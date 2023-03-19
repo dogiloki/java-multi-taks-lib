@@ -22,9 +22,8 @@ public class Test extends ModelDirectory{
     public Direccion direccion=new Direccion();
     
     public Test(){
-        //JSON json=new JSON("{\"key_name\":\"Julio\",\"key_edad\":20,\"key_peso\":58.0,\"key\":{\"key_name\":\"Julio\",\"key_edad\":20,\"key_peso\":58.0}}");
-        super.run(this,"E:\\Escritorio\\hola.json");
-        this.save();
+        JSON json=new JSON("{\"documents\":\"\",\"name\":\"Julio\",\"pueba_clase\":{\"calle\":\"Morelos\",\"cp\":55846},\"edad\":20,\"direction\":\"\"}");
+        System.out.println(json.getValue("pueba_clase","calle"));
     }
     
     public static void main(String args[]){

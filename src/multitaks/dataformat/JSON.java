@@ -25,12 +25,20 @@ public class JSON implements DataFormat{
     
     @Override
     public Object getValue(String... keys){
-        return null;
+        Object value=(JsonObject)this.json_object.getAsJsonObject().get(keys[0]);
+        int count=0;
+        for(Object key:keys){
+            if(count!=0){
+                value=new JSON(value.toString()).getValue(key.toString());
+            }
+            count++;
+        }
+        return value;
     }
 
     @Override
     public Object getValue(String key) {
-        return this.json_object.get(key).getAsString();
+        return this.json_element.getAsJsonObject().get(key);
     }
     
 }
