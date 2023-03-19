@@ -131,14 +131,17 @@ public class Storage{
         }
     }
     
-    public boolean delete(){
+    public void delete(){
         try{
-            return this.file.delete();
+            if(this.type==DirectoryType.FOLDER){
+                Storage.deleteFolder(this.src);
+            }else{
+                Storage.deleteFile(this.src);
+            }
         }catch(Exception ex){
-            return false;
+            ex.printStackTrace();
         }
     }
-    
     // Crea una carpeta
     public static boolean createFolder(String path){
         try{
@@ -148,6 +151,7 @@ public class Storage{
                 File directorio=new File(ruta_crear);
                 if(!directorio.exists()){
                     directorio.mkdir();
+    
                 }
             }
             return true;
@@ -432,6 +436,48 @@ public class Storage{
     public static String getFolder(String path){
         String[] array=path.replace("\\", "/").split("/");
         return String.join("/",Arrays.copyOfRange(array,0,array.length-1));
+    }
+    
+    // Eliminar archivo
+    public static boolean deleteFile(String ruta){
+        try{
+            File directorio=new File(ruta);
+            if(!directorio.exists()){
+                return false;
+            }
+            return directorio.delete();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    // Eliminar folder
+    public static void deleteFolder(String path) throws Exception{
+        try{
+            System.out.println(path);
+            File direct;
+            String[] directories=Storage.listDirectory(path);
+            for(String directory:directories){
+                direct=new File(path+"/"+directory);
+                if(direct.isFile()){
+                    direct.delete();
+                    continue;
+                }
+                Storage.deleteFolder(direct.getPath());
+                direct.delete();
+            }
+            direct=new File(path);
+            if(direct.isFile()){
+                return;
+            }
+            String[] list=direct.list();
+            if(list==null || list.length<=0){
+                direct.delete();
+            }
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
     }
     
     // Obtener ruta donde se ejecuta el programa

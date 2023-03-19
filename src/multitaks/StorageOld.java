@@ -179,46 +179,5 @@ public class StorageOld{
             throw new Exception(ex.getMessage());
         }
     }
-    
-    // Eliminar archivo
-    public static boolean deleteFile(String ruta){
-        try{
-            File directorio=new File(ruta);
-            if(!directorio.exists()){
-                return false;
-            }
-            return directorio.delete();
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return false;
-    }
-    
-    // Eliminar folder
-    public static void deleteFolder(String path) throws Exception{
-        try{
-            File direct;
-            String[] directories=Storage.listDirectory(path);
-            for(String directory:directories){
-                direct=new File(path+"/"+directory);
-                if(direct.isFile()){
-                    direct.delete();
-                    continue;
-                }
-                StorageOld.deleteFolder(direct.getPath());
-                direct.delete();
-            }
-            direct=new File(path);
-            if(direct.isFile()){
-                return;
-            }
-            String[] list=direct.list();
-            if(list==null || list.length<=0){
-                direct.delete();
-            }
-        }catch(Exception ex){
-            throw new Exception(ex.getMessage());
-        }
-    }
 
 }

@@ -15,7 +15,7 @@ import multitaks.relations.Relation;
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.JSON)
+@Directory(type=DirectoryType.FOLDER)
 public class Persona extends ModelDirectory{
     
     @Key(value="name")
@@ -30,7 +30,7 @@ public class Persona extends ModelDirectory{
     public Direccion pueba_clase=new Direccion();
     
     public Persona(){
-        super.run(this,"src\\PUEBA.json");
+        super.run(this,"src\\PUEBA");
         this.save();
     }
     
