@@ -7,6 +7,6 @@ package multitaks.enums;
 
 public enum FieldType{
     
-    DEFAULT, CLASS
+    DEFAULT, CLASS, OneByOne, OneToMany
     
 }

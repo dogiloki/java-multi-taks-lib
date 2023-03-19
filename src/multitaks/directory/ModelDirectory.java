@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Map;
 import multitaks.annotations.directory.Directory;
 import multitaks.annotations.directory.Key;
 import multitaks.enums.DirectoryType;
 import multitaks.enums.FieldType;
 import java.util.HashMap;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -22,6 +24,8 @@ import org.w3c.dom.Element;
 import multitaks.dataformat.ENV;
 import multitaks.dataformat.JSON;
 import multitaks.interfaces.DataFormat;
+import multitaks.relations.OneByOne;
+import multitaks.relations.OneToMany;
 
 /**
  *
@@ -65,7 +69,7 @@ public class ModelDirectory extends Storage{
             Storage.createFolder(this.src);
         }else{
             Storage.exists(this.src,DirectoryType.FILE,true);
-            this.setText();
+            //this.setText();
         }
     }
     
@@ -82,10 +86,44 @@ public class ModelDirectory extends Storage{
                 Key annot_key=field.getAnnotation(Key.class);
                 if(annot_key instanceof Key){
                     Object value=field.get(this.instance);
-                    if(annot_key.type()==FieldType.CLASS && value!=null){
-                        ModelDirectory model=new ModelDirectory();
-                        model.run(value);
-                        value=model.getText();
+                    ModelDirectory model=new ModelDirectory();
+                    if(annot_key.type()==FieldType.OneByOne){
+                        Object item=((OneByOne)value).get();
+                        if(item!=null){
+                            model.run(item);
+                            if(this.type==DirectoryType.JSON){
+                                value=new JSON(model.getText().toString()).json_object;
+                            }else{
+                                value=model.getText();
+                            }
+                        }else{
+                            value="";
+                        }
+                    }else
+                    if(annot_key.type()==FieldType.OneToMany){
+                        List<Object> values=new ArrayList<>();
+                        List<Object> items=((OneToMany)value).get();
+                        if(items!=null){
+                            for(Object item:items){
+                                model.run(item);
+                                values.add(model.getText());
+                            }
+                            value=values;
+                        }else{
+                            value="";
+                        }
+                    }else
+                    if(annot_key.type()==FieldType.CLASS){
+                        if(value!=null){
+                            model.run(value);
+                            if(this.type==DirectoryType.JSON){
+                                value=new JSON(model.getText().toString()).json_object;
+                            }else{
+                                value=model.getText();
+                            }
+                        }else{
+                            value="";
+                        }
                     }else{
                         if(value==null){
                             value="";
@@ -97,7 +135,7 @@ public class ModelDirectory extends Storage{
                     this.attributes.put(annot_key.value(),field.getName());
                 }
             }
-        }catch(IllegalAccessException ex){
+        }catch(Exception ex){
             ex.printStackTrace();
         }
     }
@@ -160,7 +198,7 @@ public class ModelDirectory extends Storage{
         return this.instance;
     }
     
-    private String getText(){
+    private Object getText(){
         if(this.type==null){
             return null;
         }
@@ -202,6 +240,7 @@ public class ModelDirectory extends Storage{
     public boolean save(){
         if(this.type!=null && this.src!=null && this.isFile()){
             this.clean();
+            this.getText();
             return this.write(this.getText());
         }
         return false;
