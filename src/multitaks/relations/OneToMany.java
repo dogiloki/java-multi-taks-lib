@@ -3,14 +3,13 @@ package multitaks.relations;
 import java.util.List;
 import multitaks.interfaces.ActionOneToMany;
 import java.util.ArrayList;
-import multitaks.interfaces.ActionRelation;
 
 /**
  *
  * @author dogi_
  */
 
-public class OneToMany<T> implements ActionRelation<T>, ActionOneToMany<T>{
+public class OneToMany<T> implements ActionOneToMany<T>{
  
     List<T> items=null;
     
@@ -28,7 +27,7 @@ public class OneToMany<T> implements ActionRelation<T>, ActionOneToMany<T>{
     }
     
     @Override
-    public List<T> getAll(){
+    public List<T> get(){
         return this.items;
     }
     
@@ -38,7 +37,7 @@ public class OneToMany<T> implements ActionRelation<T>, ActionOneToMany<T>{
     }
     
     @Override
-    public void removeAll(){
+    public void remove(){
         this.items=null;
     }
     

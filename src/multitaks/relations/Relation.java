@@ -2,17 +2,16 @@ package multitaks.relations;
 
 import multitaks.interfaces.ActionRelation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.security.auth.callback.Callback;
 
 /**
  *
  * @author dogi_
  */
-public class Relation{
+public class Relation implements ActionRelation{
     
     public interface Callback{
         public void execute(Field field);
@@ -20,7 +19,7 @@ public class Relation{
     
     private Object instance;
     private Class chield_class;
-    private List<List<ActionRelation>> items=new ArrayList<>();
+    private List<Object> items=new ArrayList<>();
     
     public Relation(){
         
@@ -47,20 +46,21 @@ public class Relation{
         }
     }
     
-    public void removeAll(){
+    public void removeRelations(){
         this.getField((field)->{
             try{
-                ((ActionRelation)field.get(this.instance)).removeAll();
+                field.getType().getMethod("remove").invoke(field.get(this.instance));
             }catch(Exception ex){
                 ex.printStackTrace();
             }
         });
     }
     
-    public List<List<ActionRelation>> getAll(){
+    public List<Object> getRelations(){
+        this.items.clear();
         this.getField((field)->{
             try{
-                this.items.add(((ActionRelation)field.get(this.instance)).getAll());
+                this.items.add(field.getType().getMethod("get").invoke(field.get(this.instance)));
             }catch(Exception ex){
                 ex.printStackTrace();
             }

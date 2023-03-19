@@ -7,9 +7,9 @@ import java.util.List;
  * @author dogi_
  */
 
-public interface ActionRelation<T>{
+public interface ActionRelation{
     
-    public void removeAll();
-    public List<T> getAll();
+    public void removeRelations();
+    public List<Object> getRelations();
     
 }

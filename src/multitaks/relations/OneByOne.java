@@ -10,7 +10,7 @@ import multitaks.interfaces.ActionRelation;
  * @author dogi_
  */
 
-public class OneByOne<T> implements ActionRelation<T>, ActionOneByOne<T>{
+public class OneByOne<T> implements ActionOneByOne<T>{
     
     T item=null;
     
@@ -28,18 +28,5 @@ public class OneByOne<T> implements ActionRelation<T>, ActionOneByOne<T>{
     public void remove(){
         this.item=null;
     }
-
-    @Override
-    public void removeAll() {
-        this.item=null;
-    }
-
-    @Override
-    public List<T> getAll(){
-        List<T> items=new ArrayList<>();
-        items.add(this.item);
-        return items;
-    }
-
     
 }
