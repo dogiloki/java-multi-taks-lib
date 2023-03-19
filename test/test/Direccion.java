@@ -12,4 +12,8 @@ public class Direccion{
     @Key(value="cp")
     public int cp=55846;
     
+    public Direccion(){
+        
+    }
+    
 }
