@@ -1,9 +1,11 @@
 package multitaks;
 
 import java.awt.Dimension;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  *
@@ -61,27 +63,6 @@ public class Function<T>{
             }
         }
         return null;
-    }
-    
-    // Crea un array Method
-    public static Method[] createdArray(Method... args){
-        return args;
-    }
-    // Crea un array de tipo texto o caracter, según la cantidad de parametros
-    public static String[] createdArray(String... args){
-        return args;
-    }
-    // Crea un array de tipo entero, según la cantidad de parametros
-    public static int[] createdArray(int... args){
-        return args;
-    }
-    // Crea un array de tipo decimal, según la cantidad de parametros
-    public static float[] createdArray(float... args){
-        return args;
-    }
-    // Crea un array de tipo decimal grande, según la cantidad de parametros
-    public static double[] createdArray(double... args){
-        return args;
     }
     
     // Convertir dos parámetro numéricos en dimenciones
