@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ActionRelation{
     
-    public void removeRelations();
+    public void clearRelations();
     public List<Object> getRelations();
     
 }

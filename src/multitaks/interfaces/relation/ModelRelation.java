@@ -1,4 +1,4 @@
-package multitaks.relations;
+package multitaks.relation;
 
 import multitaks.interfaces.ActionRelation;
 import java.lang.reflect.Field;
@@ -6,26 +6,32 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import multitaks.annotations.relation.Relation;
+import multitaks.enums.RelationType;
 
 /**
  *
  * @author dogi_
  */
-public class Relation implements ActionRelation{
+public class ModelRelation implements ActionRelation{
     
-    public interface Callback{
-        public void execute(Field field);
+    public static ModelRelation ami(Object instance){
+        return new ModelRelation(instance);
+    }
+    
+    protected interface Callback{
+        public void execute(Field field, Relation annot_key);
     }
     
     private Object instance;
     private Class chield_class;
     private List<Object> items=new ArrayList<>();
     
-    public Relation(){
+    public ModelRelation(){
         
     }
     
-    public Relation(Object instance){
+    public ModelRelation(Object instance){
         this.aim(instance);
     }
     
@@ -37,8 +43,9 @@ public class Relation implements ActionRelation{
     public void getField(Callback call){
         for(Field field:this.chield_class.getDeclaredFields()){
             try{
-                if(field.getType()==OneByOne.class || field.getType()==OneToMany.class){
-                    call.execute(field);
+                Relation annot_key=field.getAnnotation(Relation.class);
+                if(annot_key!=null && annot_key.type()!=null){
+                    call.execute(field,annot_key);
                 }
             }catch(Exception ex){
                 ex.printStackTrace();
@@ -46,10 +53,14 @@ public class Relation implements ActionRelation{
         }
     }
     
-    public void removeRelations(){
-        this.getField((field)->{
+    public void clearRelations(){
+        this.getField((field,annot_key)->{
             try{
-                field.getType().getMethod("remove").invoke(field.get(this.instance));
+                if(annot_key.type()==RelationType.OneToMany){
+                    field.getType().getMethod("clear").invoke(field.get(this.instance));
+                }else{
+                    field.set(this.instance,null);
+                }
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -58,14 +69,14 @@ public class Relation implements ActionRelation{
     
     public List<Object> getRelations(){
         this.items.clear();
-        this.getField((field)->{
+        this.getField((field,annot_key)->{
             try{
-                this.items.add(field.getType().getMethod("get").invoke(field.get(this.instance)));
+                this.items.add(field.get(this.instance));
             }catch(Exception ex){
                 ex.printStackTrace();
             }
         });
-        return this.items;
+        return this.items.size()<=0?null:this.items;
     }
     
 }

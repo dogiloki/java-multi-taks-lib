@@ -24,8 +24,6 @@ import org.w3c.dom.Element;
 import multitaks.dataformat.ENV;
 import multitaks.dataformat.JSON;
 import multitaks.interfaces.DataFormat;
-import multitaks.relations.OneByOne;
-import multitaks.relations.OneToMany;
 
 /**
  *
@@ -87,6 +85,7 @@ public class ModelDirectory extends Storage{
                 if(annot_key instanceof Key){
                     Object value=field.get(this.instance);
                     ModelDirectory model=new ModelDirectory();
+                    /*
                     if(annot_key.type()==FieldType.OneByOne){
                         Object item=((OneByOne)value).get();
                         if(item!=null){
@@ -99,10 +98,10 @@ public class ModelDirectory extends Storage{
                         }else{
                             value="";
                         }
-                    }else
-                    if(annot_key.type()==FieldType.OneToMany){
+                    }else*/
+                    if(annot_key.type()==FieldType.LIST){
                         List<Object> values=new ArrayList<>();
-                        List<Object> items=((OneToMany)value).get();
+                        List<Object> items=(List)value;
                         if(items!=null){
                             for(Object item:items){
                                 model.run(item);

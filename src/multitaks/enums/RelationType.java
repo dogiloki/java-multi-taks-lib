@@ -5,8 +5,8 @@ package multitaks.enums;
  * @author dogi_
  */
 
-public enum FieldType{
+public enum RelationType{
     
-    DEFAULT, CLASS, LIST
+    OneByOne, OneToMany
     
 }
