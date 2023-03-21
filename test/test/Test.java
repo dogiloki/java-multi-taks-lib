@@ -1,5 +1,6 @@
 package test;
 
+import multitaks.Function;
 import multitaks.annotations.directory.Directory;
 import multitaks.annotations.directory.Key;
 import multitaks.dataformat.JSON;
@@ -22,8 +23,7 @@ public class Test extends ModelDirectory{
     public Direccion direccion=new Direccion();
     
     public Test(){
-        JSON json=new JSON("{\"documents\":\"\",\"name\":\"Julio\",\"pueba_clase\":{\"calle\":\"Morelos\",\"cp\":55846},\"edad\":20,\"direction\":\"\"}");
-        System.out.println(json.getValue("pueba_clase","calle"));
+        System.out.println(Function.isRange(15,10,20));
     }
     
     public static void main(String args[]){

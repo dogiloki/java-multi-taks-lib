@@ -44,7 +44,6 @@ public class Function<T>{
         }
         return null;
     }
-    
     public static <T> T assign(T... values){
         for(T value:values){
             if(value!=null){
@@ -55,7 +54,6 @@ public class Function<T>{
         }
         return null;
     }
-    
     public static <T> T assignNotNull(T... values){
         for(T value:values){
             if(value!=null){
@@ -63,6 +61,11 @@ public class Function<T>{
             }
         }
         return null;
+    }
+    
+    // Saber si esta dentro del rango
+    public static boolean isRange(int num, int min, int max){
+        return num>=min && num<=max;
     }
     
     // Convertir dos parámetro numéricos en dimenciones
