@@ -80,7 +80,7 @@ public class ModelDirectory extends Storage{
                     return;
                 }
             }
-            for(Field field:this.child_class.getDeclaredFields()){
+            for(Field field:this.child_class.getFields()){
                 Key annot_key=field.getAnnotation(Key.class);
                 if(annot_key instanceof Key){
                     Object value=field.get(this.instance);
@@ -172,7 +172,7 @@ public class ModelDirectory extends Storage{
                     ModelDirectory model=new ModelDirectory();
                     model.run(type_class.newInstance());
                     value=model.setText(value.toString());
-                    /*for(Field f:value.getClass().getDeclaredFields()){
+                    /*for(Field f:value.getClass().getFields()){
                         System.out.println(f.get(value));
                     }*/
                     field.set(this.instance,value);
