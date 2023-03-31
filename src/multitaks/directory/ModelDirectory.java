@@ -1,6 +1,7 @@
 package multitaks.directory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -80,7 +81,7 @@ public class ModelDirectory extends Storage{
                     return;
                 }
             }
-            for(Field field:this.child_class.getDeclaredFields()){
+            for(Field field:this.child_class.getFields()){
                 Key annot_key=field.getAnnotation(Key.class);
                 if(annot_key instanceof Key){
                     Object value=field.get(this.instance);
@@ -105,7 +106,11 @@ public class ModelDirectory extends Storage{
                         if(items!=null){
                             for(Object item:items){
                                 model.run(item);
-                                values.add(model.getText());
+                                if(this.type==DirectoryType.JSON){
+                                    values.add(new Gson().fromJson((String)model.getText(),JsonElement.class));
+                                }else{
+                                    values.add(model.getText());
+                                }
                             }
                             value=values;
                         }else{
@@ -172,7 +177,7 @@ public class ModelDirectory extends Storage{
                     ModelDirectory model=new ModelDirectory();
                     model.run(type_class.newInstance());
                     value=model.setText(value.toString());
-                    /*for(Field f:value.getClass().getDeclaredFields()){
+                    /*for(Field f:value.getClass().getFields()){
                         System.out.println(f.get(value));
                     }*/
                     field.set(this.instance,value);
