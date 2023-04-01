@@ -2,6 +2,7 @@ package multitaks.directory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -34,8 +35,16 @@ public class ModelDirectory extends Storage{
     
     Class<?> child_class;
     public Object instance;
+    /**
+     * String clave para formato de texto
+     * String Valor del atributo de la clase
+    */
     Map<String,Object> fields=new HashMap<>();
-    Map<String,String> attributes=new HashMap<>();
+    /**
+     * String clave para formato de texto
+     * Field variable de la clase
+    */
+    Map<String,Field> attributes=new HashMap<>();
 
     public ModelDirectory(){
         super();
@@ -68,7 +77,7 @@ public class ModelDirectory extends Storage{
             Storage.createFolder(this.src);
         }else{
             Storage.exists(this.src,DirectoryType.FILE,true);
-            //this.setText();
+            this.setText();
         }
     }
     
@@ -136,7 +145,7 @@ public class ModelDirectory extends Storage{
                         }
                     }
                     this.fields.put(annot_key.value(),value);
-                    this.attributes.put(annot_key.value(),field.getName());
+                    this.attributes.put(annot_key.value(),field);
                 }
             }
         }catch(Exception ex){
@@ -165,36 +174,43 @@ public class ModelDirectory extends Storage{
         if(data==null){
             return null;
         }
-        for(Map.Entry<String,String> entry:this.attributes.entrySet()){
+        for(Map.Entry<String,Field> entry:this.attributes.entrySet()){
             String key=entry.getKey();
-            String name=entry.getValue();
+            Field field=entry.getValue();
             try{
                 Object value=data.getValue(key);
-                Field field=this.child_class.getField(name);
                 Key annot_key=field.getAnnotation(Key.class);
-                if(annot_key.type()==FieldType.CLASS && value!=null){
+                if(value==null){
+                    continue;
+                }
+                if(annot_key.type()==FieldType.CLASS){
                     Class<?> type_class=field.getType();
                     ModelDirectory model=new ModelDirectory();
-                    model.run(type_class.newInstance());
+                    model.run(type_class.getConstructor().newInstance());
                     value=model.setText(value.toString());
                     /*for(Field f:value.getClass().getFields()){
                         System.out.println(f.get(value));
                     }*/
                     field.set(this.instance,value);
                     continue;
+                }else
+                if(annot_key.type()==FieldType.LIST){
+                    
                 }
-                Constructor<?> constructor;
+                String class_name=field.getType().getName();
                 if(field.getType().isPrimitive()){
-                    String class_name=field.getType().getName();
                     if(int.class.equals(field.getType())){
                         class_name+="eger";
                     }
-                    Class<?> class_type=Class.forName("java.lang."+class_name.substring(0,1).toUpperCase()+class_name.substring(1));
-                    constructor=class_type.getDeclaredConstructor(value.getClass());
-                }else{
-                    constructor=field.getType().getDeclaredConstructor(value.getClass());
+                    class_name="java.lang."+class_name.substring(0,1).toUpperCase()+class_name.substring(1);
                 }
-                field.set(this.instance,constructor.newInstance(value));
+                Class<?> class_type=Class.forName(class_name);
+                Constructor<?> constructor=class_type.getDeclaredConstructor(field.getType());
+                if(this.type==DirectoryType.JSON){
+                    field.set(this.instance,constructor.newInstance(new Gson().fromJson((JsonPrimitive)value,class_type)));
+                }else{
+                    field.set(this.instance,constructor.newInstance(value));
+                }
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -244,7 +260,6 @@ public class ModelDirectory extends Storage{
     public boolean save(){
         if(this.type!=null && this.src!=null && this.isFile()){
             this.clean();
-            this.getText();
             return this.write(this.getText());
         }
         return false;

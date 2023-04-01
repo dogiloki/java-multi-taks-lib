@@ -22,7 +22,8 @@ public class Test extends ModelDirectory{
     public Direccion direccion=new Direccion();
     
     public Test(){
-        System.out.println(Function.isRange(15,10,20));
+        super.run(this,"prueba.json");
+        System.out.println(this.direccion.cp);
     }
     
     public static void main(String args[]){
