@@ -1,11 +1,14 @@
 package multitaks.directory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Map;
 import multitaks.annotations.directory.Directory;
@@ -195,7 +198,26 @@ public class ModelDirectory extends Storage{
                     continue;
                 }else
                 if(annot_key.type()==FieldType.LIST){
-                    
+                    List<Object> values=new ArrayList<>();
+                    List<Object> items;
+                    if(this.type==DirectoryType.JSON){
+                        items=new Gson().fromJson(value.toString(),new TypeToken<List<Object>>(){}.getType());
+                    }else{
+                        items=(List)value;
+                    }
+                    if(items!=null){
+                        for(Object item:items){
+                            Class<?> type_class=Class.forName(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName());
+                            ModelDirectory model=new ModelDirectory();
+                            model.run(type_class.getConstructor().newInstance());
+                            values.add(model.setText(item.toString()));
+                        }
+                        value=values;
+                    }else{
+                        value=new ArrayList<>();
+                    }
+                    field.set(this.instance,value);
+                    continue;
                 }
                 String class_name=field.getType().getName();
                 if(field.getType().isPrimitive()){

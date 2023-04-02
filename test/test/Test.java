@@ -1,5 +1,7 @@
 package test;
 
+import java.util.ArrayList;
+import java.util.List;
 import multitaks.Function;
 import multitaks.annotations.directory.Directory;
 import multitaks.annotations.directory.Key;
@@ -20,10 +22,16 @@ public class Test extends ModelDirectory{
     public int edad=20;
     @Key(value="direccion",type=FieldType.CLASS)
     public Direccion direccion=new Direccion();
+    @Key(value="direcciones",type=FieldType.LIST)
+    public List<Direccion> direcciones=new ArrayList<>();
     
     public Test(){
         super.run(this,"prueba.json");
-        System.out.println(this.direccion.cp);
+        this.direcciones.add(new Direccion());
+        this.direcciones.add(new Direccion());
+        this.direcciones.add(new Direccion());
+        System.out.println(this.direcciones.get(0).cp);
+        //this.save();
     }
     
     public static void main(String args[]){
