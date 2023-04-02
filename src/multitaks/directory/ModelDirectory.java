@@ -200,7 +200,7 @@ public class ModelDirectory extends Storage{
                     List<Object> values=new ArrayList<>();
                     List<Object> items;
                     if(this.type==DirectoryType.JSON){
-                        items=new Gson().fromJson(value.toString(),new TypeToken<List<Object>>(){}.getType());
+                        items=new Gson().fromJson(value.toString(),new TypeToken<List<JsonElement>>(){}.getType());
                     }else{
                         items=(List)value;
                     }
