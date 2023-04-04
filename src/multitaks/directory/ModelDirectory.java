@@ -139,6 +139,9 @@ public class ModelDirectory extends Storage{
                         }else{
                             value="";
                         }
+                    }else
+                    if(annot_key.type()==FieldType.ENUM){
+                        value=value==null?"":value.toString();
                     }else{
                         if(value==null){
                             value="";
@@ -194,6 +197,11 @@ public class ModelDirectory extends Storage{
                         System.out.println(f.get(value));
                     }*/
                     field.set(this.instance,value);
+                    continue;
+                }else
+                if(annot_key.type()==FieldType.ENUM){
+                    Class<Enum> type_class=(Class<Enum>)field.getType();
+                    field.set(this.instance,Enum.valueOf(type_class,value.toString().replaceAll("\"","")));
                     continue;
                 }else
                 if(annot_key.type()==FieldType.LIST){
