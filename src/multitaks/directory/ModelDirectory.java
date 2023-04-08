@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Map;
@@ -23,6 +24,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import multitaks.annotations.directory.Execute;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import multitaks.dataformat.ENV;
@@ -47,6 +49,10 @@ public class ModelDirectory extends Storage{
      * Field variable de la clase
     */
     Map<String,Field> attributes=new HashMap<>();
+    /**
+     * Method Método a de la clase
+     */
+    List<Method> methods=new ArrayList<>();
 
     public ModelDirectory(){
         super();
@@ -217,7 +223,8 @@ public class ModelDirectory extends Storage{
                             Class<?> type_class=Class.forName(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName());
                             ModelDirectory model=new ModelDirectory();
                             model.run(type_class.getConstructor().newInstance());
-                            values.add(model.setText(item.toString()));
+                            Object instance=model.setText(item.toString());
+                            values.add(instance);
                         }
                         value=values;
                     }else{
@@ -240,6 +247,18 @@ public class ModelDirectory extends Storage{
                 }else{
                     field.set(this.instance,constructor.newInstance(value));
                 }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        // Métodos
+        for(Method method:this.instance.getClass().getMethods()){
+            Execute annot_execute=method.getAnnotation(Execute.class);
+            if(annot_execute==null){
+                continue;
+            }
+            try{
+                method.invoke(this.instance);
             }catch(Exception ex){
                 ex.printStackTrace();
             }
