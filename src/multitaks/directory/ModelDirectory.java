@@ -49,10 +49,6 @@ public class ModelDirectory extends Storage{
      * Field variable de la clase
     */
     Map<String,Field> attributes=new HashMap<>();
-    /**
-     * Method Método a de la clase
-     */
-    List<Method> methods=new ArrayList<>();
 
     public ModelDirectory(){
         super();
@@ -308,6 +304,14 @@ public class ModelDirectory extends Storage{
     public boolean save(){
         if(this.type!=null && this.src!=null && this.isFile()){
             return this.write(this.getText());
+        }
+        return false;
+    }
+    
+    public boolean reset(){
+        if(this.type!=null && this.src!=null && this.isFile()){
+            this.clean();
+            return this.save();
         }
         return false;
     }

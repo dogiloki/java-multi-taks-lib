@@ -142,6 +142,21 @@ public class Storage{
             ex.printStackTrace();
         }
     }
+    
+    public long getSize(){
+        return Storage.getSize(this.src);
+    }
+    
+    public String[] listDirectory(){
+        return Storage.listDirectory(this.src);
+    }
+    public String[] listFolders(){
+        return Storage.listDirectory(this.src,DirectoryType.FOLDER);
+    }
+    public String[] listFiles(){
+        return Storage.listDirectory(this.src,DirectoryType.FILE);
+    }
+    
     // Crea una carpeta
     public static boolean createFolder(String path){
         try{
@@ -159,20 +174,6 @@ public class Storage{
             JOptionPane.showMessageDialog(null,ex,"Error",JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    }
-    
-    public long getSize(){
-        return Storage.getSize(this.src);
-    }
-    
-    public String[] listDirectory(){
-        return Storage.listDirectory(this.src);
-    }
-    public String[] listFolders(){
-        return Storage.listDirectory(this.src,DirectoryType.FOLDER);
-    }
-    public String[] listFiles(){
-        return Storage.listDirectory(this.src,DirectoryType.FILE);
     }
     
     // Saber si existe un archivo o carpeta
