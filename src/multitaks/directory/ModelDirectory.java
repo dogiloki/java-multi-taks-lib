@@ -61,7 +61,7 @@ public class ModelDirectory extends Storage{
     public void aim(Object instance){
         this._aim(instance,null);
     }
-    public void run(Object instance, String src){
+    public void aim(Object instance, String src){
         this._aim(instance,src);
     }
     
