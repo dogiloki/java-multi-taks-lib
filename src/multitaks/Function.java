@@ -1,11 +1,9 @@
 package multitaks;
 
 import java.awt.Dimension;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
-import java.util.List;
+import javax.swing.JPanel;
 
 /**
  *
@@ -73,7 +71,22 @@ public class Function<T>{
         return new Dimension((int)ancho,(int)alto);
     }
     
-    // Obtener ip privada
+    // Agregar un panle dentro de otro panel
+    public static void setPanel(JPanel panel1, JPanel panel2){
+        panel2.setVisible(true);
+        panel2.setBounds(0,0,panel1.getWidth(),panel1.getHeight());
+        panel1.removeAll();
+        panel1.add(panel2);
+        panel1.updateUI();
+    }
+    
+    // Dimencionar un panel en base a otro panel
+    public static void resizablePanel(JPanel panel1, JPanel panel2){
+        panel2.setBounds(0,0,panel1.getWidth(),panel1.getHeight());
+        panel1.updateUI();
+    }
+    
+    // Obtener ip
     public static String getIp(){
         try{
             InetAddress address=InetAddress.getLocalHost();
