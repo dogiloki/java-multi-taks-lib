@@ -77,7 +77,7 @@ public class Storage{
     
     public boolean append(Object text){
         try{
-            if(!this.open(false)){
+            if(!this.open(true)){
                 return false;
             }
             this.bw.write(((String)text));
@@ -90,7 +90,7 @@ public class Storage{
     
     public boolean write(Object text){
         try{
-            if(!this.open(true)){
+            if(!this.open(false)){
                 return false;
             }
             this.bw.write(((String)text));

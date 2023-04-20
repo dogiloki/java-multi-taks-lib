@@ -307,7 +307,6 @@ public class ModelDirectory extends Storage{
     
     public boolean save(){
         if(this.type!=null && this.src!=null && this.isFile()){
-            this.clean();
             return this.write(this.getText());
         }
         return false;
