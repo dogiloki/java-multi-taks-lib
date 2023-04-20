@@ -36,14 +36,14 @@ public class Storage{
     }
     
     public Storage(String src){
-        this.run(src,null);
+        this.aim(src,null);
     }
     
     public Storage(String src, DirectoryType type){
-        this.run(src,type);
+        this.aim(src,type);
     }
     
-    public void run(String src, DirectoryType type){
+    public void aim(String src, DirectoryType type){
         this.type=type;
         this.src=src;
     }

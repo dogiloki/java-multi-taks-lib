@@ -58,14 +58,14 @@ public class ModelDirectory extends Storage{
         super();
     }
 
-    public void run(Object instance){
-        this._run(instance,null);
+    public void aim(Object instance){
+        this._aim(instance,null);
     }
     public void run(Object instance, String src){
-        this._run(instance,src);
+        this._aim(instance,src);
     }
     
-    private void _run(Object instance, String src){
+    private void _aim(Object instance, String src){
         this.instance=instance;
         this.child_class=instance.getClass();
         this.src=src;
@@ -74,7 +74,7 @@ public class ModelDirectory extends Storage{
             this.type=annot_directory.type();
         }
         this.create();
-        super.run(src,this.type);
+        super.aim(src,this.type);
     }
     
     private void create(){
@@ -122,7 +122,7 @@ public class ModelDirectory extends Storage{
                         List<Object> items=(List)value;
                         if(items!=null){
                             for(Object item:items){
-                                model.run(item);
+                                model.aim(item);
                                 if(this.type==DirectoryType.JSON){
                                     values.add(new Gson().fromJson((String)model.getText(),JsonElement.class));
                                 }else{
@@ -136,7 +136,7 @@ public class ModelDirectory extends Storage{
                     }else
                     if(annot_key.type()==FieldType.CLASS){
                         if(value!=null){
-                            model.run(value);
+                            model.aim(value);
                             if(this.type==DirectoryType.JSON){
                                 value=new JSON(model.getText().toString()).json_object;
                             }else{
@@ -197,7 +197,7 @@ public class ModelDirectory extends Storage{
                 if(annot_key.type()==FieldType.CLASS){
                     Class<?> type_class=field.getType();
                     ModelDirectory model=new ModelDirectory();
-                    model.run(type_class.getConstructor().newInstance());
+                    model.aim(type_class.getConstructor().newInstance());
                     value=model.setText(value.toString());
                     /*for(Field f:value.getClass().getFields()){
                         System.out.println(f.get(value));
@@ -222,7 +222,7 @@ public class ModelDirectory extends Storage{
                         for(Object item:items){
                             Class<?> type_class=Class.forName(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName());
                             ModelDirectory model=new ModelDirectory();
-                            model.run(type_class.getConstructor().newInstance());
+                            model.aim(type_class.getConstructor().newInstance());
                             Object instance=model.setText(item.toString());
                             values.add(instance);
                         }
