@@ -76,7 +76,6 @@ public class ObjectId{
     private byte[] getCount(){
         this.count++;
         byte[] count=String.valueOf(this.count).getBytes();
-        System.out.println(this.count);
         return Arrays.copyOfRange(count,0,3);
     }
     
