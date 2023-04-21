@@ -37,6 +37,12 @@ public class Function<T>{
         return "";
     }
     
+    // Formato de número (dinero)
+    public String formatNumber(String num){
+        DecimalFormat formato=new DecimalFormat("#,###.##");
+        return formato.format(Float.parseFloat(num));
+    }
+    
     // Asignar el primer valor diferente a nulo, dentro de un array
     public T set(T... values){
         for(T value:values){
