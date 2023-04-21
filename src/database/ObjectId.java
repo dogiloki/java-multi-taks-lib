@@ -13,14 +13,22 @@ import multitaks.Function;
 
 public class ObjectId{
     
+    private static long count_static=-2;
     private long count;
     
     public static String generate(){
-        return new ObjectId().get();
+        ObjectId.count_static++;
+        return new ObjectId(ObjectId.count_static).get();
     }
     
     public static String generate(long count){
-        return new ObjectId(count).get();
+        ObjectId.count_static=count;
+        ObjectId.count_static++;
+        return new ObjectId(ObjectId.count_static).get();
+    }
+    
+    public static void count(long count){
+        ObjectId.count_static=count;
     }
     
     public ObjectId(){
@@ -68,6 +76,7 @@ public class ObjectId{
     private byte[] getCount(){
         this.count++;
         byte[] count=String.valueOf(this.count).getBytes();
+        System.out.println(this.count);
         return Arrays.copyOfRange(count,0,3);
     }
     
