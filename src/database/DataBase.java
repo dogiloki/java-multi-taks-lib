@@ -1,5 +1,7 @@
 package database;
 
+import java.util.ArrayList;
+import java.util.List;
 import multitaks.annotations.directory.Directory;
 import multitaks.directory.ModelDirectory;
 import multitaks.enums.DirectoryType;
@@ -12,33 +14,16 @@ import multitaks.enums.DirectoryType;
 @Directory(type=DirectoryType.FOLDER)
 public class DataBase extends ModelDirectory{
     
-    private Schema schema;
+    private List<Collection> collections=new ArrayList<>();
     
     public DataBase(String src){
         super.aim(this,src);
-        this.schema=new Schema(src);
-    }
-    
-    public Collection createCollection(String name, String... fields){
-        if(this.collection(name)!=null){
-            return null;
-        }
-        Collection collection=new Collection(name,this.src);
-        for(String field:fields){
-            collection.addField(field);
-        }
-        this.schema.addCollection(collection);
-        this.save();
-        return collection;
     }
     
     public Collection collection(String name){
-        return this.schema.getCollection(name);
-    }
-    
-    @Override
-    public boolean save(){
-        return this.schema.save();
+        Collection collection=new Collection(name,this.src);
+        this.collections.add(collection);
+        return collection;
     }
     
 }
