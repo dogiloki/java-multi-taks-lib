@@ -1,0 +1,1 @@
+{"collections":[{"auto_increment":0,"name":"ventas","_id":"b5685e64a4a97b84cf97253962f296c21163e683ee4c4636a4d0e1cadc27","fields":[{"name":"nombre"},{"name":"total"},{"name":"cantidad"}]},{"auto_increment":0,"name":"productos","_id":"7edad1961ce25c161bf6d6ed04883e01f666236cf41280e2e56ba5e65a9f7","fields":[{"name":"nombre"},{"name":"descripción"}]}]}

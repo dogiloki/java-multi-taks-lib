@@ -1,5 +1,7 @@
 package test;
 
+import database.DataBase;
+import database.ObjectId;
 import multitaks.GlobalField;
 
 /**
@@ -10,9 +12,7 @@ import multitaks.GlobalField;
 public class Test{
     
     public Test(){
-        GlobalField.set("valor1","dsadsa");
-        GlobalField.group("dsa").set("valor2","dsadsa");
-        System.out.println(GlobalField.groups().get("dsa").all());
+        DataBase db=new DataBase("database");
     }
     
     public static void main(String[] args){
