@@ -3,7 +3,6 @@ package database;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Arrays;
-import java.util.Base64;
 import multitaks.Function;
 
 /**

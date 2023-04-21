@@ -13,38 +13,55 @@ import multitaks.enums.DirectoryType;
 @Directory(type=DirectoryType.JSON)
 public class Record{
     
+    public interface getField{
+        public void execute(String key, Object value);
+    }
+    
     public String field_id="_id";
     private Map<String,Object> fields=new HashMap<>();
     
-    public Record(String... fields){
+    public Record(){
         this.fields.put(this.field_id,ObjectId.generate());
-        for(String field:fields){
-            this.fields.put(field,null);
-        }
     }
     
-    public Record append(Object... values){
+    public Record(String key, Object value){
+        this.fields.put(this.field_id,ObjectId.generate());
+        this.add(key,value);
+    }
+    
+    public Map<String,Object> getFields(){
+        return this.fields;
+    }
+    
+    public void getFields(getField action){
         int index=0;
         for(Map.Entry<String,Object> entry:this.fields.entrySet()){
-            if(entry.getKey().equals("_id")){
-                continue;
-            }
-            this.fields.put(entry.getKey(),values[index]);
+            action.execute(entry.getKey(),entry.getValue());
             index++;
         }
-        return this;
     }
     
     public String getId(){
         return (String)this.fields.get(this.field_id);
     }
     
+    public Record setId(Object value){
+        this.fields.put(this.field_id,value);
+        return this;
+    }
+    
     public String get(String key){
         return (String)this.fields.get(key);
     }
     
-    public void set(String key, Object value){
+    public Record add(String key, Object value){
         this.fields.put(key,value);
+        return this;
+    }
+    
+    public Record remove(String key){
+        this.fields.remove(key);
+        return this;
     }
     
 }

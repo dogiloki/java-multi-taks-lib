@@ -12,7 +12,8 @@ public class Test{
     
     public Test(){
         DataBase db=new DataBase("database");
-        db.collection("alumnos").insert(new Record("nombre","apellido").append("Julio","Villanueva"));
+        //db.collection("alumnos").insert(new Record("nombre","Juan").add("apellido","Lopéz"));
+        db.collection("alumnos").find(new Record().setId("26931d574190b654d4dfaebdb0c29f051d477e67afe4dd4276df19fb551c7c"));
     }
     
     public static void main(String[] args){
