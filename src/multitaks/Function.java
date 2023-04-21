@@ -2,7 +2,11 @@ package multitaks;
 
 import java.awt.Dimension;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.JPanel;
 
 /**
@@ -122,6 +126,26 @@ public class Function<T>{
             System.out.println(ex);
             return "";
         }
+    }
+    
+    public static String getMac(){
+        try{
+            InetAddress address=InetAddress.getLocalHost();
+            NetworkInterface network=NetworkInterface.getByInetAddress(address);
+            if(network!=null){
+                byte[] mac=network.getHardwareAddress();
+                if(mac!=null){
+                    StringBuilder mac_builder=new StringBuilder();
+                    for(int index=0; index<mac.length; index++){
+                        mac_builder.append(String.format("%02X%s",mac[index],(index<mac.length-1)?"-":""));
+                    }
+                    return mac_builder.toString();
+                }
+            }
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        return "";
     }
     
 }
