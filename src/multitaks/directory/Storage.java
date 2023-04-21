@@ -131,16 +131,18 @@ public class Storage{
         }
     }
     
-    public void delete(){
+    public boolean delete(){
         try{
             if(this.type==DirectoryType.FOLDER){
                 Storage.deleteFolder(this.src);
             }else{
                 Storage.deleteFile(this.src);
             }
+            return true;
         }catch(Exception ex){
             ex.printStackTrace();
         }
+        return false;
     }
     
     public long getSize(){
