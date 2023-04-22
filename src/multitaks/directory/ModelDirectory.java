@@ -91,6 +91,7 @@ public class ModelDirectory extends Storage{
     }
     
     private void create(){
+        this.get();
         if(this.type==null || this.src==null){
             return;
         }
@@ -98,7 +99,6 @@ public class ModelDirectory extends Storage{
             Storage.createFolder(this.src);
         }else{
             Storage.exists(this.src,DirectoryType.FILE,true);
-            this.get();
             //this.setText();
         }
     }
