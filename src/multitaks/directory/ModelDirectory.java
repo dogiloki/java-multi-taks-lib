@@ -113,6 +113,7 @@ public class ModelDirectory extends Storage{
     
     public void setFields(Map<String,Object> fields){
         this.fields=fields;
+        this.setText();
     }
     
     private void get(){
