@@ -37,18 +37,18 @@ import multitaks.interfaces.DataFormat;
  */
 public class ModelDirectory extends Storage{
     
-    Class<?> child_class;
-    public Object instance;
+    private Class<?> child_class;
+    private Object instance;
     /**
      * String clave para formato de texto
-     * String Valor del atributo de la clase
+     * String valor del atributo de la clase
     */
-    Map<String,Object> fields=new HashMap<>();
+    private Map<String,Object> fields=new HashMap<>();
     /**
      * String clave para formato de texto
      * Field variable de la clase
     */
-    Map<String,Field> attributes=new HashMap<>();
+    private Map<String,Field> attributes=new HashMap<>();
 
     public ModelDirectory(){
         super();
