@@ -1,6 +1,6 @@
 package test;
 
-import database.DataBase;
+import database.ModelDB;
 import database.Record;
 
 /**
@@ -11,7 +11,7 @@ import database.Record;
 public class Test{
     
     public Test(){
-        DataBase db=new DataBase("db");
+        ModelDB db=new ModelDB("db");
     }
     
     public static void main(String[] args){
