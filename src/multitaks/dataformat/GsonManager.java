@@ -155,9 +155,4 @@ public class GsonManager implements DataFormat{
         return new Gson().toJson(json);
     }
 
-    @Override
-    public Object getValue(String... keys) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }

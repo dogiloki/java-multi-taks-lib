@@ -8,6 +8,5 @@ package multitaks.interfaces;
 public interface DataFormat{
     
     public Object getValue(String key);
-    public Object getValue(String... keys);
     
 }

@@ -1,22 +1,14 @@
 package multitaks.directory;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
 import java.io.StringWriter;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.Map;
 import multitaks.annotations.directory.Directory;
 import multitaks.annotations.directory.Key;
 import multitaks.enums.DirectoryType;
-import multitaks.enums.FieldType;
 import java.util.HashMap;
-import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -24,11 +16,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import multitaks.Function;
 import multitaks.annotations.directory.Execute;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import multitaks.dataformat.ENV;
-import multitaks.dataformat.JSON;
 import multitaks.interfaces.DataFormat;
 
 /**
@@ -37,6 +29,11 @@ import multitaks.interfaces.DataFormat;
  */
 public class ModelDirectory extends Storage{
     
+    public static Object aim(String src, Class clazz){
+        ModelDirectory model=new ModelDirectory(src,clazz);
+        model.setText();
+        return model.getInstance();
+    }
     private Class<?> child_class;
     private Object instance;
     /**
@@ -52,8 +49,28 @@ public class ModelDirectory extends Storage{
 
     public ModelDirectory(){
         super();
+        this._aim(this,this.getSrc());
     }
-
+    
+    public ModelDirectory(String src, Class clazz){
+        super();
+        try{
+            this._aim(clazz.newInstance(),src);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public ModelDirectory(String src){
+        super();
+        this._aim(this,src);
+    }
+    
+    public ModelDirectory(Object instance){
+        super();
+        this._aim(instance,null);
+    }
+    
     public void aim(Object instance){
         this._aim(instance,null);
     }
@@ -81,8 +98,21 @@ public class ModelDirectory extends Storage{
             Storage.createFolder(this.src);
         }else{
             Storage.exists(this.src,DirectoryType.FILE,true);
-            this.setText();
+            this.get();
+            //this.setText();
         }
+    }
+    
+    public Object getInstance(){
+        return this.instance;
+    }
+    
+    public Map<String,Object> getFields(){
+        return this.fields;
+    }
+    
+    public void setFields(Map<String,Object> fields){
+        this.fields=fields;
     }
     
     private void get(){
@@ -98,60 +128,7 @@ public class ModelDirectory extends Storage{
                 Key annot_key=field.getAnnotation(Key.class);
                 if(annot_key instanceof Key){
                     Object value=field.get(this.instance);
-                    ModelDirectory model=new ModelDirectory();
-                    /*
-                    if(annot_key.type()==FieldType.OneByOne){
-                        Object item=((OneByOne)value).get();
-                        if(item!=null){
-                            model.run(item);
-                            if(this.type==DirectoryType.JSON){
-                                value=new JSON(model.getText().toString()).json_object;
-                            }else{
-                                value=model.getText();
-                            }
-                        }else{
-                            value="";
-                        }
-                    }else*/
-                    if(annot_key.type()==FieldType.LIST){
-                        List<Object> values=new ArrayList<>();
-                        List<Object> items=(List)value;
-                        if(items!=null){
-                            for(Object item:items){
-                                model.aim(item);
-                                if(this.type==DirectoryType.JSON){
-                                    values.add(new Gson().fromJson((String)model.getText(),JsonElement.class));
-                                }else{
-                                    values.add(model.getText());
-                                }
-                            }
-                            value=values;
-                        }else{
-                            value="";
-                        }
-                    }else
-                    if(annot_key.type()==FieldType.CLASS){
-                        if(value!=null){
-                            model.aim(value);
-                            if(this.type==DirectoryType.JSON){
-                                value=new JSON(model.getText().toString()).json_object;
-                            }else{
-                                value=model.getText();
-                            }
-                        }else{
-                            value="";
-                        }
-                    }else
-                    if(annot_key.type()==FieldType.ENUM){
-                        value=value==null?"":value.toString();
-                    }else{
-                        if(value==null){
-                            value="";
-                        }else{
-                            value=field.getType().isPrimitive()?field.get(this.instance):String.valueOf(field.get(this.instance));
-                        }
-                    }
-                    this.fields.put(annot_key.value(),value);
+                    this.fields.put(annot_key.value(),Function.assignNotNull(value,""));
                     this.attributes.put(annot_key.value(),field);
                 }
             }
@@ -160,26 +137,28 @@ public class ModelDirectory extends Storage{
         }
     }
     
-    public Object setText(String text){
-        return this._setText(text);
+    private void setText(String text){
+        this._setText(text);
     }
-    public Object setText(){
-        return this._setText(null);
+    private void setText(){
+        this._setText(null);
     }
-    private Object _setText(String _text){
-        this.get();
+    private void _setText(String _text){
         String text=_text==null?this.read():_text;
         if(text==null || text.equals("")){
-            return null;
+            return;
         }
         DataFormat data;
         switch(this.type){
-            case JSON: data=new JSON(text); break;
+            case JSON:{
+                this.instance=new Gson().fromJson(text,this.child_class);
+                return;
+            }
             case ENV: data=new ENV(text); break;
             default: data=null; break;
         }
         if(data==null){
-            return null;
+            return;
         }
         for(Map.Entry<String,Field> entry:this.attributes.entrySet()){
             String key=entry.getKey();
@@ -190,14 +169,12 @@ public class ModelDirectory extends Storage{
                 if(value==null){
                     continue;
                 }
-                if(annot_key.type()==FieldType.CLASS){
+                field.set(this.instance,value);
+                /*if(annot_key.type()==FieldType.CLASS){
                     Class<?> type_class=field.getType();
                     ModelDirectory model=new ModelDirectory();
                     model.aim(type_class.getConstructor().newInstance());
                     value=model.setText(value.toString());
-                    /*for(Field f:value.getClass().getFields()){
-                        System.out.println(f.get(value));
-                    }*/
                     field.set(this.instance,value);
                     continue;
                 }else
@@ -242,7 +219,7 @@ public class ModelDirectory extends Storage{
                     field.set(this.instance,constructor.newInstance(new Gson().fromJson((JsonPrimitive)value,class_type)));
                 }else{
                     field.set(this.instance,constructor.newInstance(value));
-                }
+                }*/
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -259,10 +236,9 @@ public class ModelDirectory extends Storage{
                 ex.printStackTrace();
             }
         }
-        return this.instance;
     }
     
-    private Object getText(){
+    public Object getText(){
         if(this.type==null){
             return null;
         }

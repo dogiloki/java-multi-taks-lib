@@ -51,10 +51,5 @@ public class ENV implements DataFormat{
         }
         return text.substring(0,text.length()-1);
     }
-
-    @Override
-    public Object getValue(String... keys) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
 }

@@ -1,8 +1,9 @@
 package multitaks.dataformat;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import java.util.HashMap;
+import java.util.Map;
 import multitaks.interfaces.DataFormat;
 
 /**
@@ -12,33 +13,16 @@ import multitaks.interfaces.DataFormat;
 
 public class JSON implements DataFormat{
     
-    public String json_string;
-    public JsonElement json_element;
-    public JsonObject json_object;
-    public Gson gson=new Gson();
+    private Map<String,Object> datas=new HashMap<>();
+    private Object instance;
     
     public JSON(String json_string){
-        this.json_string=json_string;
-        this.json_object=this.gson.fromJson(this.json_string, JsonObject.class);
-        this.json_element=this.gson.fromJson(this.json_string, JsonObject.class);
+        this.datas=new Gson().fromJson(json_string,new TypeToken<HashMap<String,Object>>(){}.getType());
     }
     
     @Override
-    public Object getValue(String... keys){
-        Object value=(JsonObject)this.json_object.getAsJsonObject().get(keys[0]);
-        int count=0;
-        for(Object key:keys){
-            if(count!=0){
-                value=new JSON(value.toString()).getValue(key.toString());
-            }
-            count++;
-        }
-        return value;
-    }
-
-    @Override
-    public Object getValue(String key) {
-        return this.json_element.getAsJsonObject().get(key);
+    public Object getValue(String key){
+        return datas.get(key);
     }
     
 }
