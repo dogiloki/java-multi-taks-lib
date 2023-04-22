@@ -1,4 +1,4 @@
-package database;
+package multitaks.database;
 
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;

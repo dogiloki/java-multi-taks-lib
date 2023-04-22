@@ -1,4 +1,4 @@
-package database;
+package multitaks.database;
 
 import java.util.ArrayList;
 import java.util.List;

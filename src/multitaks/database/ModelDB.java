@@ -1,7 +1,7 @@
-package database;
+package multitaks.database;
 
 import com.google.gson.Gson;
-import database.annotations.Table;
+import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
 import multitaks.GlobalVar;

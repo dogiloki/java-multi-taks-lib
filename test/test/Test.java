@@ -1,7 +1,7 @@
 package test;
 
-import database.Database;
-import database.Record;
+import multitaks.database.Database;
+import multitaks.database.Record;
 import multitaks.directory.ModelDirectory;
 
 /**

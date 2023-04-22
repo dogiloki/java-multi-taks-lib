@@ -1,4 +1,4 @@
-package database.annotations;
+package multitaks.database.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
