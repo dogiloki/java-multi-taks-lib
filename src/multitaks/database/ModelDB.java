@@ -1,6 +1,8 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
 import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
@@ -67,6 +69,24 @@ public class ModelDB{
         }catch(Exception ex){
             return null;
         }
+    }
+    
+    public static List<Object> all(Class clazz){
+        List<Object> objects=new ArrayList<>();
+        try{
+            Object instance=clazz.newInstance();
+            Table annot_table=instance.getClass().getAnnotation(Table.class);
+            if(annot_table==null){
+                return null;
+            }
+            Collection collection=ModelDB.getConnection().collection(annot_table.src());
+            for(Record record:collection.all()){
+                objects.add(new Gson().fromJson(record.getJson(),instance.getClass()));
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();;
+        }
+        return objects;
     }
     
 }
