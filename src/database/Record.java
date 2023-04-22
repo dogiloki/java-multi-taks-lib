@@ -3,7 +3,6 @@ package database;
 import java.util.HashMap;
 import java.util.Map;
 import multitaks.annotations.directory.Directory;
-import multitaks.directory.ModelDirectory;
 import multitaks.directory.Storage;
 import multitaks.enums.DirectoryType;
 
@@ -28,11 +27,6 @@ public class Record extends Storage{
     
     public Record(Map<String,Object> fields){
         this.fields=fields;
-    }
-    
-    public Record(String key, Object value){
-        this.fields.put(this.field_id,ObjectId.generate());
-        this.add(key,value);
     }
     
     public Map<String,Object> getFields(){
@@ -60,7 +54,7 @@ public class Record extends Storage{
         return (String)this.fields.get(key);
     }
     
-    public Record add(String key, Object value){
+    public Record set(String key, Object value){
         this.fields.put(key,value);
         return this;
     }

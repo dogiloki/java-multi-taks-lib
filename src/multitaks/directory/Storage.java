@@ -48,6 +48,10 @@ public class Storage{
         this.src=src;
     }
     
+    public String getSrc(){
+        return this.src;
+    }
+    
     public boolean open(boolean append){
         if(this.type!=null && this.type!=DirectoryType.FOLDER && this.src!=null){
             try{

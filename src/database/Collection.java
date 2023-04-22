@@ -36,25 +36,44 @@ public class Collection extends Storage{
         }
     }
     
-    public List<Record> find(Record record){
+    public boolean update(Record record_find, Record record_operations){
+        record_find=this.find(record_find);
+        if(record_find==null){
+            return false;
+        }
+        for(Map.Entry<String,Object> entry:record_operations.getFields().entrySet()){
+            if(entry.getKey().equals(record_find.field_id)){
+                continue;
+            }
+            record_find.set(entry.getKey(),entry.getValue());
+        }
+        return record_find.write(new Gson().toJson(record_find.getFields()));
+    }
+    
+    public Record find(Record record){
         super.aim(this.src+"/"+this.name,DirectoryType.FOLDER);
-        List<Record> records=new ArrayList<>();
+        Record record_found=null;
         for(String file:this.listFiles()){
             ModelDirectory model=new ModelDirectory();
             model.aim(this.src+"/"+file,DirectoryType.FILE);
             String json=model.read();
             Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
-            record.getFields((key,value)->{
+            int count_found=0;
+            for(Map.Entry<String,Object> entry_find:record.getFields().entrySet()){
                 for(Map.Entry<String,Object> entry:fields.entrySet()){
-                    if(entry.getKey().equals(key) && entry.getValue().equals(value)){
-                        Record record_found=new Record(fields);
-                        record_found.aim(this.src+"/"+file,DirectoryType.FILE);
-                        records.add(record_found);
+                    if(entry_find.getKey().equals(entry.getKey()) && entry_find.getValue().equals(entry.getValue())){
+                        count_found++;
                     }
                 }
-            });
+                if(count_found!=record.getFields().size()){
+                    continue;
+                }
+                record_found=new Record(fields);
+                record_found.aim(this.src+"/"+file,DirectoryType.FILE);
+                break;
+            }
         }
-        return records;
+        return record_found;
     }
     
     public List<Record> all(){
