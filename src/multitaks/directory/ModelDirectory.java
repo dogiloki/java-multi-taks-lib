@@ -113,7 +113,6 @@ public class ModelDirectory extends Storage{
     
     public void setFields(Map<String,Object> fields){
         this.fields=fields;
-        this.setText();
     }
     
     private void get(){
@@ -138,10 +137,10 @@ public class ModelDirectory extends Storage{
         }
     }
     
-    private void setText(String text){
+    public void setText(String text){
         this._setText(text);
     }
-    private void setText(){
+    public void setText(){
         this._setText(null);
     }
     private void _setText(String _text){

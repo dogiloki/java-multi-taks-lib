@@ -1,7 +1,8 @@
 package test;
 
-import database.ModelDB;
+import database.Database;
 import database.Record;
+import multitaks.directory.ModelDirectory;
 
 /**
  *
@@ -11,7 +12,12 @@ import database.Record;
 public class Test{
     
     public Test(){
-        ModelDB db=new ModelDB("db");
+        //Database db=new Database("db");
+        Persona per=(Persona)Persona.aim("personaa.json",Persona.class);
+        System.out.println(per.name);
+        System.out.println(per.edad);
+        per.name="dsa";
+        per.save();
     }
     
     public static void main(String[] args){

@@ -12,18 +12,16 @@ import multitaks.enums.DirectoryType;
  */
 
 @Directory(type=DirectoryType.FOLDER)
-public class ModelDB extends ModelDirectory{
+public class Database extends ModelDirectory{
     
     private List<Collection> collections=new ArrayList<>();
     
-    public ModelDB(String src){
+    public Database(String src){
         super.aim(this,src);
     }
     
     public Collection collection(String name){
-        Collection collection=new Collection(name,this.src);
-        this.collections.add(collection);
-        return collection;
+        return new Collection(this.src+"/"+name);
     }
     
 }

@@ -1,5 +1,6 @@
 package database;
 
+import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 import multitaks.annotations.directory.Directory;
@@ -39,6 +40,10 @@ public class Record extends Storage{
             action.execute(entry.getKey(),entry.getValue());
             index++;
         }
+    }
+    
+    public String getJson(){
+        return new Gson().toJson(this.getFields());
     }
     
     public String getId(){

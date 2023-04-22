@@ -17,28 +17,26 @@ import multitaks.enums.DirectoryType;
 
 public class Collection extends Storage{
     
-    private String name;
-    
     public Collection(){
         
     }
     
-    public Collection(String name, String src){
-        this.name=name;
+    public Collection(String src){
         this.src=src;
-        Storage.exists(src+"/"+name,DirectoryType.FOLDER,true);
+        Storage.exists(src,DirectoryType.FOLDER,true);
     }
     
-    public void insert(Record... records){
+    public boolean insert(Record... records){
         for(Record record:records){
-            super.aim(this.src+"/"+this.name+"/"+record.getId()+".json",DirectoryType.FILE);
+            super.aim(this.src+"/"+record.getId()+".json",DirectoryType.FILE);
             this.write(new Gson().toJson(record.getFields()));
         }
+        return true;
     }
     
     public boolean update(Record record_find, Record record_operations){
         record_find=this.find(record_find);
-        if(record_find==null){
+        if(record_find==null || record_operations==null){
             return false;
         }
         for(Map.Entry<String,Object> entry:record_operations.getFields().entrySet()){
@@ -51,7 +49,7 @@ public class Collection extends Storage{
     }
     
     public Record find(Record record){
-        super.aim(this.src+"/"+this.name,DirectoryType.FOLDER);
+        super.aim(this.src,DirectoryType.FOLDER);
         Record record_found=null;
         for(String file:this.listFiles()){
             ModelDirectory model=new ModelDirectory();
@@ -77,7 +75,7 @@ public class Collection extends Storage{
     }
     
     public List<Record> all(){
-        super.aim(this.src+"/"+this.name,DirectoryType.FOLDER);
+        super.aim(this.src,DirectoryType.FOLDER);
         List<Record> records=new ArrayList<>();
         for(String file:this.listFiles()){
             ModelDirectory model=new ModelDirectory();
