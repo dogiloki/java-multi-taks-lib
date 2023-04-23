@@ -59,7 +59,7 @@ public class ModelDB extends Record{
         return status;
     }
     
-    public <T> T find(Record record){
+    public Cursor find(Record record){
         try{
             Object instance=this.getInstance();
             Table annot_table=instance.getClass().getAnnotation(Table.class);
@@ -67,10 +67,8 @@ public class ModelDB extends Record{
                 return null;
             }
             Collection collection=this.getConnection().collection(annot_table.src());
-            Record record_find=collection.find(record).first();
-            Object obj=new Gson().fromJson(record_find.getJson(),instance.getClass());
-            obj.getClass().getMethod("setFields",Map.class).invoke(obj,record_find.getFields());
-            return (T)null;
+            RecordList records_find=collection.find(record);
+            return new Cursor(records_find,instance.getClass());
         }catch(Exception ex){
             return null;
         }
@@ -85,7 +83,27 @@ public class ModelDB extends Record{
             }
             Collection collection=this.getCollection();
             RecordList records=collection.all();
-            return new Cursor(records.iterator(),instance.getClass());
+            return new Cursor(records,instance.getClass());
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static Cursor all(Class<?> clazz){
+        try{
+            Object instance=clazz.newInstance();
+            return (Cursor)instance.getClass().getMethod("all").invoke(instance);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static <T> T find(Class<?> clazz, Record record){
+        try{
+            Object instance=clazz.newInstance();
+            return (T)instance.getClass().getMethod("find",Record.class).invoke(instance,record);
         }catch(Exception ex){
             ex.printStackTrace();
         }
