@@ -2,9 +2,8 @@ package multitaks.database;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import multitaks.directory.DirectoryList;
 import multitaks.directory.ModelDirectory;
@@ -16,13 +15,18 @@ import multitaks.enums.DirectoryType;
  * @author dogi_
  */
 
-public class Collection extends Storage{
+public class Collection<T> extends Storage{
     
     public Collection(){
         
     }
     
     public Collection(String src){
+        this.src=src;
+        Storage.exists(src,DirectoryType.FOLDER,true);
+    }
+    
+    public void aim(String src){
         this.src=src;
         Storage.exists(src,DirectoryType.FOLDER,true);
     }
@@ -53,7 +57,7 @@ public class Collection extends Storage{
         super.aim(this.src,DirectoryType.FOLDER);
         Record record_found=null;
         DirectoryList files=this.listFiles();
-        while(files.hasNext()){
+        out_files:while(files.hasNext()){
             String file=files.next().getFileName().toString();
             ModelDirectory model=new ModelDirectory();
             model.aim(this.src+"/"+file,DirectoryType.FILE);
@@ -71,27 +75,16 @@ public class Collection extends Storage{
                 }
                 record_found=new Record(fields);
                 record_found.aim(this.src+"/"+file,DirectoryType.FILE);
-                break;
+                break out_files;
             }
         }
         return record_found;
     }
     
-    public List<Record> all(){
+    public RecordList all(){
         super.aim(this.src,DirectoryType.FOLDER);
-        List<Record> records=new ArrayList<>();
         DirectoryList files=this.listFiles();
-        while(files.hasNext()){
-            String file=files.next().getFileName().toString();
-            ModelDirectory model=new ModelDirectory();
-            model.aim(this.src+"/"+file,DirectoryType.FILE);
-            String json=model.read();
-            Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
-            Record record_found=new Record(fields);
-            record_found.aim(this.src+"/"+file,DirectoryType.FILE);
-            records.add(record_found);
-        }
-        return records;
+        return new RecordList(files.iterator());
     }
     
 }

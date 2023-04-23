@@ -40,6 +40,10 @@ public class DirectoryList{
         }
     }
     
+    public Iterator<Path> iterator(){
+        return this.iterator;
+    }
+    
     public boolean hasNext(){
         if(!this.iterator.hasNext()){
             try{

@@ -1,8 +1,8 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.ParameterizedType;
+import java.util.Iterator;
 import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
@@ -16,18 +16,17 @@ import multitaks.directory.ModelDirectory;
 
 public class ModelDB{
     
-    private static Database db=null;
+    private Database db=null;
     
     public ModelDB(){
-        
+        if(this.db==null){
+            String src=Function.assign((String)GlobalVar.group("db").get("name"),"db");
+            this.db=new Database(src);
+        }
     }
     
-    public static Database getConnection(){
-        if(ModelDB.db==null){
-            String src=Function.assign((String)GlobalVar.group("db").get("name"),"db");
-            ModelDB.db=new Database(src);
-        }
-        return ModelDB.db;
+    public Database getConnection(){
+        return this.db;
     }
     
     public Object getInstance(){
@@ -39,7 +38,7 @@ public class ModelDB{
         if(annot_table==null){
             return null;
         }
-        return ModelDB.getConnection().collection(annot_table.src());
+        return this.getConnection().collection(annot_table.src());
     }
     
     public boolean save(){
@@ -56,37 +55,45 @@ public class ModelDB{
         }
     }
     
-    public static Object find(Record record, Class clazz){
+    public <T> T find(Record record){
         try{
-            Object instance=clazz.newInstance();
+            Object instance=this.getInstance();
             Table annot_table=instance.getClass().getAnnotation(Table.class);
             if(annot_table==null){
                 return null;
             }
-            Collection collection=ModelDB.getConnection().collection(annot_table.src());
+            Collection collection=this.getConnection().collection(annot_table.src());
             Record record_find=collection.find(record);
-            return new Gson().fromJson(record_find.getJson(),instance.getClass());
+            return (T)new Gson().fromJson(record_find.getJson(),instance.getClass());
         }catch(Exception ex){
             return null;
         }
     }
     
-    public static List<Object> all(Class clazz){
-        List<Object> objects=new ArrayList<>();
+    public Cursor all(){
         try{
-            Object instance=clazz.newInstance();
+            Object instance=this.getInstance();
             Table annot_table=instance.getClass().getAnnotation(Table.class);
             if(annot_table==null){
                 return null;
             }
-            Collection collection=ModelDB.getConnection().collection(annot_table.src());
-            for(Record record:collection.all()){
-                objects.add(new Gson().fromJson(record.getJson(),instance.getClass()));
-            }
+            Collection collection=this.getCollection();
+            RecordList records=collection.all();
+            return new Cursor(records.iterator(),instance.getClass());
         }catch(Exception ex){
-            ex.printStackTrace();;
+            ex.printStackTrace();
         }
-        return objects;
+        return new Cursor(new Iterator(){
+            @Override
+            public boolean hasNext(){
+                return false;
+            }
+
+            @Override
+            public Object next(){
+                return null;
+            }
+        },null);
     }
     
 }
