@@ -40,11 +40,17 @@ public class Cursor<T>{
     }
     
     public T next(){
-        String src=this.iterator.next().toString();
-        ModelDirectory model=new ModelDirectory();
-        model.aim(src,DirectoryType.FILE);
-        String json=model.read();
-        this.current=new Gson().fromJson(json,this.clazz);
+        try{
+            String src=this.iterator.next().toString();
+            ModelDirectory model=new ModelDirectory();
+            model.aim(src,DirectoryType.FILE);
+            String json=model.read();
+            this.current=new Gson().fromJson(json,this.clazz);
+            this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,model.getFields());
+            this.current.getClass().getMethod("aim",String.class,DirectoryType.class).invoke(this.current,model.getSrc(),model.getType());
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         return this.current;
     }
     
