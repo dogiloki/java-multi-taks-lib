@@ -12,14 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import multitaks.directory.DirectoryList;
 import multitaks.directory.Storage;
 
 /**
@@ -166,8 +161,9 @@ public class StorageOld{
             directory_new.mkdir();
         }
         try{
-            String[] directories=Storage.listDirectory(path_old);
-            for(String directory:directories){
+            DirectoryList directories=Storage.listDirectory(path_old);
+            while(directories.hasNext()){
+                String directory=directories.next().getFileName().toString();
                 if(Storage.isFolder(path_old+"/"+directory)){
                     StorageOld._copyDirectory(path_old+"/"+directory, path_new+"/"+directory,context);
                 }else

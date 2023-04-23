@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -153,13 +152,13 @@ public class Storage{
         return Storage.getSize(this.src);
     }
     
-    public String[] listDirectory(){
+    public DirectoryList listDirectory(){
         return Storage.listDirectory(this.src);
     }
-    public String[] listFolders(){
+    public DirectoryList listFolders(){
         return Storage.listDirectory(this.src,DirectoryType.FOLDER);
     }
-    public String[] listFiles(){
+    public DirectoryList listFiles(){
         return Storage.listDirectory(this.src,DirectoryType.FILE);
     }
     
@@ -209,8 +208,9 @@ public class Storage{
     private static long _getSize(String path, long size){
         File directory=new File(path);
         if(directory.isDirectory()){
-            String[] directories=Storage.listDirectory(path);
-            for(String path_:directories){
+            DirectoryList directories=Storage.listDirectory(path);
+            while(directories.hasNext()){
+                String path_=directories.next().getFileName().toString();
                 File direct=new File(path+"/"+path_);
                 if(direct.isDirectory()){
                     size=Storage._getSize(direct.getPath(), size);
@@ -229,48 +229,26 @@ public class Storage{
     }
     
     // Enlistar archivos y/o carpetas
-    public static String[] listDirectory(String path){
+    public static DirectoryList listDirectory(String path){
         return Storage._listDirectory(path,DirectoryType.ALL,null);
     }
-    public static String[] listDirectory(String path, DirectoryType type){
+    public static DirectoryList listDirectory(String path, DirectoryType type){
         return Storage._listDirectory(path,type,null);
     }
-    public static String[] listDirectory(String path, String[] exceptions){
+    public static DirectoryList listDirectory(String path, String[] exceptions){
         return Storage._listDirectory(path,DirectoryType.ALL,exceptions);
     }
-    public static String[] listDirectory(String path, DirectoryType type, String[] exceptions){
+    public static DirectoryList listDirectory(String path, DirectoryType type, String[] exceptions){
         return Storage._listDirectory(path,type,exceptions);
     }
-    public static String[] listDirectory(String path, String[] exceptions, DirectoryType type){
+    public static DirectoryList listDirectory(String path, String[] exceptions, DirectoryType type){
         return Storage._listDirectory(path,type,exceptions);
     }
-    private static String[] _listDirectory(String path, DirectoryType type, String[] exceptions){
+    private static DirectoryList _listDirectory(String path, DirectoryType type, String[] exceptions){
         if(exceptions==null){
             exceptions=new String[0];
         }
-        File file=new File(path);
-        String[] ficheros_temp=file.list();
-        ArrayList<String> ficheros=new ArrayList<>();
-        if(ficheros_temp!=null){
-            for(String fichero:ficheros_temp){
-                File file_temp=new File(path+"/"+fichero);
-                for(int a=0; a<exceptions.length; a++){
-                    fichero=fichero.replaceAll(exceptions[a],"");
-                }
-                if(type==DirectoryType.FOLDER || type==DirectoryType.ALL){
-                    if(file_temp.isDirectory()){
-                        ficheros.add(fichero);
-                    }
-                }
-                if(type==DirectoryType.FILE || type==DirectoryType.ALL){
-                    if(file_temp.isFile()){
-                        ficheros.add(fichero);
-                    }
-                }
-            }
-            return ficheros.toArray(new String[ficheros.size()]);
-        }
-        return null;
+        return new DirectoryList(path,type);
     }
     
     // Comprimir ficheros
@@ -287,7 +265,9 @@ public class Storage{
     }
     private static ZipOutputStream compress(String path, ZipOutputStream zos, String path_dir){
         try{
-            for(String f:Storage.listDirectory(path)){
+            DirectoryList directories=Storage.listDirectory(path);
+            while(directories.hasNext()){
+                String f=directories.next().getFileName().toString();
                 String path_zip=path+"/"+f;
                 if(Storage.isFolder(path_zip)){
                     zos=Storage.compress(path_zip,zos,(path_dir.equals("")?"":(path_dir+"\\"))+f);
@@ -464,8 +444,9 @@ public class Storage{
         try{
             System.out.println(path);
             File direct;
-            String[] directories=Storage.listDirectory(path);
-            for(String directory:directories){
+            DirectoryList directories=Storage.listDirectory(path);
+            while(directories.hasNext()){
+                String directory=directories.next().getFileName().toString();
                 direct=new File(path+"/"+directory);
                 if(direct.isFile()){
                     direct.delete();

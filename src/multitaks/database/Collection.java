@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import multitaks.directory.DirectoryList;
 import multitaks.directory.ModelDirectory;
 import multitaks.directory.Storage;
 import multitaks.enums.DirectoryType;
@@ -51,7 +52,9 @@ public class Collection extends Storage{
     public Record find(Record record){
         super.aim(this.src,DirectoryType.FOLDER);
         Record record_found=null;
-        for(String file:this.listFiles()){
+        DirectoryList files=this.listFiles();
+        while(files.hasNext()){
+            String file=files.next().getFileName().toString();
             ModelDirectory model=new ModelDirectory();
             model.aim(this.src+"/"+file,DirectoryType.FILE);
             String json=model.read();
@@ -77,7 +80,9 @@ public class Collection extends Storage{
     public List<Record> all(){
         super.aim(this.src,DirectoryType.FOLDER);
         List<Record> records=new ArrayList<>();
-        for(String file:this.listFiles()){
+        DirectoryList files=this.listFiles();
+        while(files.hasNext()){
+            String file=files.next().getFileName().toString();
             ModelDirectory model=new ModelDirectory();
             model.aim(this.src+"/"+file,DirectoryType.FILE);
             String json=model.read();
