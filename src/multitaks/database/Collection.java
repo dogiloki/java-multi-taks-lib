@@ -49,7 +49,7 @@ public class Collection<T> extends Storage{
             }
             record_find.set(entry.getKey(),entry.getValue());
         }
-        return this.writeLine(new Gson().toJson(record_find.getFields()),record_find.getLineNumber(),true);
+        return this.writeLine(new Gson().toJson(record_find.getFields()),record_find.getLineNumber());
     }
     
     public boolean delete(Record record_find){
@@ -57,7 +57,7 @@ public class Collection<T> extends Storage{
         if(record_find==null){
             return false;
         }
-        return this.writeLine("",record_find.getLineNumber(),false);
+        return this.writeLine("",record_find.getLineNumber());
     }
     
     public RecordList find(Record record){

@@ -17,13 +17,13 @@ public class Record{
     
     public String field_id="_id";
     private Map<String,Object> fields=new HashMap<>();
-    private int line_number=0;
+    private long line_number=0;
     
     public Record(){
         
     }
     
-    public Record(int number){
+    public Record(long number){
         this.setLineNumber(number);
     }
     
@@ -31,16 +31,16 @@ public class Record{
         this.fields=fields;
     }
     
-    public Record(Map<String,Object> fields, int number){
+    public Record(Map<String,Object> fields, long number){
         this.fields=fields;
         this.setLineNumber(number);
     }
     
-    public void setLineNumber(int number){
+    public void setLineNumber(long number){
         this.line_number=number;
     }
     
-    public int getLineNumber(){
+    public long getLineNumber(){
         return this.line_number;
     }
     

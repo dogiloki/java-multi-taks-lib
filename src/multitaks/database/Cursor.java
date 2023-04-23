@@ -44,6 +44,7 @@ public class Cursor<T>{
         return true;
     }
     
+    // Pendiente a optimizar
     public T next(){
         String json;
         if(this.record_list==null){

@@ -16,7 +16,7 @@ public class RecordList{
     private final Scanner iterator;
     private Record current;
     private Record record_find;
-    private int line_number=0;
+    private long line_number=0;
     
     public RecordList(Scanner iterator, Record record){
         this.iterator=iterator;

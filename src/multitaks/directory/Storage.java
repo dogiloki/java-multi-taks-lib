@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import multitaks.Function;
 import multitaks.enums.DirectoryType;
 
 /**
@@ -111,21 +113,15 @@ public class Storage{
         }
     }
     
-    public boolean writeLine(Object text, int number, boolean write){
+    public boolean writeLine(Object text, long number){
         try{
-            if(!this.open(true)){
-                return false;
-            }
+            RandomAccessFile file=new RandomAccessFile(this.src,"rw");
             Scanner reader=this.readIterator();
             int current_number=1;
             List<String> lines=new ArrayList<>();
             while(reader.hasNextLine()){
                 String line=reader.nextLine();
-                if(write){
-                    line=(current_number==number?(String)text:line);
-                }else{
-                    line=(current_number==number?null:line);
-                }
+                line=(current_number==number?Function.assign((String)text,""):line);
                 if(line!=null){
                     lines.add(line);
                 }
