@@ -1,12 +1,13 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
-import java.util.Iterator;
+import com.google.gson.reflect.TypeToken;
+import java.util.HashMap;
 import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
 import multitaks.GlobalVar;
-import multitaks.directory.ModelDirectory;
+import multitaks.dataformat.JSON;
 
 /**
  *
@@ -43,11 +44,10 @@ public class ModelDB extends Record{
     public boolean save(){
         Collection collection=this.getCollection();
         Object instance=this.getInstance();
-        ModelDirectory model=new ModelDirectory(instance);
+        String json=JSON.builder().toJson(instance);
+        Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
         Record record=new Record();
-        for(Map.Entry<String,Object> entry:model.getFields().entrySet()){
-            record.set(entry.getKey(),entry.getValue());
-        }
+        record.setFields(fields);
         boolean status;
         if(collection.update(new Record().setId(record.getId()),record)){
             status=true;
