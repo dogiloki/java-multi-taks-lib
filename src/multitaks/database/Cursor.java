@@ -1,10 +1,7 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import multitaks.directory.ModelDirectory;
