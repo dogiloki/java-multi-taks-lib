@@ -8,7 +8,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -108,6 +111,41 @@ public class Storage{
         }
     }
     
+    public boolean writeLine(Object text, int number, boolean write){
+        try{
+            if(!this.open(true)){
+                return false;
+            }
+            Scanner reader=this.readIterator();
+            int current_number=1;
+            List<String> lines=new ArrayList<>();
+            while(reader.hasNextLine()){
+                String line=reader.nextLine();
+                if(write){
+                    line=(current_number==number?(String)text:line);
+                }else{
+                    line=(current_number==number?null:line);
+                }
+                if(line!=null){
+                    lines.add(line);
+                }
+                current_number++;
+            }
+            this.close();
+            this.clean();
+            if(!this.open(true)){
+                return false;
+            }
+            for(String line:lines){
+                this.bw.write(line+"\n");
+            }
+            this.close();
+            return true;
+        }catch(Exception ex){
+            return false;
+        }
+    }
+    
     public String read(){
         try{
             if(!this.open(true)){
@@ -123,6 +161,20 @@ public class Storage{
         }catch(IOException ex){
             return null;
         }
+    }
+    
+    public Scanner readIterator(){
+        Scanner in=new Scanner(System.in);
+        in.useDelimiter("\n");
+        if(!this.open(true)){
+            return in;
+        }
+        try{
+            in=new Scanner(this.file);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return in;
     }
     
     public boolean close(){

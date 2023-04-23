@@ -3,17 +3,13 @@ package multitaks.database;
 import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
-import multitaks.annotations.directory.Directory;
-import multitaks.directory.Storage;
-import multitaks.enums.DirectoryType;
 
 /**
  *
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.JSON)
-public class Record extends Storage{
+public class Record{
     
     public interface getField{
         public void execute(String key, Object value);
@@ -21,13 +17,31 @@ public class Record extends Storage{
     
     public String field_id="_id";
     private Map<String,Object> fields=new HashMap<>();
+    private int line_number=0;
     
     public Record(){
-        this.fields.put(this.field_id,ObjectId.generate());
+        
+    }
+    
+    public Record(int number){
+        this.setLineNumber(number);
     }
     
     public Record(Map<String,Object> fields){
         this.fields=fields;
+    }
+    
+    public Record(Map<String,Object> fields, int number){
+        this.fields=fields;
+        this.setLineNumber(number);
+    }
+    
+    public void setLineNumber(int number){
+        this.line_number=number;
+    }
+    
+    public int getLineNumber(){
+        return this.line_number;
     }
     
     public Map<String,Object> getFields(){
@@ -57,6 +71,10 @@ public class Record extends Storage{
     public Record setId(Object value){
         this.fields.put(this.field_id,value);
         return this;
+    }
+    
+    public void generateId(){
+        this.fields.put(this.field_id,ObjectId.generate());
     }
     
     public String get(String key){

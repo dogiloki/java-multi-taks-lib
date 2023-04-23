@@ -2,10 +2,7 @@ package test;
 
 import multitaks.database.Database;
 import multitaks.database.Record;
-import multitaks.directory.DirectoryList;
-import multitaks.directory.ModelDirectory;
-import multitaks.directory.Storage;
-import multitaks.enums.DirectoryType;
+import multitaks.database.RecordList;
 
 /**
  *
@@ -15,11 +12,10 @@ import multitaks.enums.DirectoryType;
 public class Test{
     
     public Test(){
-        Storage storage=new Storage("E:\\Escritorio\\client\\libraries",DirectoryType.FOLDER);
-        DirectoryList lista=storage.listDirectory();
-        while(lista.hasNext()){
-            System.out.println(lista.next().getFileName().toString());
-        }
+        Database db=new Database("db");
+        //db.collection("personas").insert(new Record().set("name","Julio").set("surname","Villanueva"));
+        db.collection("personas").update(new Record().setId("1c78e0dda75e3fbea6df8aca482a3fec3746c59d017cfcf3c71f425b4628e45"),new Record().set("name","Cambio de nombre"));
+        //db.collection("personas").delete(new Record().setId("d4f8b651c3e2112248276da81d98f2dda4c2585fdc88ca1bee6b7aa8773240"));
     }
     
     public static void main(String[] args){

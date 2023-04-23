@@ -56,7 +56,6 @@ public class ModelDB extends Record{
             status=collection.insert(record);
         }
         this.setFields(record.getFields());
-        this.aim(collection.getSrc(),collection.getType());
         return status;
     }
     
@@ -68,11 +67,8 @@ public class ModelDB extends Record{
                 return null;
             }
             Collection collection=this.getConnection().collection(annot_table.src());
-            Record record_find=collection.find(record);
-            Object obj=new Gson().fromJson(record_find.getJson(),instance.getClass());
-            obj.getClass().getMethod("setFields",Map.class).invoke(obj,record_find.getFields());
-            obj.getClass().getMethod("aim",String.class,DirectoryType.class).invoke(obj,record_find.getSrc(),record_find.getType());
-            return (T)obj;
+            Record record_find=collection.find(record).first();
+            return (T)new Gson().fromJson(record_find.getJson(),instance.getClass());
         }catch(Exception ex){
             return null;
         }
