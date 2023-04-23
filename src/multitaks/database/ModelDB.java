@@ -7,7 +7,6 @@ import java.util.Map;
 import multitaks.Function;
 import multitaks.GlobalVar;
 import multitaks.directory.ModelDirectory;
-import multitaks.enums.DirectoryType;
 
 /**
  *
@@ -53,6 +52,7 @@ public class ModelDB extends Record{
         if(collection.update(new Record().setId(record.getId()),record)){
             status=true;
         }else{
+            record.generateId();
             status=collection.insert(record);
         }
         this.setFields(record.getFields());
@@ -68,7 +68,9 @@ public class ModelDB extends Record{
             }
             Collection collection=this.getConnection().collection(annot_table.src());
             Record record_find=collection.find(record).first();
-            return (T)new Gson().fromJson(record_find.getJson(),instance.getClass());
+            Object obj=new Gson().fromJson(record_find.getJson(),instance.getClass());
+            obj.getClass().getMethod("setFields",Map.class).invoke(obj,record_find.getFields());
+            return (T)null;
         }catch(Exception ex){
             return null;
         }
@@ -87,17 +89,17 @@ public class ModelDB extends Record{
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        return new Cursor(new Iterator(){
-            @Override
-            public boolean hasNext(){
-                return false;
-            }
-
-            @Override
-            public Object next(){
-                return null;
-            }
-        },null);
+        return null;
+    }
+    
+    public boolean delete(){
+        Object instance=this.getInstance();
+        Table annot_table=instance.getClass().getAnnotation(Table.class);
+        if(annot_table==null){
+            return false;
+        }
+        Collection collection=this.getConnection().collection(annot_table.src());
+        return collection.delete(new Record().setId(this.getId()));
     }
     
 }

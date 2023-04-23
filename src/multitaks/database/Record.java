@@ -73,8 +73,9 @@ public class Record{
         return this;
     }
     
-    public void generateId(){
+    public Record generateId(){
         this.fields.put(this.field_id,ObjectId.generate());
+        return this;
     }
     
     public String get(String key){

@@ -1,9 +1,12 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Scanner;
 import multitaks.directory.ModelDirectory;
 import multitaks.enums.DirectoryType;
 
@@ -14,7 +17,7 @@ import multitaks.enums.DirectoryType;
 
 public class Cursor<T>{
     
-    private Iterator<Path> iterator;
+    private Scanner iterator;
     private Class<T> clazz;
     private T current;
     
@@ -23,7 +26,7 @@ public class Cursor<T>{
         this.clazz=null;
     }
     
-    public Cursor(Iterator<Path> iterator, Class<T> clazz){
+    public Cursor(Scanner iterator, Class<T> clazz){
         this.iterator=iterator;
         //this.clazz=(Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         this.clazz=clazz;
@@ -38,13 +41,10 @@ public class Cursor<T>{
     
     public T next(){
         try{
-            String src=this.iterator.next().toString();
-            ModelDirectory model=new ModelDirectory();
-            model.aim(src,DirectoryType.FILE);
-            String json=model.read();
+            String json=this.iterator.nextLine();
+            Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
             this.current=new Gson().fromJson(json,this.clazz);
-            this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,model.getFields());
-            this.current.getClass().getMethod("aim",String.class,DirectoryType.class).invoke(this.current,model.getSrc(),model.getType());
+            this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,fields);
         }catch(Exception ex){
             ex.printStackTrace();
         }

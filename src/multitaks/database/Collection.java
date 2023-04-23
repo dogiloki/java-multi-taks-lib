@@ -1,13 +1,8 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
-import multitaks.directory.DirectoryList;
-import multitaks.directory.ModelDirectory;
 import multitaks.directory.Storage;
 import multitaks.enums.DirectoryType;
 

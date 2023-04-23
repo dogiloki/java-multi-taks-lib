@@ -28,7 +28,7 @@ public class RecordList{
         this.iterator=iterator;
     }
     
-    public Iterator<String> iterator(){
+    public Scanner iterator(){
         return this.iterator;
     }
     
@@ -42,7 +42,7 @@ public class RecordList{
     public Record next(){
         this.line_number++;
         if(!this.hasNext()){
-            return new Record();
+            return null;
         }
         this.current=null;
         String json=this.iterator.nextLine();
@@ -54,6 +54,9 @@ public class RecordList{
             int count_found=0;
             for(Map.Entry<String,Object> entry_find:this.record_find.getFields().entrySet()){
                 for(Map.Entry<String,Object> entry:fields.entrySet()){
+                    if(entry_find.getValue()==null || entry.getValue()==null){
+                        continue;
+                    }
                     if(entry_find.getKey().equals(entry.getKey()) && entry_find.getValue().equals(entry.getValue())){
                         count_found++;
                     }
@@ -70,7 +73,7 @@ public class RecordList{
         this.current=null;
         Record record=this.next();
         if(record==null){
-            return new Record();
+            return null;
         }
         String json=record.getJson();
         Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
