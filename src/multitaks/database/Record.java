@@ -42,6 +42,10 @@ public class Record extends Storage{
         }
     }
     
+    public void setFields(Map<String,Object> fields){
+        this.fields=fields;
+    }
+    
     public String getJson(){
         return new Gson().toJson(this.getFields());
     }

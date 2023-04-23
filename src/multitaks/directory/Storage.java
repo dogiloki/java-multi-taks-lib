@@ -51,6 +51,10 @@ public class Storage{
         return this.src;
     }
     
+    public DirectoryType getType(){
+        return this.type;
+    }
+    
     public boolean open(boolean append){
         if(this.type!=null && this.type!=DirectoryType.FOLDER && this.src!=null){
             try{

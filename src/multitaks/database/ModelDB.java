@@ -1,20 +1,20 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
-import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;
 import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
 import multitaks.GlobalVar;
 import multitaks.directory.ModelDirectory;
+import multitaks.enums.DirectoryType;
 
 /**
  *
  * @author dogi_
  */
 
-public class ModelDB{
+public class ModelDB extends Record{
     
     private Database db=null;
     
@@ -43,16 +43,21 @@ public class ModelDB{
     
     public boolean save(){
         Collection collection=this.getCollection();
-        ModelDirectory model=new ModelDirectory(this.getInstance());
+        Object instance=this.getInstance();
+        ModelDirectory model=new ModelDirectory(instance);
         Record record=new Record();
         for(Map.Entry<String,Object> entry:model.getFields().entrySet()){
             record.set(entry.getKey(),entry.getValue());
         }
+        boolean status;
         if(collection.update(new Record().setId(record.getId()),record)){
-            return true;
+            status=true;
         }else{
-            return collection.insert(record);
+            status=collection.insert(record);
         }
+        this.setFields(record.getFields());
+        this.aim(collection.getSrc(),collection.getType());
+        return status;
     }
     
     public <T> T find(Record record){
@@ -64,7 +69,10 @@ public class ModelDB{
             }
             Collection collection=this.getConnection().collection(annot_table.src());
             Record record_find=collection.find(record);
-            return (T)new Gson().fromJson(record_find.getJson(),instance.getClass());
+            Object obj=new Gson().fromJson(record_find.getJson(),instance.getClass());
+            obj.getClass().getMethod("setFields",Map.class).invoke(obj,record_find.getFields());
+            obj.getClass().getMethod("aim",String.class,DirectoryType.class).invoke(obj,record_find.getSrc(),record_find.getType());
+            return (T)obj;
         }catch(Exception ex){
             return null;
         }
