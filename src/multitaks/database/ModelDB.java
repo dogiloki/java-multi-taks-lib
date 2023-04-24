@@ -3,11 +3,11 @@ package multitaks.database;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
-import multitaks.database.annotations.Table;
 import java.util.Map;
 import multitaks.Function;
 import multitaks.GlobalVar;
 import multitaks.dataformat.JSON;
+import multitaks.database.annotations.Collect;
 
 /**
  *
@@ -34,7 +34,7 @@ public class ModelDB extends Record{
     }
     
     public Collection getCollection(){
-        Table annot_table=this.getInstance().getClass().getAnnotation(Table.class);
+        Collect annot_table=this.getInstance().getClass().getAnnotation(Collect.class);
         if(annot_table==null){
             return null;
         }
@@ -62,7 +62,7 @@ public class ModelDB extends Record{
     public Cursor find(Record record){
         try{
             Object instance=this.getInstance();
-            Table annot_table=instance.getClass().getAnnotation(Table.class);
+            Collect annot_table=instance.getClass().getAnnotation(Collect.class);
             if(annot_table==null){
                 return null;
             }
@@ -77,7 +77,7 @@ public class ModelDB extends Record{
     public Cursor all(){
         try{
             Object instance=this.getInstance();
-            Table annot_table=instance.getClass().getAnnotation(Table.class);
+            Collect annot_table=instance.getClass().getAnnotation(Collect.class);
             if(annot_table==null){
                 return null;
             }
@@ -112,7 +112,7 @@ public class ModelDB extends Record{
     
     public boolean delete(){
         Object instance=this.getInstance();
-        Table annot_table=instance.getClass().getAnnotation(Table.class);
+        Collect annot_table=instance.getClass().getAnnotation(Collect.class);
         if(annot_table==null){
             return false;
         }
