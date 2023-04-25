@@ -1,7 +1,9 @@
 package multitaks.database;
 
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +19,7 @@ public class Record{
     
     public String field_id="_id";
     private Map<String,Object> fields=new HashMap<>();
+    private List<Operation> operations=new ArrayList<>();
     private long line_number=0;
     
     public Record(){
@@ -56,8 +59,9 @@ public class Record{
         }
     }
     
-    public void setFields(Map<String,Object> fields){
+    public Record setFields(Map<String,Object> fields){
         this.fields=fields;
+        return this;
     }
     
     public String getJson(){
@@ -90,6 +94,15 @@ public class Record{
     public Record remove(String key){
         this.fields.remove(key);
         return this;
+    }
+    
+    public Record setOperation(Operation operation){
+        this.operations.add(operation);
+        return this;
+    }
+    
+    public List<Operation> getOperations(){
+        return this.operations;
     }
     
 }

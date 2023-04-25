@@ -46,22 +46,36 @@ public class RecordList{
         this.current=null;
         String json=this.iterator.nextLine();
         Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
+        
         Record record_found=new Record(fields,this.line_number);
-        if(this.record_find==null){
+        if(this.record_find==null || (this.record_find.getOperations().isEmpty() && this.record_find.getFields().isEmpty())){
             this.current=record_found;
         }else{
             int count_found=0;
+            // Convertir los fields en operaciones de igual
             for(Map.Entry<String,Object> entry_find:this.record_find.getFields().entrySet()){
+                this.record_find.setOperation(new Operation(entry_find.getKey(),entry_find.getValue()));
+            }
+            // Validad si las operaciones se cumplen
+            for(Operation operation:this.record_find.getOperations()){
                 for(Map.Entry<String,Object> entry:fields.entrySet()){
-                    if(entry_find.getValue()==null || entry.getValue()==null){
-                        continue;
-                    }
-                    if(entry_find.getKey().equals(entry.getKey()) && entry_find.getValue().equals(entry.getValue())){
-                        count_found++;
+                    switch(operation.operator){
+                        case "=":{
+                            if(entry.getKey().equals(operation.field) && (entry.getValue()==operation.value || entry.getValue().equals(operation.value))){
+                                count_found++;
+                            }
+                            break;
+                        }
+                        case "!=":{
+                            if(entry.getKey().equals(operation.field) && (entry.getValue()!=operation.value || !entry.getValue().equals(operation.value))){
+                                count_found++;
+                            }
+                            break;
+                        }
                     }
                 }
             }
-            if(count_found==this.record_find.getFields().size()){
+            if(count_found==this.record_find.getOperations().size()){
                 this.current=record_found;
             }
         }
