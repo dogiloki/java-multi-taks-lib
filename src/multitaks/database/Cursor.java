@@ -50,11 +50,11 @@ public class Cursor<T>{
         if(this.record_list==null){
             json=this.iterator.nextLine();
         }else{
-            /*Record record=this.record_list.next();
+            Record record=this.record_list.next();
             if(record==null){
-                return (T)this.current;
-            }*/
-            json=this.record_list.next().getJson();
+                return null;
+            }
+            json=record.getJson();
         }
         try{
             
