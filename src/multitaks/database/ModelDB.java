@@ -96,7 +96,7 @@ public class ModelDB extends Record{
     
     public Cursor find(Record record){
         if(this.deleteSave()){
-            record.setOperation(new Operation("delete_at","!=",null));
+            record.setOperation(new Operation("delete_at",null));
         }
         try{
             Object instance=this.getInstance();

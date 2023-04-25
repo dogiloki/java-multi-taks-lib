@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -58,20 +59,19 @@ public class RecordList{
             }
             // Validad si las operaciones se cumplen
             for(Operation operation:this.record_find.getOperations()){
-                for(Map.Entry<String,Object> entry:fields.entrySet()){
-                    switch(operation.operator){
-                        case "=":{
-                            if(entry.getKey().equals(operation.field) && (entry.getValue()==operation.value || entry.getValue().equals(operation.value))){
-                                count_found++;
-                            }
-                            break;
+                Object value=fields.get(operation.field);
+                switch(operation.operator){
+                    case "=":{
+                        if(Objects.equals(value,operation.value)){
+                            count_found++;
                         }
-                        case "!=":{
-                            if(entry.getKey().equals(operation.field) && (entry.getValue()!=operation.value || !entry.getValue().equals(operation.value))){
-                                count_found++;
-                            }
-                            break;
+                        break;
+                    }
+                    case "!=":{
+                        if(!Objects.equals(value,operation.value)){
+                            count_found++;
                         }
+                        break;
                     }
                 }
             }
