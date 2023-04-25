@@ -32,7 +32,7 @@ public class RecordList{
         return this.iterator;
     }
     
-    public boolean hasNext(){
+    private boolean hasNext(){
         if(!this.iterator.hasNextLine()){
             return false;
         }

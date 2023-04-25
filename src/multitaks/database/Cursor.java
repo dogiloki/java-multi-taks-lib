@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import multitaks.dataformat.JSON;
 
 /**
  *
@@ -34,9 +35,9 @@ public class Cursor<T>{
         this.clazz=clazz;
     }
     
-    public boolean hasNext(){
-        if(this.record_list!=null){
-            return this.record_list.hasNext();
+    private boolean hasNext(){
+        if(this.iterator==null){
+            return false;
         }
         if(!this.iterator.hasNext()){
             return false;
@@ -44,22 +45,28 @@ public class Cursor<T>{
         return true;
     }
     
-    // Pendiente a optimizar
     public T next(){
         String json;
+        Record record=null;
+        this.current=null;
         if(this.record_list==null){
             json=this.iterator.nextLine();
         }else{
-            Record record=this.record_list.next();
+            record=this.record_list.next();
             if(record==null){
                 return null;
             }
             json=record.getJson();
         }
         try{
-            
-            Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
-            this.current=new Gson().fromJson(json,this.clazz);
+            Map<String,Object> fields;
+            if(record==null){
+                fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
+            }else{
+                fields=record.getFields();
+            }
+            System.out.println(record);
+            this.current=JSON.builder().fromJson(json,this.clazz);
             this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,fields);
         }catch(Exception ex){
             ex.printStackTrace();
