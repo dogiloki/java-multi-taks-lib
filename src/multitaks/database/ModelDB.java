@@ -20,6 +20,7 @@ public class ModelDB extends Record{
     
     private Database db=null;
     private String date_format="dd-MM-yyyy HH:mm:ss";
+    private boolean with_trashed;
     
     public static Cursor all(Class<?> clazz){
         try{
@@ -48,15 +49,15 @@ public class ModelDB extends Record{
         }
     }
     
-    public Database getConnection(){
+    private Database getConnection(){
         return this.db;
     }
     
-    public Object getInstance(){
+    protected Object getInstance(){
         return this;
     }
     
-    public boolean deleteSave(){
+    protected boolean deleteSave(){
         return false;
     }
     
@@ -94,10 +95,24 @@ public class ModelDB extends Record{
         return status;
     }
     
+    public ModelDB withTrashed(){
+        this.with_trashed=true;
+        return this;
+    }
+    
+    public boolean restore(){
+        Collection collection=this.getCollection();
+        Record record=new Record();
+        record.setId(this.getId());
+        record.set("delete_at",null);
+        return collection.update(new Record().setId(record.getId()),record);
+    }
+    
     public Cursor find(Record record){
-        if(this.deleteSave()){
+        if(this.deleteSave() && !this.with_trashed){
             record.setOperation(new Operation("delete_at",null));
         }
+        this.with_trashed=false;
         try{
             Object instance=this.getInstance();
             Collect annot_table=instance.getClass().getAnnotation(Collect.class);
@@ -114,9 +129,10 @@ public class ModelDB extends Record{
     }
     
     public Cursor all(){
-        if(this.deleteSave()){
+        if(this.deleteSave() && !this.with_trashed){
             return this.find(new Record());
         }
+        this.with_trashed=false;
         try{
             Object instance=this.getInstance();
             Collect annot_table=instance.getClass().getAnnotation(Collect.class);

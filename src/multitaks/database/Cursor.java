@@ -65,7 +65,6 @@ public class Cursor<T>{
             }else{
                 fields=record.getFields();
             }
-            System.out.println(record);
             this.current=JSON.builder().fromJson(json,this.clazz);
             this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,fields);
         }catch(Exception ex){
