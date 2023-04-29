@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import multitaks.directory.Storage;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

@@ -20,7 +20,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import multitaks.Function;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

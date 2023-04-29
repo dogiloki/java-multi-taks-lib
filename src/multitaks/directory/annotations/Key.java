@@ -1,10 +1,10 @@
-package multitaks.annotations.relation;
+package multitaks.directory.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import multitaks.enums.RelationType;
+import multitaks.directory.enums.FieldType;
 
 /**
  *
@@ -13,8 +13,9 @@ import multitaks.enums.RelationType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Relation{
+public @interface Key{
     
-    RelationType type();
+    String value();
+    FieldType type() default(FieldType.DEFAULT);
     
 }

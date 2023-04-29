@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

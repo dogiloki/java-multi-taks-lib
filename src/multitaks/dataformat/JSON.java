@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
-import multitaks.interfaces.DataFormat;
+import multitaks.directory.interfaces.DataFormat;
 
 /**
  *

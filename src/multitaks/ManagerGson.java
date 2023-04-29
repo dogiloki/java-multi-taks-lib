@@ -3,7 +3,7 @@ package multitaks;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import multitaks.directory.Storage;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

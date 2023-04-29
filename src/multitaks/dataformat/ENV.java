@@ -2,7 +2,7 @@ package multitaks.dataformat;
 
 import java.util.Map;
 import java.util.HashMap;
-import multitaks.interfaces.DataFormat;
+import multitaks.directory.interfaces.DataFormat;
 
 /**
  *

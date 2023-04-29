@@ -1,13 +1,10 @@
-package multitaks.relation;
+package multitaks.directory.interfaces;
 
-import multitaks.interfaces.ActionRelation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import multitaks.annotations.relation.Relation;
-import multitaks.enums.RelationType;
+import multitaks.directory.annotations.Relation;
+import multitaks.directory.enums.RelationType;
 
 /**
  *

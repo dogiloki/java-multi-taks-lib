@@ -5,9 +5,9 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
-import multitaks.annotations.directory.Directory;
-import multitaks.annotations.directory.Key;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.annotations.Directory;
+import multitaks.directory.annotations.Key;
+import multitaks.directory.enums.DirectoryType;
 import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,11 +17,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import multitaks.Function;
-import multitaks.annotations.directory.Execute;
+import multitaks.directory.annotations.Execute;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import multitaks.dataformat.ENV;
-import multitaks.interfaces.DataFormat;
+import multitaks.directory.interfaces.DataFormat;
 
 /**
  *

@@ -1,8 +1,8 @@
 package multitaks.database;
 
-import multitaks.annotations.directory.Directory;
+import multitaks.directory.annotations.Directory;
 import multitaks.directory.ModelDirectory;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

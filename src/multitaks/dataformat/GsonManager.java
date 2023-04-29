@@ -8,8 +8,8 @@ import com.google.gson.JsonParser;
 import java.util.List;
 import java.util.Map;
 import multitaks.StorageOld;
-import multitaks.enums.DirectoryType;
-import multitaks.interfaces.DataFormat;
+import multitaks.directory.enums.DirectoryType;
+import multitaks.directory.interfaces.DataFormat;
 
 /**
  *

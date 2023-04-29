@@ -2,10 +2,10 @@ package test;
 
 import java.util.ArrayList;
 import java.util.List;
-import multitaks.annotations.directory.Directory;
-import multitaks.annotations.directory.Key;
+import multitaks.directory.annotations.Directory;
+import multitaks.directory.annotations.Key;
 import multitaks.directory.ModelDirectory;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *

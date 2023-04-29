@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import java.util.Map;
 import java.util.Scanner;
 import multitaks.directory.Storage;
-import multitaks.enums.DirectoryType;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *
