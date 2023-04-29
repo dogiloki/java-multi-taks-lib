@@ -107,7 +107,7 @@ public class Storage{
      * @param path Ruta del fichero
      * @return Scanner con el método en forma de iterador
      */
-    public Scanner readIterator(String path){
+    public static Scanner readIterator(String path){
         return new Storage(path).readIterator();
     }
     
@@ -217,7 +217,7 @@ public class Storage{
      * @param path Ruta del fichero
      * @return Devuelve en un String el nombre de la carpeta
      */
-    public String getFolder(String path){
+    public static String getFolder(String path){
         return new Storage(path).getFolder();
     }
     
@@ -544,7 +544,7 @@ public class Storage{
      * @param append Indicar si abrir el fichero para adicción de texto
      * @return Indica si se abrió correctamente el fichero
      */
-    public boolean open(boolean append){
+    private boolean open(boolean append){
         if(this.type!=null && this.type!=DirectoryType.FOLDER && this.src!=null){
             try{
                 this.file=new File(this.src);
@@ -785,16 +785,6 @@ public class Storage{
      */
     public DirectoryList listFiles(){
         return this._listDirectory(this.src,DirectoryType.FILE);
-    }
-    
-    /**
-     * Lista todos los archivos y carpetas de un directorio
-     * @param path Ruta del directorio
-     * @param type Indicar si enlistar carpetas, archivo o todo con el enum DirectoryType
-     * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
-     */
-    public DirectoryList listDirectory(String path, DirectoryType type){
-        return this._listDirectory(path,type);
     }
     
     /**

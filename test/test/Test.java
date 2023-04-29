@@ -4,6 +4,7 @@ import multitaks.database.Database;
 import multitaks.database.Record;
 import multitaks.database.RecordList;
 import multitaks.directory.Storage;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *
