@@ -409,13 +409,13 @@ public class Storage{
                 String f=directories.next().getFileName().toString();
                 String path_zip=path+"/"+f;
                 if(Storage.isFolder(path_zip)){
-                    zos=Storage.compress(path_zip,zos,(path_dir.equals("")?"":(path_dir+"\\"))+f);
+                    zos=Storage.compress(path_zip,zos,(path_dir.equals("")?"":(path_dir+"/"))+f);
                     if(zos==null){
                         return null;
                     }
                     continue;
                 }
-                ZipEntry ze=new ZipEntry((path_dir.equals("")?"":(path_dir+"\\"))+f);
+                ZipEntry ze=new ZipEntry((path_dir.equals("")?"":(path_dir+"/"))+f);
                 zos.putNextEntry(ze);
                 FileInputStream fis=new FileInputStream(path_zip);
                 byte[] buffer=new byte[1024];
@@ -438,7 +438,7 @@ public class Storage{
             ZipInputStream zis=new ZipInputStream(new FileInputStream(path_zip));
             ZipEntry zos;
             while((zos=zis.getNextEntry())!=null){
-                String path_folder=path+"\\"+zos.getName();
+                String path_folder=path+"/"+zos.getName();
                 if(zos.isDirectory()){
                     Storage.createFolder(path_folder);
                     continue;
@@ -446,7 +446,7 @@ public class Storage{
                     String[] sub_path=Storage.formatPath(path_folder).split("/");
                     String path_create="";
                     for(int a=0; a<sub_path.length-1; a++){
-                        path_create+=sub_path[a]+"\\";
+                        path_create+=sub_path[a]+"/";
                     }
                     path_create=path_create.substring(0,path_create.length()-1);
                     Storage.createFolder(path_create);
