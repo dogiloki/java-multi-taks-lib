@@ -60,6 +60,11 @@ public class Storage{
         return this.type;
     }
     
+    /**
+     * Abrir fichero inicializando su BufferedWriter y BufferedReader
+     * @param append Indicar si abrir el fichero para adicción de texto
+     * @return Indica si se abrió correctamente el fichero
+     */
     public boolean open(boolean append){
         if(this.type!=null && this.type!=DirectoryType.FOLDER && this.src!=null){
             try{
@@ -74,6 +79,10 @@ public class Storage{
         return false;
     }
     
+    /**
+     * Reescribe el fichero con contenido vacio
+     * @return Indica si se limpio el fichero
+     */
     public boolean clean(){
         try{
             if(!this.open(false) || !this.close()){
@@ -87,6 +96,11 @@ public class Storage{
         }
     }
     
+    /**
+     * Adicionar contenido a un fichero
+     * @param text Contenido a adicionar en el fichero
+     * @return Indica si se adiciono el contenido en el fichero.
+     */
     public boolean append(Object text){
         try{
             if(!this.open(true)){
@@ -100,6 +114,11 @@ public class Storage{
         }
     }
     
+    /**
+     * Reescribir el fichero con nuevo contenido
+     * @param text Contenido a reescribir en el fichero
+     * @return Indica si se reescribio el nuevo contenido en el fichero
+     */
     public boolean write(Object text){
         try{
             if(!this.open(false)){
@@ -113,6 +132,12 @@ public class Storage{
         }
     }
     
+    /**
+     * Reescribe contenido de una línea en especifica con nuevo contenido dentro del fichero
+     * @param text Contenido que se adicciona al fichero
+     * @param number Número de la línea donde se reecribira en contenido
+     * @return Indica si se reescribio el fichero
+     */
     public boolean writeLine(Object text, long number){
         try{
             RandomAccessFile file=new RandomAccessFile(this.src,"rw");
@@ -142,6 +167,10 @@ public class Storage{
         }
     }
     
+    /**
+     * Obtiene todo el contenido de un fichero de un fichero
+     * @return Devuelve el contenido en un solo String con sus respectivos salto de línea
+     */
     public String read(){
         try{
             if(!this.open(true)){
@@ -159,6 +188,10 @@ public class Storage{
         }
     }
     
+    /**
+     * Obtiene todo el contenido de un fichero en forma de iterador en lugar de leer todo fichero
+     * @return Scanner con el método en forma de iterador
+     */
     public Scanner readIterator(){
         Scanner in=new Scanner(System.in);
         in.useDelimiter("\n");
@@ -173,6 +206,10 @@ public class Storage{
         return in;
     }
     
+    /**
+     * Cerrar fichero, cerrando su BufferedWriter y BufferedReader
+     * @return 
+     */
     public boolean close(){
         try{
             if(this.bw==null || this.br==null){
@@ -186,6 +223,10 @@ public class Storage{
         }
     }
     
+    /**
+     * Eliminar fichero. Incuyendo si es un carpeta con subcarpetas y archivos
+     * @return Indica si se eliminó correctamente
+     */
     public boolean delete(){
         try{
             if(this.type==DirectoryType.FOLDER){
@@ -200,21 +241,43 @@ public class Storage{
         return false;
     }
     
+    /**
+     * Obtinen el tamaño en bits de un fichero ya sea carpeta o arvhivo
+     * @return 
+     */
     public long getSize(){
         return Storage.getSize(this.src);
     }
     
+    /**
+     * Lista todos los fichero en caso de ser folder
+     * @return Devuelve un objeto de tipo DirectoryList que actua como iterador
+     */
     public DirectoryList listDirectory(){
         return Storage.listDirectory(this.src);
     }
+    
+    /**
+     * Lista todos los folders en caso de ser folder
+     * @return Devuelve un objeto de tipo DirectoryList que actua como iterador
+     */
     public DirectoryList listFolders(){
         return Storage.listDirectory(this.src,DirectoryType.FOLDER);
     }
+    
+    /**
+     * Lista todos los archivos en caso de ser folder
+     * @return Devuelve un objeto de tipo DirectoryList que actua como iterador
+     */
     public DirectoryList listFiles(){
         return Storage.listDirectory(this.src,DirectoryType.FILE);
     }
     
-    // Crea una carpeta
+    /**
+     * Crea una carpeta incluyendo si no existe las subcarpetas anteriores
+     * @param path Ruta de la carpeta completa
+     * @return Indica si se creó la carpeta final (las anteriores no las elimina, en caso de indicar false)
+     */
     public static boolean createFolder(String path){
         try{
             String ruta_crear="";
@@ -233,13 +296,33 @@ public class Storage{
         }
     }
     
-    // Saber si existe un archivo o carpeta
+    /**
+     * Verificar si existe un directorio (carpeta o archivo)
+     * @param path Ruta del directorio
+     * @return Indica si existe el directorio
+     */
     public static boolean exists(String path){
         return Storage._exists(path,DirectoryType.ALL,false);
     }
+    
+    /**
+     * Verificar si existe un directorio indicando si es carpeta o archivo y si crearlo
+     * @param path Ruta del directorio
+     * @param type Indicar si es una carpeta o archivo con el enum DirectoryType
+     * @param created Indicar si crearlo en caso de no existir
+     * @return Indica si existe el directorio y si se creo correctamente en caso de indicarlo
+     */
     public static boolean exists(String path, DirectoryType type, boolean created){
         return Storage._exists(path,type,created);
     }
+    
+    /**
+     * Verificar si existe un directorio indicando si es carpeta o archivo y si crearlo
+     * @param path Ruta del directorio
+     * @param type Indicar si es una carpeta o archivo con el enum DirectoryType
+     * @param created Indicar si crearlo en caso de no existir
+     * @return Indica si existe el directorio y si se creo correctamente en caso de indicarlo
+     */
     private static boolean _exists(String path, DirectoryType type, boolean created){
         File directorio=new File(path);
         if(!directorio.exists() && created){
