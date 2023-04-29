@@ -3,6 +3,7 @@ package test;
 import multitaks.database.Database;
 import multitaks.database.Record;
 import multitaks.database.RecordList;
+import multitaks.directory.ModelDirectory;
 import multitaks.directory.Storage;
 import multitaks.directory.enums.DirectoryType;
 
@@ -20,6 +21,9 @@ public class Test{
         //db.collection("personas").delete(new Record().setId("d4f8b651c3e2112248276da81d98f2dda4c2585fdc88ca1bee6b7aa8773240"));
         //Storage.compress("E:\\Escritorio\\inversiones","hola");
         //Storage.descompress("compress","hola.zip");
+        Persona persona=(Persona)new ModelDirectory("persona.json",Persona.class).setText();
+        System.out.println(persona.name);
+        //persona.save();
     }
     
     public static void main(String[] args){

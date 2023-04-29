@@ -17,7 +17,7 @@ public class Database extends ModelDirectory{
     }
     
     public Collection collection(String name){
-        return new Collection(this.src+"/"+name);
+        return new Collection(this.getSrc()+"/"+name);
     }
     
 }

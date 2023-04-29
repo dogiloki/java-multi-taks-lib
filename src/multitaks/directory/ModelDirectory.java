@@ -35,7 +35,7 @@ public class ModelDirectory extends Storage{
         return model.getInstance();
     }
     private Class<?> child_class;
-    private Object instance;
+    private Object _instance;
     /**
      * String clave para formato de texto
      * String valor del atributo de la clase
@@ -48,12 +48,10 @@ public class ModelDirectory extends Storage{
     private Map<String,Field> attributes=new HashMap<>();
 
     public ModelDirectory(){
-        super();
-        this._aim(this,this.getSrc());
+        
     }
     
     public ModelDirectory(String src, Class clazz){
-        super();
         try{
             this._aim(clazz.newInstance(),src);
         }catch(Exception ex){
@@ -62,49 +60,59 @@ public class ModelDirectory extends Storage{
     }
     
     public ModelDirectory(String src){
-        super();
-        this._aim(this,src);
+        this._aim(null,src);
     }
     
-    public ModelDirectory(Object instance){
-        super();
-        this._aim(instance,null);
+    public void aim(String src){
+        this._aim(null,src);
     }
     
     public void aim(Object instance){
         this._aim(instance,null);
     }
+    
     public void aim(Object instance, String src){
         this._aim(instance,src);
     }
     
     private void _aim(Object instance, String src){
-        this.instance=instance;
-        this.child_class=instance.getClass();
-        this.src=src;
+        this.setInstance(instance);
+        this.child_class=this.getInstance().getClass();
+        this.setSrc(src);
         Directory annot_directory=this.child_class.getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
-            this.type=annot_directory.type();
+            this.setType(annot_directory.type());
         }
         this.create();
-        super.aim(src,this.type);
+        super.aim(src,this.getType());
     }
     
     private void create(){
         this.get();
-        if(this.type==null || this.src==null){
+        if(this.getType()==null || this.getSrc()==null){
             return;
         }
         if(this.isFolder()){
-            Storage.createFolder(this.src);
+            Storage.createFolder(this.getSrc());
         }else{
-            Storage.exists(this.src,DirectoryType.FILE,true);
-            //this.setText();
+            Storage.exists(this.getSrc(),DirectoryType.FILE,true);
         }
     }
     
     public Object getInstance(){
-        return this.instance;
+        return Function.assign(this._instance,this);
+    }
+    
+    private void setInstance(Object instance){
+        this._instance=instance;
+    }
+    
+    private void setInstance(Class clazz){
+        try{
+            this._instance=clazz.newInstance();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
     
     public Map<String,Object> getFields(){
@@ -119,7 +127,7 @@ public class ModelDirectory extends Storage{
         try{
             Directory annot_directory=this.child_class.getAnnotation(Directory.class);
             if(annot_directory instanceof Directory){
-                this.type=annot_directory.type();
+                this.setType(annot_directory.type());
                 if(this.isFolder()){
                     return;
                 }
@@ -127,7 +135,7 @@ public class ModelDirectory extends Storage{
             for(Field field:this.child_class.getFields()){
                 Key annot_key=field.getAnnotation(Key.class);
                 if(annot_key instanceof Key){
-                    Object value=field.get(this.instance);
+                    Object value=field.get(this.getInstance());
                     this.fields.put(annot_key.value(),Function.assignNotNull(value,""));
                     this.attributes.put(annot_key.value(),field);
                 }
@@ -137,28 +145,28 @@ public class ModelDirectory extends Storage{
         }
     }
     
-    public void setText(String text){
-        this._setText(text);
+    public Object setText(String text){
+        return this._setText(text);
     }
-    public void setText(){
-        this._setText(null);
+    public Object setText(){
+        return this._setText(null);
     }
-    private void _setText(String _text){
+    private Object _setText(String _text){
         String text=_text==null?this.read():_text;
         if(text==null || text.equals("")){
-            return;
+            return this.getInstance();
         }
         DataFormat data;
-        switch(this.type){
+        switch(this.getType()){
             case JSON:{
-                this.instance=new Gson().fromJson(text,this.child_class);
-                return;
+                this.setInstance(new Gson().fromJson(text,this.child_class));
+                return this.getInstance();
             }
             case ENV: data=new ENV(text); break;
             default: data=null; break;
         }
         if(data==null){
-            return;
+            return this.getInstance();
         }
         for(Map.Entry<String,Field> entry:this.attributes.entrySet()){
             String key=entry.getKey();
@@ -169,7 +177,7 @@ public class ModelDirectory extends Storage{
                 if(value==null){
                     continue;
                 }
-                field.set(this.instance,value);
+                field.set(this.getInstance(),value);
                 /*if(annot_key.type()==FieldType.CLASS){
                     Class<?> type_class=field.getType();
                     ModelDirectory model=new ModelDirectory();
@@ -225,25 +233,26 @@ public class ModelDirectory extends Storage{
             }
         }
         // Métodos
-        for(Method method:this.instance.getClass().getMethods()){
+        for(Method method:this.getInstance().getClass().getMethods()){
             Execute annot_execute=method.getAnnotation(Execute.class);
             if(annot_execute==null){
                 continue;
             }
             try{
-                method.invoke(this.instance);
+                method.invoke(this.getInstance());
             }catch(Exception ex){
                 ex.printStackTrace();
             }
         }
+        return this.getInstance();
     }
     
     public Object getText(){
-        if(this.type==null){
+        if(this.getType()==null){
             return null;
         }
         this.get();
-        switch(this.type){
+        switch(this.getType()){
             case JSON: return new Gson().toJson(this.fields);
             case ENV: return new ENV(this.fields).toString()+"\n";
             case XML:{
@@ -278,25 +287,17 @@ public class ModelDirectory extends Storage{
     }
     
     public boolean save(){
-        if(this.type!=null && this.src!=null && this.isFile()){
+        if(this.getType()!=null && this.getSrc()!=null && this.isFile()){
             return this.write(this.getText());
         }
         return false;
     }
     
-    public boolean reset(){
-        if(this.type!=null && this.src!=null && this.isFile()){
-            this.clean();
-            return this.save();
-        }
-        return false;
-    }
-    
     public boolean isFile(){
-        if(this.type==null){
+        if(this.getType()==null){
             return false;
         }
-        switch(this.type){
+        switch(this.getType()){
             case JSON: return true;
             case XML: return true;
             case ENV: return true;
@@ -305,10 +306,10 @@ public class ModelDirectory extends Storage{
     }
     
     public boolean isFolder(){
-        if(this.type==null){
+        if(this.getType()==null){
             return false;
         }
-        return this.type==DirectoryType.FOLDER;
+        return this.getType()==DirectoryType.FOLDER;
     }
     
 }

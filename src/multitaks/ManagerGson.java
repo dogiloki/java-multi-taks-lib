@@ -26,13 +26,13 @@ public class ManagerGson extends Storage{
     }
     
     public void load(){
-        if(this.type!=null && this.src!=null){
+        if(this.getType()!=null && this.getSrc()!=null){
             this.instance=this.gson.fromJson(this.read(),this.instance.getClass());
         }
     }
     
     public boolean save(){
-        if(this.type!=null && this.src!=null){
+        if(this.getType()!=null && this.getSrc()!=null){
             this.clean();
             return this.write(this.gson.toJson(this.instance));
         }

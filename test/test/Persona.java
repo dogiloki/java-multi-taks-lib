@@ -16,7 +16,7 @@ import multitaks.directory.enums.DirectoryType;
 public class Persona extends ModelDirectory{
     
     @Key(value="name")
-    public String name;
+    public String name="B";
     
     @Key(value="edad")
     public int edad;
@@ -26,9 +26,9 @@ public class Persona extends ModelDirectory{
     
     @Key(value="documents")
     public List<Documento> documentos=new ArrayList<>();
-
+    
     public Persona(){
-        super("persona.json");
+        
     }
     
 }

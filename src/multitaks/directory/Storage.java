@@ -508,9 +508,9 @@ public class Storage{
         return Storage.formatPath(new File("").getAbsolutePath());
     }
     
-    protected String src=null;
-    protected DirectoryType type=null;
-    protected File file=null;
+    private String _src=null;
+    private DirectoryType _type=null;
+    private File file=null;
     private BufferedWriter bw=null;
     private BufferedReader br=null;
     
@@ -527,16 +527,24 @@ public class Storage{
     }
     
     public void aim(String src, DirectoryType type){
-        this.type=type;
-        this.src=src;
+        this.setSrc(src);
+        this.setType(type);
     }
     
     public String getSrc(){
-        return this.src;
+        return this._src;
+    }
+    
+    public void setSrc(String src){
+        this._src=src;
     }
     
     public DirectoryType getType(){
-        return this.type;
+        return this._type;
+    }
+    
+    public void setType(DirectoryType type){
+        this._type=type;
     }
     
     /**
@@ -545,9 +553,9 @@ public class Storage{
      * @return Indica si se abrió correctamente el fichero
      */
     private boolean open(boolean append){
-        if(this.type!=null && this.type!=DirectoryType.FOLDER && this.src!=null){
+        if(this.getType()!=null && this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
             try{
-                this.file=new File(this.src);
+                this.file=new File(this.getSrc());
                 this.bw=new BufferedWriter(new FileWriter(this.file,append));
                 this.br=new BufferedReader(new FileReader(this.file));
                 return true;
@@ -623,7 +631,7 @@ public class Storage{
      */
     public boolean writeLine(Object text, long number){
         try{
-            RandomAccessFile file=new RandomAccessFile(this.src,"rw");
+            RandomAccessFile file=new RandomAccessFile(this.getSrc(),"rw");
             Scanner reader=this.readIterator();
             int current_number=1;
             List<String> lines=new ArrayList<>();
@@ -715,10 +723,10 @@ public class Storage{
      */
     public boolean delete(){
         try{
-            if(this.type==DirectoryType.FOLDER){
-                Storage.deleteFolder(this.src);
+            if(this.getType()==DirectoryType.FOLDER){
+                Storage.deleteFolder(this.getSrc());
             }else{
-                Storage.deleteFile(this.src);
+                Storage.deleteFile(this.getSrc());
             }
             return true;
         }catch(Exception ex){
@@ -732,7 +740,7 @@ public class Storage{
      * @return Devuelve el tamaño de ficheros en bits
      */
     public long getSize(){
-        return this._getSize(this.src,0);
+        return this._getSize(this.getSrc(),0);
     }
     /**
      * Obtine el tamaño en bits de un fichero ya sea carpeta o arvhivo
@@ -768,7 +776,7 @@ public class Storage{
      * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
      */
     public DirectoryList listDirectory(){
-        return this._listDirectory(this.src,DirectoryType.ALL);
+        return this._listDirectory(this.getSrc(),DirectoryType.ALL);
     }
     
     /**
@@ -776,7 +784,7 @@ public class Storage{
      * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
      */
     public DirectoryList listFolders(){
-        return this._listDirectory(this.src,DirectoryType.FOLDER);
+        return this._listDirectory(this.getSrc(),DirectoryType.FOLDER);
     }
     
     /**
@@ -784,7 +792,7 @@ public class Storage{
      * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
      */
     public DirectoryList listFiles(){
-        return this._listDirectory(this.src,DirectoryType.FILE);
+        return this._listDirectory(this.getSrc(),DirectoryType.FILE);
     }
     
     /**
@@ -802,7 +810,7 @@ public class Storage{
      * @return Indica si existe el directorio
      */
     public boolean exists(){
-        return this._exists(this.src,this.type,false);
+        return this._exists(this.getSrc(),this.getType(),false);
     }
     
     /**
@@ -811,7 +819,7 @@ public class Storage{
      * @return Indica si existe el directorio
      */
     public boolean exists(boolean created){
-        return this._exists(this.src,this.type,created);
+        return this._exists(this.getSrc(),this.getType(),created);
     }
     
     /**
@@ -855,7 +863,7 @@ public class Storage{
      * @return Devuelve un String con el nombre de la extesión
      */
     public String getExtension(){
-        return this._getExtension(this.src);
+        return this._getExtension(this.getSrc());
     }
     
     /**
@@ -873,7 +881,7 @@ public class Storage{
      * @return Devuelve en un String el nombre del archivo (sin extensión)
      */
     public String getNameNotExtension(){
-        return this._getNameNotExtension(this.src);
+        return this._getNameNotExtension(this.getSrc());
     }
     
     /**
@@ -891,7 +899,7 @@ public class Storage{
      * @return Devuelve en un String el nombre del archivo (con extensión)
      */
     public String getName(){
-        return this._getName(this.src);
+        return this._getName(this.getSrc());
     }
     
     /**
@@ -909,7 +917,7 @@ public class Storage{
      * @return Devuelve en un String el nombre de la carpeta
      */
     public String getFolder(){
-        return this._getFolder(this.src);
+        return this._getFolder(this.getSrc());
     }
     
     /**
