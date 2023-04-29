@@ -1,10 +1,10 @@
-package multitaks.directory.annotations;
+package multitaks.relations.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import multitaks.directory.enums.RelationType;
+import multitaks.relation.enums.RelationType;
 
 /**
  *

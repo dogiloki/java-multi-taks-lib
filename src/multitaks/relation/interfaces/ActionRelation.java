@@ -1,4 +1,4 @@
-package multitaks.directory.interfaces;
+package multitaks.relation.interfaces;
 
 import java.util.List;
 

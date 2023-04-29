@@ -1,4 +1,4 @@
-package multitaks.directory.enums;
+package multitaks.relation.enums;
 
 /**
  *
