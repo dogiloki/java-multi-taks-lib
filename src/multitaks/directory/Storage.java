@@ -29,6 +29,10 @@ import multitaks.enums.DirectoryType;
 
 public class Storage{
     
+    public static String formatPath(String path){
+        return path.replace("\\","/");
+    }
+    
     protected String src=null;
     protected DirectoryType type=null;
     protected File file=null;
@@ -281,7 +285,7 @@ public class Storage{
     public static boolean createFolder(String path){
         try{
             String ruta_crear="";
-            for(String sub_ruta:path.replace("\\","/").split("/")){
+            for(String sub_ruta:Storage.formatPath(path).split("/")){
                 ruta_crear+=sub_ruta+"/";
                 File directorio=new File(ruta_crear);
                 if(!directorio.exists()){
@@ -439,7 +443,7 @@ public class Storage{
                     Storage.createFolder(path_folder);
                     continue;
                 }else{
-                    String[] sub_path=path_folder.replace("\\","/").split("/");
+                    String[] sub_path=Storage.formatPath(path_folder).split("/");
                     String path_create="";
                     for(int a=0; a<sub_path.length-1; a++){
                         path_create+=sub_path[a]+"\\";
@@ -546,17 +550,17 @@ public class Storage{
     }
     
     public static String getNameNotExtension(String path){
-        String[] path_array=path.replace("\\", "/").split("/");
+        String[] path_array=Storage.formatPath(path).split("/");
         return (path_array[path_array.length-1]).split("\\.")[0];
     }
     
     public static String getName(String path){
-        String[] path_array=path.replace("\\", "/").split("/");
+        String[] path_array=Storage.formatPath(path).split("/");
         return path_array[path_array.length-1];
     }
     
     public static String getFolder(String path){
-        String[] array=path.replace("\\", "/").split("/");
+        String[] array=Storage.formatPath(path).split("/");
         return String.join("/",Arrays.copyOfRange(array,0,array.length-1));
     }
     
@@ -605,7 +609,7 @@ public class Storage{
     
     // Obtener ruta donde se ejecuta el programa
     public static String getDir(){
-        return new File("").getAbsolutePath().replace("\\","/");
+        return Storage.formatPath(new File("").getAbsolutePath());
     }
     
 }
