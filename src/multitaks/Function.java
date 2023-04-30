@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JPanel;
 
 /**
@@ -32,6 +34,13 @@ public class Function<T>{
             return new DecimalFormat("#.##").format(teras)+" TB";
         }else
         return "";
+    }
+    
+    private static String date_format="dd-MM-yyyy HH:mm:ss";
+    
+    // Obtener fecha y hra actual en formato indicado en Function.date_format
+    public String getDateTime(){
+        return new SimpleDateFormat(Function.date_format).format(new Date());
     }
     
     // Formato de número (dinero)
