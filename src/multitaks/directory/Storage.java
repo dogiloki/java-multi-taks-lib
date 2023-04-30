@@ -1,6 +1,7 @@
 package multitaks.directory;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -451,7 +452,7 @@ public class Storage{
     }
     
     /**
-     *  Elimina un archivo
+     * Elimina un archivo
      * @param ruta Ruta del fichero
      * @return Indica si se eliminó en archivo (si no existe devuelve false)
      */
@@ -498,6 +499,15 @@ public class Storage{
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
+    }
+    
+    /**
+     * Abrir archivo
+     * @param path Ruta del fichero
+     * @return Indica si el archivo se abrio
+     */
+    public static boolean execute(String path){
+        return new Storage(path).execute();
     }
     
     /**
@@ -928,6 +938,19 @@ public class Storage{
     private String _getFolder(String path){
         String[] array=Storage.formatPath(path).split("/");
         return String.join("/",Arrays.copyOfRange(array,0,array.length-1));
+    }
+    
+    /**
+     * Abrir archivo
+     * @return Indica si el archivo se abrio
+     */
+    public boolean execute(){
+        try{
+            Desktop.getDesktop().open(this.file);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
     }
     
 }
