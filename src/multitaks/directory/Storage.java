@@ -538,6 +538,10 @@ public class Storage{
     
     public void aim(String src, DirectoryType type){
         this.setSrc(src);
+        File file;
+        if(type==null && (file=new File(src)).exists()){
+            type=file.isDirectory()?DirectoryType.FOLDER:DirectoryType.FILE;
+        }
         this.setType(type);
     }
     
@@ -946,7 +950,11 @@ public class Storage{
      */
     public boolean execute(){
         try{
+            if(!this.open(false)){
+                return false;
+            }
             Desktop.getDesktop().open(this.file);
+            return true;
         }catch(Exception ex){
             ex.printStackTrace();
         }
