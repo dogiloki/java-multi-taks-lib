@@ -1,5 +1,6 @@
 package multitaks.directory;
 
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +18,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import multitaks.Function;
 import multitaks.directory.enums.DirectoryType;
@@ -326,14 +326,14 @@ public class Storage{
     /**
      * @see Storage@_selectFile()
      */
-    public static String selectFile(JFrame frame, String path_current){ 
+    public static String selectFile(Component frame, String path_current){ 
         return Storage._selectFile(frame,path_current);
     }
     
     /**
      * @see Storage@_selectFile()
      */
-    public static String selectFile(JFrame frame){ 
+    public static String selectFile(Component frame){ 
         return Storage._selectFile(frame,"");
     }
     
@@ -347,14 +347,14 @@ public class Storage{
     /**
      * @see Storage@_selectFiles()
      */
-    public static File[] selectFiles(JFrame frame, String path_current){
+    public static File[] selectFiles(Component frame, String path_current){
         return Storage._selectFiles(frame,path_current);
     }
     
     /**
      * @see Storage@_selectFiles()
      */
-    public static File[] selectFiles(JFrame frame){
+    public static File[] selectFiles(Component frame){
         return Storage._selectFiles(frame,"");
     }
     
@@ -367,11 +367,11 @@ public class Storage{
     
     /**
      * Muestra un selector de archivo
-     * @param frame Clase de tipo java.awt.Frame para anclar el selector de archivos
+     * @param frame Clase de tipo java.awt.Component para anclar el selector de archivos
      * @param path_current Ruta en la que el selector se posisionara
      * @return Devuelve un String con lara ruta y nombre del archivo seleccionado
      */
-    private static String _selectFile(JFrame frame, String path_current){ 
+    private static String _selectFile(Component frame, String path_current){ 
         JFileChooser chooser=new JFileChooser(path_current);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -386,11 +386,11 @@ public class Storage{
     
     /**
      * Muestra un selector de varios archivos
-     * @param frame Clase de tipo java.awt.Frame para anclar el selector de archivos
+     * @param frame Clase de tipo java.awt.Component para anclar el selector de archivos
      * @param path_current Ruta en la que el selector se posisionara
      * @return Devuelve una array de tipo java.io.File de los archivos seleccionados
      */
-    private static File[] _selectFiles(JFrame frame, String path_current){ 
+    private static File[] _selectFiles(Component frame, String path_current){ 
         JFileChooser chooser=new JFileChooser(path_current);
         chooser.setMultiSelectionEnabled(true);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -413,14 +413,14 @@ public class Storage{
     /**
      * @see Storage@_selectFolder()
      */
-    public static String selectFolder(JFrame frame, String path_current){ 
+    public static String selectFolder(Component frame, String path_current){ 
         return Storage._selectFolder(frame,path_current);
     }
     
     /**
      * @see Storage@_selectFolder()
      */
-    public static String selectFolder(JFrame frame){ 
+    public static String selectFolder(Component frame){ 
         return Storage._selectFolder(frame,"");
     }
     
@@ -433,11 +433,11 @@ public class Storage{
     
     /**
      * Selector de una carpeta
-     * @param frame Clase de tipo java.awt.Frame para una anclar a una ventana
+     * @param frame Clase de tipo java.awt.Component para una anclar a una ventana
      * @param path_current Ruta en la que el selector se posisionara
      * @return Devuelve un String con la ruta de la carpeta seleccionada
      */
-    private static String _selectFolder(JFrame frame, String path_current){ 
+    private static String _selectFolder(Component frame, String path_current){ 
         JFileChooser chooser=new JFileChooser(path_current);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
