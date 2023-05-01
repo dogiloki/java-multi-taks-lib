@@ -1,5 +1,6 @@
 package multitaks.database;
 
+import multitaks.ObjectId;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
