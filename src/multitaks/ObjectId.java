@@ -3,7 +3,6 @@ package multitaks;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Arrays;
-import multitaks.Function;
 
 /**
  *
@@ -44,10 +43,12 @@ public class ObjectId{
             out_array.write(this.getTimestamp());
             out_array.write(this.getMac());
             out_array.write(this.getCount());
-            byte[] hash=MessageDigest.getInstance("SHA-256").digest(out_array.toByteArray());
+            MessageDigest md=MessageDigest.getInstance("SHA-256");
+            md.update(out_array.toByteArray());
+            byte[] hash=md.digest();
             StringBuilder hex=new StringBuilder();
-            for(int index=0; index<hash.length; index++){
-                hex.append(Integer.toHexString(0xFF & hash[index]));
+            for(byte b:hash){
+                hex.append(String.format("%02x",b & 0XFF));
             }
             return hex.toString();
         }catch(Exception ex){
