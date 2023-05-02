@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import java.util.List;
 import java.util.Map;
 import multitaks.StorageOld;
+import multitaks.directory.Storage;
 import multitaks.directory.enums.DirectoryType;
 import multitaks.directory.interfaces.DataFormat;
 
@@ -43,7 +44,7 @@ public class GsonManager implements DataFormat{
     public GsonManager(String dir, DirectoryType type){
         this.indice=0;
         switch(type){
-            case FILE: this.json=String.join(" ",StorageOld.readFile(dir.trim())); break;
+            case FILE: this.json=String.join(" ",Storage.readFile(dir.trim())); break;
         }
         this.constructer();
     }

@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +23,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import multitaks.Function;
+import multitaks.ObjectId;
 import multitaks.directory.enums.DirectoryType;
 
 /**
@@ -60,6 +63,18 @@ public class Storage{
             JOptionPane.showMessageDialog(null,ex,"Error",JOptionPane.ERROR_MESSAGE);
             return false;
         }
+    }
+    
+    /**
+     * Renombrar un fichero
+     * @param name_old Ruta del fichero anterior / viejo
+     * @param name_new Ruta del fichero a renombrar nuevo
+     * @return Indica si renombró correctamente el fichero
+     */
+    public static boolean rename(String name_old, String name_new){
+        File directorio_old=new File(name_old);
+        File directorio_new=new File(name_new);
+        return directorio_old.renameTo(directorio_new);
     }
     
     /**
@@ -508,6 +523,134 @@ public class Storage{
      */
     public static boolean execute(String path){
         return new Storage(path).execute();
+    }
+    
+    /**
+     * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
+     * @param path_store Ruta actual de la carpeta donde se almacenará
+     * @param path_file Ruta actual del archivo
+     * @return Indicar si se almaceno
+     */
+    public static String store(String path_store, String path_file){
+        try{
+            String ext=Storage.getExtension(path_file);
+            String hash=ObjectId.generate();
+            String path=path_store+"/"+hash.substring(0,2)+"/"+hash+"."+ext;
+            Storage.copyFile(path_file,path);
+            return path;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * Obtener el fichero alamacenado por el método Storage.store()
+     * @param path_store Ruta actual de la carpeta donde se almacenó
+     * @param name_file Nombre hash del archivo
+     * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
+     */
+    public static File get(String path_store, String name_file){
+        try{
+            String name=Storage.getNameNotExtension(name_file);
+            DirectoryList files=Storage.listFiles(path_store+"/"+name.substring(0,2));
+            while(files.hasNext()){
+                String path=files.next().toString();
+                if(name.equals(Storage.getNameNotExtension(path))){
+                    return new File(path);
+                }
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    /**
+     * Copiar un archivo
+     * @param path_old Ruta actual del archivo
+     * @param path_new Ruta a copiar del archivo
+     * @throws Exception Se dispara un excepción si hay error al copiar el archivo
+     */
+    public static void copyFile(String path_old, String path_new) throws Exception{
+        File directory_old=new File(path_old);
+        File directory_new=new File(path_new);
+        if(!directory_old.exists()){
+            throw new Exception("Not exists "+path_old);
+        }else
+        if(!directory_old.isFile()){
+            throw new Exception(path_old+" not a file");
+        }
+        try{
+            Storage.createFolder(directory_new.getParent());
+            InputStream in=new FileInputStream(directory_old);
+            OutputStream out=new FileOutputStream(directory_new);
+            byte[] buf=new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            in.close();
+            out.close();
+        }catch(IOException ex){
+            if(directory_new.exists()){
+                directory_new.delete();
+            }
+            throw new Exception(ex.getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @param path_old Ruta actual de la carpeta
+     * @param path_new Ruta a copiar de la carpeta
+     * @throws Exception Se dispara un excepción si hay error al mover algún archivo
+     */
+    public static void copyDirectory(String path_old, String path_new) throws Exception{
+        Storage._copyDirectory(path_old,path_new,null);
+    }
+    
+    /**
+     * 
+     * @param path_old Ruta actual de la carpeta
+     * @param path_new Ruta a copiar de la carpeta
+     * @param context Ventana a anclar (pendiente)
+     * @throws Exception Se dispara un excepción si hay error al mover algún archivo
+     */
+    public static void copyDirectory(String path_old, String path_new, Component context) throws Exception{
+        Storage._copyDirectory(path_old,path_new,context);
+    }
+    
+    /**
+     * 
+     * @param path_old Ruta actual de la carpeta
+     * @param path_new Ruta a copiar de la carpeta
+     * @param context Ventana a anclar (pendiente)
+     * @throws Exception Se dispara un excepción si hay error al mover algún archivo
+     */
+    private static void _copyDirectory(String path_old, String path_new, Component context) throws Exception{
+        File directory_old=new File(path_old);
+        File directory_new=new File(path_new);
+        if(!directory_old.exists()){
+            throw new Exception("Not exists "+path_old);
+        }else
+        if(directory_old.isDirectory()){
+            directory_new.mkdir();
+        }
+        try{
+            DirectoryList directories=Storage.listDirectory(path_old);
+            while(directories.hasNext()){
+                String directory=directories.next().getFileName().toString();
+                if(Storage.isFolder(path_old+"/"+directory)){
+                    Storage._copyDirectory(path_old+"/"+directory, path_new+"/"+directory,context);
+                }else
+                if(Storage.isFile(path_old+"/"+directory)){
+                    Storage.copyFile(path_old+"/"+directory, path_new+"/"+directory);
+                }
+            }
+        }catch(Exception ex){
+            throw new Exception(ex.getMessage());
+        }
     }
     
     /**
