@@ -23,6 +23,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import multitaks.Function;
+import multitaks.GlobalVar;
 import multitaks.ObjectId;
 import multitaks.directory.enums.DirectoryType;
 
@@ -527,11 +528,30 @@ public class Storage{
     
     /**
      * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
+     * @param path_file Ruta actual del archivo
+     * @return Indicar si se almaceno
+     */
+    public static String store(String path_file){
+        return Storage._store((String)GlobalVar.group("storage").get("store"),path_file);
+    }
+    
+    /**
+     * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
      * @param path_store Ruta actual de la carpeta donde se almacenará
      * @param path_file Ruta actual del archivo
      * @return Indicar si se almaceno
      */
     public static String store(String path_store, String path_file){
+        return Storage._store(path_store,path_file);
+    }
+    
+    /**
+     * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
+     * @param path_store Ruta actual de la carpeta donde se almacenará
+     * @param path_file Ruta actual del archivo
+     * @return Indicar si se almaceno
+     */
+    private static String _store(String path_store, String path_file){
         try{
             String ext=Storage.getExtension(path_file);
             String hash=ObjectId.generate();
@@ -546,11 +566,30 @@ public class Storage{
     
     /**
      * Obtener el fichero alamacenado por el método Storage.store()
+     * @param name_file Nombre hash del archivo
+     * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
+     */
+    public static File get(String name_file){
+        return Storage._get((String)GlobalVar.group("storage").get("store"),name_file);
+    }
+    
+    /**
+     * Obtener el fichero alamacenado por el método Storage.store()
      * @param path_store Ruta actual de la carpeta donde se almacenó
      * @param name_file Nombre hash del archivo
      * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
      */
     public static File get(String path_store, String name_file){
+        return Storage._get(path_store,name_file);
+    }
+    
+    /**
+     * Obtener el fichero alamacenado por el método Storage.store()
+     * @param path_store Ruta actual de la carpeta donde se almacenó
+     * @param name_file Nombre hash del archivo
+     * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
+     */
+    private static File _get(String path_store, String name_file){
         try{
             String name=Storage.getNameNotExtension(name_file);
             DirectoryList files=Storage.listFiles(path_store+"/"+name.substring(0,2));

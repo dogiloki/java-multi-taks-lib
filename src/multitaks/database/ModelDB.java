@@ -44,7 +44,7 @@ public class ModelDB extends Record{
     
     public ModelDB(){
         if(this.db==null){
-            String src=Function.assign((String)GlobalVar.group("db").get("name"),"db");
+            String src=(String)GlobalVar.group("db").get("name");
             this.db=new Database(src);
         }
     }
