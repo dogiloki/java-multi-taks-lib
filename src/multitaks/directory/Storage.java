@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -527,6 +528,15 @@ public class Storage{
     }
     
     /**
+     * Obtiene el MIME de un archivo
+     * @param path Ruta del archivo
+     * @return MIME del archivo
+     */
+    public static String getMine(String path){
+        return new Storage(path).getMime();
+    }
+    
+    /**
      * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
      * @param path_file Ruta actual del archivo
      * @return Indicar si se almaceno
@@ -761,6 +771,10 @@ public class Storage{
             }
         }
         return false;
+    }
+    
+    private void openOnlyFile(){
+        this.file=new File(this.getSrc());
     }
     
     /**
@@ -1124,6 +1138,20 @@ public class Storage{
     private String _getFolder(String path){
         String[] array=Storage.formatPath(path).split("/");
         return String.join("/",Arrays.copyOfRange(array,0,array.length-1));
+    }
+    
+    /**
+     * Obtiene el MIME de un archivo
+     * @return MIME del archivo
+     */
+    public String getMime(){
+        try{
+            this.openOnlyFile();
+            return Files.probeContentType(this.file.toPath());
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
     
     /**
