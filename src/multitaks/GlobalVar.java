@@ -16,16 +16,17 @@ public class GlobalVar{
     private GlobalVar sele_group=null;
     
     private GlobalVar(){
-        // Configuraciones por defecto para uso de librería más eficiente
-        // Nombre de la carpeta en que usará database.ModelDB
-        GlobalVar.group("db").set("name","db");
-        // Nombre de la carpeta en que usará Storage.store() y Storage.get()
-        GlobalVar.group("storage").set("store","store");
+        
     }
     
     public static GlobalVar singleton(){
         if(GlobalVar.instance==null){
             GlobalVar.instance=new GlobalVar();
+            // Configuraciones por defecto para uso de librería más eficiente
+            // Nombre de la carpeta en que usará database.ModelDB
+            GlobalVar.group("db").set("name","db");
+            // Nombre de la carpeta en que usará Storage.store() y Storage.get()
+            GlobalVar.group("storage").set("store","store");
         }
         return GlobalVar.instance;
     }

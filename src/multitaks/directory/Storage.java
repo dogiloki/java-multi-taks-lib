@@ -1147,7 +1147,7 @@ public class Storage{
     public String getMime(){
         try{
             this.openOnlyFile();
-            return Files.probeContentType(this.file.toPath());
+            return Function.assign(Files.probeContentType(this.file.toPath()),"application/octet-stream");
         }catch(Exception ex){
             ex.printStackTrace();
         }
