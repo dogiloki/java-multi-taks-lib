@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import multitaks.Function;
 import multitaks.GlobalVar;
 import multitaks.dataformat.JSON;
 import multitaks.database.annotations.Collect;

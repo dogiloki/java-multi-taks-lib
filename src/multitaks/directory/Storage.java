@@ -539,7 +539,7 @@ public class Storage{
     /**
      * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
      * @param path_file Ruta actual del archivo
-     * @return Indicar si se almaceno
+     * @return Devuelve el nombre del archivo almacenado
      */
     public static String store(String path_file){
         return Storage._store((String)GlobalVar.group("storage").get("store"),path_file);
@@ -549,7 +549,7 @@ public class Storage{
      * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
      * @param path_store Ruta actual de la carpeta donde se almacenará
      * @param path_file Ruta actual del archivo
-     * @return Indicar si se almaceno
+     * @return Devuelve el nombre del archivo almacenado
      */
     public static String store(String path_store, String path_file){
         return Storage._store(path_store,path_file);
@@ -559,15 +559,16 @@ public class Storage{
      * Almacenar el archivo path_file a la dirección path_store renombrandolo a un hash-256 y almacenandolo
      * @param path_store Ruta actual de la carpeta donde se almacenará
      * @param path_file Ruta actual del archivo
-     * @return Indicar si se almaceno
+     * @return Devuelve el nombre del archivo almacenado
      */
     private static String _store(String path_store, String path_file){
         try{
             String ext=Storage.getExtension(path_file);
             String hash=ObjectId.generate();
-            String path=path_store+"/"+hash.substring(0,2)+"/"+hash+"."+ext;
+            String name_file=hash+"."+ext;
+            String path=path_store+"/"+hash.substring(0,2)+"/"+name_file;
             Storage.copyFile(path_file,path);
-            return path;
+            return name_file;
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -601,13 +602,10 @@ public class Storage{
      */
     private static File _get(String path_store, String name_file){
         try{
-            String name=Storage.getNameNotExtension(name_file);
-            DirectoryList files=Storage.listFiles(path_store+"/"+name.substring(0,2));
-            while(files.hasNext()){
-                String path=files.next().toString();
-                if(name.equals(Storage.getNameNotExtension(path))){
-                    return new File(path);
-                }
+            String path=path_store+"/"+name_file.substring(0,2)+"/"+name_file;
+            File file=new File(path);
+            if(file.exists()){
+                return file;
             }
         }catch(Exception ex){
             ex.printStackTrace();
