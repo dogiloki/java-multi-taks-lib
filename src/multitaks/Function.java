@@ -15,37 +15,24 @@ import javax.swing.JPanel;
 
 public class Function<T>{
     
-    //  Convertir bytes en KB, MB, GB y TB
-    public static String convertSize(long bytes){
-        double kilobytes=bytes/Math.pow(1024,1);
-        double megas=bytes/Math.pow(1024,2);
-        double gigas=bytes/Math.pow(1024,3);
-        double teras=bytes/Math.pow(1024,4);
-        if(kilobytes<1024){
-            return new DecimalFormat("#").format(kilobytes)+" KB";
-        }else
-        if(megas<1024){
-            return new DecimalFormat("#.##").format(megas)+" MB";
-        }else
-        if(gigas<1024){
-            return new DecimalFormat("#.##").format(gigas)+" GB";
-        }else
-        if(teras<1024){
-            return new DecimalFormat("#.##").format(teras)+" TB";
-        }else
-        return "";
-    }
+    public static String date_format="dd-MM-yyyy HH:mm:ss";
+    public static String number_format="#,###.##";
     
-    private static String date_format="dd-MM-yyyy HH:mm:ss";
-    
-    // Obtener fecha y hra actual en formato indicado en Function.date_format
+    /**
+     * Obtener fecha y hora actual con el formato asignado en Function.date_format por defecto (dd-MM-yyyy HH:mm:ss)
+     * @return Devuelve String con el fomato asígnado
+     */
     public String getDateTime(){
         return new SimpleDateFormat(Function.date_format).format(new Date());
     }
     
-    // Formato de número (dinero)
+    /**
+     * Formato de número (dinero) con el formato asignado en Function.number_format por defecto (#,###.##)
+     * @param num Número a convertir
+     * @return Devuelve String con el fomato asígnado
+     */
     public String formatNumber(String num){
-        DecimalFormat formato=new DecimalFormat("#,###.##");
+        DecimalFormat formato=new DecimalFormat(Function.number_format);
         return formato.format(Float.parseFloat(num));
     }
     
@@ -77,7 +64,13 @@ public class Function<T>{
         return null;
     }
     
-    // Saber si esta dentro del rango
+    /**
+     * Verificar si esta dentro del rango
+     * @param num Número a verificar
+     * @param min Número máximo
+     * @param max Númer minímo
+     * @return Indicar si esta dentro del rango
+     */
     public static boolean isRange(int num, int min, int max){
         return num>=min && num<=max;
     }
@@ -90,13 +83,17 @@ public class Function<T>{
     // Agregar un panle dentro de otro panel
     public static void setPanel(JPanel panel1, JPanel panel2){
         panel2.setVisible(true);
-        panel2.setBounds(0,0,panel1.getWidth(),panel1.getHeight());
+        Function.resizablePanel(panel1,panel2);
         panel1.removeAll();
         panel1.add(panel2);
         panel1.updateUI();
     }
     
-    // Dimencionar un panel en base a otro panel
+    /**
+     * Dimencionar un panel en base a otro panel
+     * @param panel1 JPanel principal (obtener las dimenciones)
+     * @param panel2 JPanel secundario (asignar las dimenciones)
+     */
     public static void resizablePanel(JPanel panel1, JPanel panel2){
         panel2.setBounds(0,0,panel1.getWidth(),panel1.getHeight());
         panel1.updateUI();
@@ -108,36 +105,39 @@ public class Function<T>{
             InetAddress address=InetAddress.getLocalHost();
             return address.getHostAddress();
         }catch(Exception ex){
-            System.out.println(ex);
-            return "";
+            ex.printStackTrace();
         }
+        return "";
     }
+    
     public static String getIp(String ip){
         try{
             InetAddress address=InetAddress.getByName(ip);
             return address.getHostAddress();
         }catch(Exception ex){
-            System.out.println(ex);
-            return "";
+            ex.printStackTrace();
         }
+        return "";
     }
+    
     public static String getHost(){
         try{
             InetAddress address=InetAddress.getLocalHost();
             return address.getHostName();
         }catch(Exception ex){
-            System.out.println(ex);
-            return "";
+            ex.printStackTrace();
         }
+        return "";
     }
+    
     public static String getHost(String host){
         try{
             InetAddress address=InetAddress.getByName(host);
             return address.getHostName();
         }catch(Exception ex){
-            System.out.println(ex);
-            return "";
+            ex.printStackTrace();
         }
+        return "";
     }
     
     public static String getMac(){
@@ -155,7 +155,7 @@ public class Function<T>{
                 }
             }
         }catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return "";
     }

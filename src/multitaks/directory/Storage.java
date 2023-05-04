@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +37,32 @@ import multitaks.directory.enums.DirectoryType;
 public class Storage{
     
     /**
-     * Dar formato de direcorio remplazando \ por /
+     * Convertir bits en byte, MB, GB, TB
+     * @param bytes Número en bits
+     * @return Devuelve String con byte, MB, GB, TB
+     */
+    public static String convertSize(long bytes){
+        double kilobytes=bytes/Math.pow(1024,1);
+        double megas=bytes/Math.pow(1024,2);
+        double gigas=bytes/Math.pow(1024,3);
+        double teras=bytes/Math.pow(1024,4);
+        if(kilobytes<1024){
+            return new DecimalFormat("#").format(kilobytes)+" KB";
+        }else
+        if(megas<1024){
+            return new DecimalFormat("#.##").format(megas)+" MB";
+        }else
+        if(gigas<1024){
+            return new DecimalFormat("#.##").format(gigas)+" GB";
+        }else
+        if(teras<1024){
+            return new DecimalFormat("#.##").format(teras)+" TB";
+        }else
+        return "";
+    }
+    
+    /**
+     * Dar formato de directorio remplazando \ por /
      * @param path Ruta del directorio
      * @return 
      */
@@ -1158,9 +1184,7 @@ public class Storage{
      */
     public boolean execute(){
         try{
-            if(!this.open(false)){
-                return false;
-            }
+            this.openOnlyFile();
             Desktop.getDesktop().open(this.file);
             return true;
         }catch(Exception ex){

@@ -22,7 +22,7 @@ public class Checksum{
             long adler_check=adler.getValue();
             return String.valueOf(adler_check);
         }catch(IOException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
             return null;
         }
     }

@@ -23,7 +23,7 @@ public class Download extends javax.swing.JDialog implements Runnable{
     private String url;
     private InputStream in;
     private OutputStream out;
-    private boolean eliminar=false;
+    private boolean close=false;
     
     public Download(java.awt.Frame parent, boolean modal, String folder, String name, String url, String msg) {
         super(parent,modal);
@@ -58,7 +58,7 @@ public class Download extends javax.swing.JDialog implements Runnable{
             this.progreso.setMaximum(100);
             int b=0;
             while(b!=-1){
-                if(this.eliminar){
+                if(this.close){
                     this.in.close();
                     this.out.close();
                     //Storage.deleteFile(this.folder);
@@ -67,7 +67,7 @@ public class Download extends javax.swing.JDialog implements Runnable{
                     b=in.read();
                     if(b!=-1){
                         out.write(b);
-                        this.progreso_texto.setText("Descargando: "+Function.convertSize(file.length())+" / "+Function.convertSize(tamano));
+                        this.progreso_texto.setText("Descargando: "+Storage.convertSize(file.length())+" / "+Storage.convertSize(tamano));
                         this.progreso.setValue((int)(file.length()*100)/tamano);
                     }
                 }
@@ -119,7 +119,7 @@ public class Download extends javax.swing.JDialog implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.eliminar=true;
+        this.close=true;
     }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]){
