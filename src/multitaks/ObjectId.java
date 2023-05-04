@@ -69,7 +69,7 @@ public class ObjectId{
     }
     
     private byte[] getMac(){
-        byte[] mac=Function.getMac().getBytes();
+        byte[] mac=Network.getMac().getBytes();
         return Arrays.copyOfRange(mac,0,3);
     }
     
