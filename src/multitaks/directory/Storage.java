@@ -628,6 +628,7 @@ public class Storage{
      */
     private static File _get(String path_store, String name_file){
         try{
+            name_file=Function.assign(name_file,"  ");
             String path=path_store+"/"+name_file.substring(0,2)+"/"+name_file;
             File file=new File(path);
             if(file.exists()){
