@@ -47,4 +47,48 @@ public class Graph{
         return node.getNodes();
     }
     
+    public List<Table> generateTable(Node initial_node, List<Node> exception_nodes, List<Table> tables){
+        if(initial_node==null){
+            initial_node=this.nodes.get(0);
+        }
+        if(exception_nodes==null){
+            exception_nodes=new ArrayList<>();
+        }
+        if(tables==null){
+            tables=new ArrayList<>();
+            for(Node node:this.nodes){
+                node.setWeight(0);
+                if(node.getValue()!=initial_node.getValue()){
+                    Table table=new Table();
+                    table.setVertexNode(node);
+                    table.setFinalWeight(node.getValue()==initial_node.getValue()?0:-1);
+                    table.setTemporaryWeight(table.getFinalWeight());
+                    tables.add(table);
+                }
+            }
+            Table table=new Table();
+            table.setVertexNode(initial_node);
+            table.setFinalWeight(0);
+            table.setTemporaryWeight(0);
+            tables.add(0,table);
+        }
+        if(this.finished()){
+            return tables;
+        }
+        List<Node> adjacent_nodes=initial_node.getAdjacentNodes(exception_nodes);
+        if(adjacent_nodes!=null){
+           int adjacent_node_index=0;
+           for(Node adjacent_node:adjacent_nodes){
+               for(Table table:tables){
+                   adjacent_node
+               }
+               adjacent_node_index++;
+           } 
+        }
+    }
+    
+    private boolean finished(){
+        
+    }
+    
 }
