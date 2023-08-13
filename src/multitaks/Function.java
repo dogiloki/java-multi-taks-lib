@@ -1,11 +1,16 @@
 package multitaks;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -97,6 +102,36 @@ public class Function<T>{
     public static void resizablePanel(JPanel panel1, JPanel panel2){
         panel2.setBounds(0,0,panel1.getWidth(),panel1.getHeight());
         panel1.updateUI();
+    }
+    
+    /**
+     * Generar un icono con dimenciones especificar a partir de una imagen
+     */
+    public static Icon generateIcon(String path, int width, int height){
+        ImageIcon image=new ImageIcon(path);
+        Icon icon=new ImageIcon(image.getImage().getScaledInstance(width,height,Image.SCALE_DEFAULT));
+        return icon;
+    }
+    
+    public static Icon generateIcon(ImageIcon image, int width, int height){
+        Icon icon=new ImageIcon(image.getImage().getScaledInstance(width,height,Image.SCALE_DEFAULT));
+        return icon;
+    }
+    
+    /**
+     * Crear una ImageIcon apartir de una URL
+     */
+    public static ImageIcon createImageFromURL(String url){
+        try{
+            URL image_url=new URL(url);
+            Image image=ImageIO.read(image_url);
+            if(image!=null){
+                return new ImageIcon(image);
+            }
+        }catch(Exception ex){
+            
+        }
+        return null;
     }
     
 }

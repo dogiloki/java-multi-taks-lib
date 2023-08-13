@@ -80,15 +80,16 @@ public class Graph{
            int adjacent_node_index=0;
            for(Node adjacent_node:adjacent_nodes){
                for(Table table:tables){
-                   adjacent_node
+                   //adjacent_node
                }
                adjacent_node_index++;
            } 
         }
+        return null;
     }
     
     private boolean finished(){
-        
+        return false;
     }
     
 }
