@@ -7,138 +7,199 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 import multitaks.directory.Storage;
-import multitaks.directory.enums.DirectoryType;
 
 /**
  *
  * @author dogi_
  */
 
-public class Download extends javax.swing.JDialog implements Runnable{
-
-    private String folder;
+public class Download extends javax.swing.JPanel implements Runnable{
+    
+    private String path;
     private String name;
-    private String url;
     private InputStream in;
     private OutputStream out;
-    private boolean close=false;
+    private String url;
+    private Thread thread;
+    private boolean abort;
+    private boolean pause;
+    private boolean delete_if_canceled;
     
-    public Download(java.awt.Frame parent, boolean modal, String folder, String name, String url, String msg) {
-        super(parent,modal);
+    public Download(String url, String path){
+        this.init(url,path,Storage.getName(path));
+    }
+    
+    public Download(String url, String path, String name){
+        this.init(url,path+"/"+name,name);
+    }
+    
+    private void init(String url, String path, String name){
         initComponents();
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        if((name==null || name.trim().equals(""))){
-            String[] name_tmp=folder.split("/");
-            name=name_tmp[name_tmp.length-1];
-            name_tmp=Arrays.copyOf(name_tmp,name_tmp.length-1);
-            folder=String.join("/", name_tmp);
-        }
-        Storage.exists(folder,DirectoryType.FOLDER,true);
-        this.folder=folder+"/"+name;
+        this.path=Storage.formatPath(path);
         this.name=name;
         this.url=url;
-        msg=(msg==null || msg.trim().equals(" "))?this.url:msg;
-        this.setTitle(name);
-        this.progreso_texto.setText(msg);
-        new Thread(this).start();
+        this.deleteIfCanceled(false);
+        this.text_progress.setText(this.url);
+        this.abort();
+    }
+    
+    public void deleteIfCanceled(boolean op){
+        this.delete_if_canceled=op;
+    }
+    
+    public boolean deleteIfCanceled(){
+        return this.delete_if_canceled;
+    }
+    
+    public void abort(){
+        this.thread=new Thread(this);
+        this.resumen();
+        this.btn_pause_resumen.setVisible(false);
+        this.btn_play_canceled.setText("Iniciar");
+        this.abort=true;
+    }
+    
+    public void start(){
+        this.btn_pause_resumen.setVisible(true);
+        this.btn_play_canceled.setText("Cancelar");
+        this.abort=false;
+        this.resumen();
+        this.thread.start();
+    }
+    
+    public void pause(){
+        this.btn_pause_resumen.setText("Reanudar");
+        this.pause=true;
+    }
+    
+    public void resumen(){
+        this.btn_pause_resumen.setText("Pausar");
+        this.pause=false;
     }
     
     @Override
     public void run(){
-        File file=new File(this.folder);
+        File file=new File(this.path);
+        this.progress.setMaximum(100);
         try{
             URLConnection con=new URL(this.url).openConnection();
             con.connect();
+            
             this.in=new BufferedInputStream(con.getInputStream());
             this.out=new FileOutputStream(file,true);
-            int tamano=con.getContentLength();
-            this.progreso.setMaximum(100);
+            
+            int size_total=con.getContentLength();
             int b=0;
+            long start_time=System.currentTimeMillis();
             while(b!=-1){
-                if(this.close){
+                if(this.pause){
+                    continue;
+                }
+                if(this.abort){
                     this.in.close();
                     this.out.close();
-                    //Storage.deleteFile(this.folder);
                     b=-1;
+                    if(this.deleteIfCanceled()){
+                        Storage.deleteFile(this.path);
+                    }
                 }else{
-                    b=in.read();
+                    b=this.in.read();
                     if(b!=-1){
-                        out.write(b);
-                        this.progreso_texto.setText("Descargando: "+Storage.convertSize(file.length())+" / "+Storage.convertSize(tamano));
-                        this.progreso.setValue((int)(file.length()*100)/tamano);
+                        this.out.write(b);
                     }
                 }
+                long current_time=System.currentTimeMillis();
+                long elapsed_time=current_time-start_time;
+                this.text_progress.setText("Descargando: "+Storage.convertSize(file.length())+" / "+Storage.convertSize(size_total));
+                this.progress.setValue((int)(file.length()*100)/size_total);
             }
-            in.close();
-            out.close();
+            this.in.close();
+            this.out.close();
         }catch(Exception ex){
-            this.progreso_texto.setText(ex.toString());
+            ex.printStackTrace();
         }
-        dispose();
     }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        progreso = new javax.swing.JProgressBar();
-        progreso_texto = new javax.swing.JLabel();
+        text_progress = new javax.swing.JLabel();
+        progress = new javax.swing.JProgressBar();
+        btn_play_canceled = new javax.swing.JButton();
+        btn_pause_resumen = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
+        setMaximumSize(new java.awt.Dimension(0, 0));
+        setPreferredSize(new java.awt.Dimension(0, 0));
+
+        text_progress.setMaximumSize(new java.awt.Dimension(400, 0));
+
+        btn_play_canceled.setText("Cancelar");
+        btn_play_canceled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_play_canceledActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        btn_pause_resumen.setText("Cancelar");
+        btn_pause_resumen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_pause_resumenActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progreso, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                    .addComponent(progreso_texto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(progress, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(text_progress, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btn_pause_resumen)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_play_canceled)))
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(progreso_texto, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                .addComponent(text_progress, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progreso, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(progress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_play_canceled)
+                    .addComponent(btn_pause_resumen)))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.close=true;
-    }//GEN-LAST:event_formWindowClosing
+    private void btn_play_canceledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_play_canceledActionPerformed
+        if(this.abort){
+            this.start();
+        }else{
+            this.abort();
+        }
+    }//GEN-LAST:event_btn_play_canceledActionPerformed
 
-    public static void main(String args[]){
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Download dialog = new Download(new javax.swing.JFrame(),true,null,null,null,null);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+    private void btn_pause_resumenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pause_resumenActionPerformed
+        if(this.pause){
+            this.resumen();
+        }else{
+            this.pause();
+        }
+    }//GEN-LAST:event_btn_pause_resumenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JProgressBar progreso;
-    private javax.swing.JLabel progreso_texto;
+    private javax.swing.JButton btn_pause_resumen;
+    private javax.swing.JButton btn_play_canceled;
+    private javax.swing.JProgressBar progress;
+    private javax.swing.JLabel text_progress;
     // End of variables declaration//GEN-END:variables
+
 }
