@@ -117,6 +117,8 @@ public class ExecutionObserver{
         while((line=this.reader.readLine())!=null){
             this.out_str+=line+"\n";
         }
+        input_stream.close();
+        reader.close();
         return this.out_str;
     }
     
