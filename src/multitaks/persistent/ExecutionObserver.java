@@ -1,4 +1,4 @@
-package multitaks.Persistent;
+package multitaks.persistent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class ExecutionObserver{
     }
     
     public interface onOutput{
-        public void call(String line);
+        public void call(String line, int posi);
     }
     
     public interface onCaceled{
@@ -83,9 +83,11 @@ public class ExecutionObserver{
             public void run(){
                 String line;
                 try{
+                    int index=0;
                     while((line=reader.readLine())!=null){
                         out_str+=line+"\n";
-                        action.call(line);
+                        action.call(line,index);
+                        index++;
                         if(cancel){
                             break;
                         }
