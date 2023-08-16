@@ -2,7 +2,6 @@ package test.socket;
 
 import javax.swing.JOptionPane;
 import multitaks.socket.SocketClient;
-import multitaks.socket.SocketData;
 import multitaks.socket.SocketHandle;
 import multitaks.socket.SocketServer;
 

@@ -3,16 +3,19 @@ package multitaks.socket;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import multitaks.socket.SocketServer.onMessage;
+import multitaks.socket.contracts.SocketServerImpl;
 
 /**
  *
  * @author dogi_
  */
 
-public class SocketHandle{
+public class SocketHandle implements SocketServerImpl{
     
     private Map<String,SocketServer.onMessage> channels=new HashMap<>();
     
@@ -44,6 +47,11 @@ public class SocketHandle{
     
     public Map<String,SocketServer.onMessage> getChannels(){
         return this.channels;
+    }
+
+    @Override
+    public List<Socket> getClients(){
+        return new ArrayList<>();
     }
     
 }
