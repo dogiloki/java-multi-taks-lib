@@ -2,17 +2,13 @@ package multitaks;
 
 import java.awt.Dimension;
 import java.awt.Image;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Iterator;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -124,10 +120,25 @@ public class Function<T>{
     
     /**
      * Crear una ImageIcon apartir de una URL
+     * @param url dirección http de la imagen
+     * @return ImageIcon
      */
     public static ImageIcon createImageFromURL(String url){
         try{
             URL image_url=new URL(url);
+            
+            Iterator<ImageReader> readers=ImageIO.getImageReadersBySuffix("webp");
+            if(readers.hasNext()){
+                ImageReader reader=readers.next();
+                try{
+                    reader.setInput(ImageIO.createImageInputStream(image_url.openStream()));
+                    Image image=reader.read(0);
+                    return new ImageIcon(image);
+                }finally{
+                    reader.dispose();
+                }
+            }
+            
             Image image=ImageIO.read(image_url);
             if(image!=null){
                 return new ImageIcon(image);
