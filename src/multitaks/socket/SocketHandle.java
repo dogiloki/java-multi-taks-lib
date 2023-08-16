@@ -25,7 +25,7 @@ public class SocketHandle{
         this.getChannels().put(channel,action);
     }
     
-    public void emit(SocketData data) throws IOException{
+    public void emit(String channel, Object message) throws IOException{
         
     }
     

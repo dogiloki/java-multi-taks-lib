@@ -24,8 +24,8 @@ public class SocketClient extends SocketHandle implements Runnable{
     }
     
     @Override
-    public void emit(SocketData data) throws IOException{
-        this.send(this.socket,data.toString());
+    public void emit(String channel, Object message) throws IOException{
+        this.send(this.socket,new SocketData(channel,message.toString()).toString());
     }
     
     @Override
@@ -51,7 +51,7 @@ public class SocketClient extends SocketHandle implements Runnable{
                         SocketData message=new Gson().fromJson(data,SocketData.class);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
                         if(on_message!=null){
-                            on_message.run(message);
+                            on_message.run(message.getMessage());
                         }
                     }catch(Exception ex){
                         ex.printStackTrace();

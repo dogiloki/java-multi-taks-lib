@@ -1,7 +1,6 @@
 package test;
 
 import multitaks.socket.SocketClient;
-import multitaks.socket.SocketData;
 
 /**
  *
@@ -14,7 +13,7 @@ public class SocketTestClient{
         try{
             SocketClient server=new SocketClient("192.168.1.73",1234);
             server.start();
-            server.emit(new SocketData("test","Hola"));
+            server.emit("test","hola");
         }catch(Exception ex){
             System.out.println(ex.getMessage());
         }

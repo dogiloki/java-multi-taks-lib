@@ -208,7 +208,7 @@ public class SocketFrom extends javax.swing.JFrame {
 
     private void btn_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendActionPerformed
         try{
-            this.socket.emit(new SocketData(this.box_channel_send.getText(),this.box_message.getText()));
+            this.socket.emit(this.box_channel_send.getText(),this.box_message.getText());
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
         }
@@ -216,8 +216,8 @@ public class SocketFrom extends javax.swing.JFrame {
 
     private void btn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_send1ActionPerformed
         try{
-            this.socket.on(this.box_channel_on.getText(),(data)->{
-                this.box_messages.setText(this.box_messages.getText()+"["+data.getChannel()+"]"+data.getMessage()+"\n");
+            this.socket.on(this.box_channel_on.getText(),(message)->{
+                this.box_messages.setText(this.box_messages.getText()+"["+this.box_channel_on.getText()+"]"+message.toString()+"\n");
             });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
@@ -226,8 +226,8 @@ public class SocketFrom extends javax.swing.JFrame {
 
     private void btn_on2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_on2ActionPerformed
         try{
-            this.socket.on(this.box_channel_on.getText(),(data)->{
-                this.box_messages.setText(this.box_messages.getText()+"["+data.getChannel()+"]"+data.getMessage()+"\n");
+            this.socket.on(this.box_channel_on.getText(),(message)->{
+                this.box_messages.setText(this.box_messages.getText()+"["+this.box_channel_on.getText()+"]"+message.toString()+"\n");
             });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);

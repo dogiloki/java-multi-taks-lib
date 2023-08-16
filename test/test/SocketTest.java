@@ -13,7 +13,7 @@ public class SocketTest{
             SocketServer server=new SocketServer(1234);
             server.start();
             server.on("test",(data)->{
-                System.out.println(data.getMessage());
+                System.out.println(data);
             });
         }catch(Exception ex){
             System.out.println(ex.getMessage());

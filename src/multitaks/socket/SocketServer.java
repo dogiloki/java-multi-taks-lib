@@ -18,7 +18,7 @@ import multitaks.Network;
 public class SocketServer extends SocketHandle implements Runnable{
     
     public interface onMessage{
-        public void run(SocketData message);
+        public void run(Object message);
     }
     
     private String ip;
@@ -32,9 +32,9 @@ public class SocketServer extends SocketHandle implements Runnable{
     }
     
     @Override
-    public void emit(SocketData data) throws IOException{
+    public void emit(String channel, Object message) throws IOException{
         for(Socket client:this.getClients()){
-            this.send(client,data.toString());
+            this.send(client,new SocketData(channel,message.toString()).toString());
         }
     }
     
@@ -55,7 +55,7 @@ public class SocketServer extends SocketHandle implements Runnable{
             try{
                 Socket client=this.socket.accept();
                 this.getClients().add(client);
-                this.getChannels().get("connected").run(new SocketData("connected",client.toString()));
+                this.getChannels().get("connected").run(client);
                 BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String data;
                 while((data=reader.readLine())!=null){
@@ -63,13 +63,13 @@ public class SocketServer extends SocketHandle implements Runnable{
                         SocketData message=new Gson().fromJson(data,SocketData.class);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
                         if(on_message!=null && !message.getChannel().equals("connected") && !message.getChannel().equals("disconnected")){
-                            on_message.run(message);
+                            on_message.run(message.getMessage());
                         }
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }
                 }
-                this.getChannels().get("disconnected").run(new SocketData("disconnected",client.toString()));
+                this.getChannels().get("disconnected").run(client);
                 reader.close();
                 this.getClients().remove(client);
                 client.close();
