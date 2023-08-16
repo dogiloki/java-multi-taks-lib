@@ -55,7 +55,7 @@ public class SocketServer extends SocketHandle implements Runnable{
             try{
                 Socket client=this.socket.accept();
                 this.getClients().add(client);
-                this.getChannels().get("connected").run(new SocketData("connected",client));
+                this.getChannels().get("connected").run(new SocketData("connected",client.toString()));
                 BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String data;
                 while((data=reader.readLine())!=null){
@@ -69,7 +69,7 @@ public class SocketServer extends SocketHandle implements Runnable{
                         ex.printStackTrace();
                     }
                 }
-                this.getChannels().get("disconnected").run(new SocketData("disconnected",client));
+                this.getChannels().get("disconnected").run(new SocketData("disconnected",client.toString()));
                 reader.close();
                 this.getClients().remove(client);
                 client.close();
