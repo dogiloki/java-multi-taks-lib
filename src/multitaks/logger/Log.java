@@ -1,4 +1,4 @@
-package multitaks.loguer;
+package multitaks.logger;
 
 import multitaks.directory.ModelDirectory;
 import multitaks.directory.annotations.Directory;
@@ -22,7 +22,7 @@ public class Log extends ModelDirectory{
     }
     
     public void add(LogType log_type, String message){
-        this.append("["+Loguer.getTimeCurrent()+"] "+log_type.getText()+" "+message+"\n");
+        this.append("["+Logger.getTimeCurrent()+"] "+log_type.getText()+" "+message+"\n");
     }
     
 }

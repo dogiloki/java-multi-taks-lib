@@ -1,6 +1,6 @@
 package multitaks.loguer.contracts;
 
-import multitaks.loguer.Loguer;
+import multitaks.logger.Logger;
 
 /**
  *
@@ -8,14 +8,14 @@ import multitaks.loguer.Loguer;
  */
 public interface LogImpl{
     
-    public Loguer add(String message);
-    public Loguer info(String message);
-    public Loguer error(String message);
-    public Loguer warning(String message);
-    public Loguer debug(String message);
-    public Loguer notice(String message);
-    public Loguer critical(String message);
-    public Loguer alert(String message);
-    public Loguer emergency(String message);
+    public Logger add(String message);
+    public Logger info(String message);
+    public Logger error(String message);
+    public Logger warning(String message);
+    public Logger debug(String message);
+    public Logger notice(String message);
+    public Logger critical(String message);
+    public Logger alert(String message);
+    public Logger emergency(String message);
     
 }

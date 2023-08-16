@@ -1,6 +1,6 @@
 package test;
 
-import multitaks.loguer.Loguer;
+import multitaks.logger.Logger;
 
 /**
  *
@@ -10,7 +10,7 @@ import multitaks.loguer.Loguer;
 public class LoguerTest{
     
     public LoguerTest(){
-        Loguer loguer=new Loguer();
+        Logger loguer=new Logger();
         loguer.info("Esto es un mensage informativo");
         loguer.add("HOla");
         loguer.info("que tal");

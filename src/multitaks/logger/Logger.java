@@ -1,4 +1,4 @@
-package multitaks.loguer;
+package multitaks.logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,25 +16,25 @@ import multitaks.loguer.enums.LogType;
  */
 
 @Directory(type=DirectoryType.FOLDER)
-public class Loguer extends ModelDirectory implements LogImpl{
+public class Logger extends ModelDirectory implements LogImpl{
     
     private static String day_format="dd-MM-yyyy";
     private static String time_format="HH:mm:ss";
     public static String getDayCurrent(){
-        return new SimpleDateFormat(Loguer.day_format).format(new Date());
+        return new SimpleDateFormat(Logger.day_format).format(new Date());
     }
     public static String getTimeCurrent(){
-        return new SimpleDateFormat(Loguer.time_format).format(new Date());
+        return new SimpleDateFormat(Logger.time_format).format(new Date());
     }
     
     private Log log;
     private boolean mode_debug=true;
     
-    public Loguer(){
+    public Logger(){
         this.createFielLog(null);
     }
     
-    public Loguer(String src){
+    public Logger(String src){
         this.createFielLog(src);
     }
     
@@ -46,7 +46,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
             }
         }
         super.aim(this,src);
-        this.log=new Log(this.getSrc()+"/"+Loguer.getDayCurrent()+".txt");
+        this.log=new Log(this.getSrc()+"/"+Logger.getDayCurrent()+".txt");
     }
     
     public void modeDebug(boolean op){
@@ -58,7 +58,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
     
     @Override
-    public Loguer add(String message){
+    public Logger add(String message){
         if(this.isModeDebug()){
             this.getLog().add(message);
         }
@@ -66,7 +66,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
     
     @Override
-    public Loguer info(String message){
+    public Logger info(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.INFO,message);
         }
@@ -74,7 +74,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
     
     @Override
-    public Loguer error(String message){
+    public Logger error(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.ERROR,message);
         }
@@ -82,7 +82,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer warning(String message){
+    public Logger warning(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.WARNING,message);
         }
@@ -90,7 +90,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer debug(String message){
+    public Logger debug(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.DEBUG,message);
         }
@@ -98,7 +98,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer notice(String message){
+    public Logger notice(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.NOTICE,message);
         }
@@ -106,7 +106,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer critical(String message){
+    public Logger critical(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.CRITICAL,message);
         }
@@ -114,7 +114,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer alert(String message){
+    public Logger alert(String message){
         if(this.isModeDebug()){
             this.getLog().add(LogType.ALERT,message);
         }
@@ -122,7 +122,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
 
     @Override
-    public Loguer emergency(String message){
+    public Logger emergency(String message){
         this.getLog().add(LogType.EMERGENCY,message);
         return this;
     }
