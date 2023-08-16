@@ -28,6 +28,7 @@ public class Loguer extends ModelDirectory implements LogImpl{
     }
     
     private Log log;
+    private boolean mode_debug=true;
     
     public Loguer(){
         this.createFielLog(null);
@@ -48,49 +49,82 @@ public class Loguer extends ModelDirectory implements LogImpl{
         this.log=new Log(this.getSrc()+"/"+Loguer.getDayCurrent()+".txt");
     }
     
-    @Override
-    public void add(String message){
-        this.getLog().add(message);
+    public void modeDebug(boolean op){
+        this.mode_debug=op;
+    }
+    
+    public boolean isModeDebug(){
+        return this.mode_debug;
     }
     
     @Override
-    public void info(String message){
-        this.getLog().add(LogType.INFO,message);
+    public Loguer add(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(message);
+        }
+        return this;
     }
     
     @Override
-    public void error(String message){
-        this.getLog().add(LogType.ERROR,message);
+    public Loguer info(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.INFO,message);
+        }
+        return this;
+    }
+    
+    @Override
+    public Loguer error(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.ERROR,message);
+        }
+        return this;
     }
 
     @Override
-    public void warning(String message){
-        this.getLog().add(LogType.WARNING,message);
+    public Loguer warning(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.WARNING,message);
+        }
+        return this;
     }
 
     @Override
-    public void debug(String message){
-        this.getLog().add(LogType.DEBUG,message);
+    public Loguer debug(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.DEBUG,message);
+        }
+        return this;
     }
 
     @Override
-    public void notice(String message){
-        this.getLog().add(LogType.NOTICE,message);
+    public Loguer notice(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.NOTICE,message);
+        }
+        return this;
     }
 
     @Override
-    public void critical(String message){
-        this.getLog().add(LogType.CRITICAL,message);
+    public Loguer critical(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.CRITICAL,message);
+        }
+        return this;
     }
 
     @Override
-    public void alert(String message){
-        this.getLog().add(LogType.ALERT,message);
+    public Loguer alert(String message){
+        if(this.isModeDebug()){
+            this.getLog().add(LogType.ALERT,message);
+        }
+        return this;
     }
 
     @Override
-    public void emergency(String message){
+    public Loguer emergency(String message){
         this.getLog().add(LogType.EMERGENCY,message);
+        return this;
     }
     
     public Log getLog(){
