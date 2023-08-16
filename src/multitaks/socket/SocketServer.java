@@ -55,19 +55,21 @@ public class SocketServer extends SocketHandle implements Runnable{
             try{
                 Socket client=this.socket.accept();
                 this.getClients().add(client);
+                this.getChannels().get("connected").run(new SocketData("connected",client));
                 BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String data;
                 while((data=reader.readLine())!=null){
                     try{
                         SocketData message=new Gson().fromJson(data,SocketData.class);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
-                        if(on_message!=null){
+                        if(on_message!=null && !message.getChannel().equals("connected") && !message.getChannel().equals("disconnected")){
                             on_message.run(message);
                         }
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }
                 }
+                this.getChannels().get("disconnected").run(new SocketData("disconnected",client));
                 reader.close();
                 this.getClients().remove(client);
                 client.close();

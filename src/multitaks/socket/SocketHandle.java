@@ -17,7 +17,8 @@ public class SocketHandle{
     private Map<String,SocketServer.onMessage> channels=new HashMap<>();
     
     public SocketHandle(){
-        
+        this.on("connected",(data)->{});
+        this.on("disconnected",(data)->{});
     }
     
     public void on(String channel, onMessage action){
