@@ -784,7 +784,7 @@ public class Storage{
      * @return Indica si se abrió correctamente el fichero
      */
     private boolean open(boolean append){
-        if(this.getType()!=null && this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
+        if(this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
             try{
                 this.file=new File(this.getSrc());
                 this.bw=new BufferedWriter(new FileWriter(this.file,append));

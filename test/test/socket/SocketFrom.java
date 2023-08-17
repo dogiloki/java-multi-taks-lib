@@ -194,7 +194,7 @@ public class SocketFrom extends javax.swing.JFrame {
             this.socket.start();
             this.socket.on("connected",(client)->{
                 try{
-                    this.socket.emit((Socket)client,"welcome","Bienvenido "+((Socket)client).getInetAddress());
+                    this.socket.emit((Socket)client,"welcome","Bienvenido "+((Socket)client));
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
