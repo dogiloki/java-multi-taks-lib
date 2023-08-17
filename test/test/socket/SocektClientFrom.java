@@ -1,6 +1,12 @@
 package test.socket;
 
+import java.io.FileNotFoundException;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import multitaks.directory.FileBlock;
+import multitaks.directory.Storage;
 import multitaks.socket.SocketClient;
 
 /**
@@ -163,7 +169,14 @@ public class SocektClientFrom extends javax.swing.JFrame {
             this.client=new SocketClient(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
             this.client.start();
             this.client.on("welcome",(message)->{
-                JOptionPane.showMessageDialog(null,message);
+                try{
+                    byte[] b=Base64.getDecoder().decode(message);
+                    Storage s=new Storage("VID-20230210-WA0004.mp4");
+                    FileBlock file=s.fileBlock(1024);
+                    file.write(b);
+                }catch(Exception ex){
+                    
+                }
             });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);

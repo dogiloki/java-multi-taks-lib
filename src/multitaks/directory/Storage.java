@@ -12,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -83,7 +82,6 @@ public class Storage{
                 File directorio=new File(ruta_crear);
                 if(!directorio.exists()){
                     directorio.mkdir();
-    
                 }
             }
             return true;
@@ -934,7 +932,7 @@ public class Storage{
         return in;
     }
     
-    public FileBlock readBloks(int block_size){
+    public FileBlock fileBlock(int block_size){
         try{
             if(!this.open(true)){
                 return null;
@@ -1082,7 +1080,7 @@ public class Storage{
             Storage store=new Storage(path,type);
             switch(type){
                 case FOLDER: return Storage.createFolder(path);
-                case FILE: return store.write("");
+                case FILE: Storage.createFolder(Storage.getFolder(path)); return store.write("");
             }
             store.close();
         }

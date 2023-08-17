@@ -2,8 +2,9 @@ package multitaks.directory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import multitaks.directory.enums.DirectoryType;
 
 /**
  *
@@ -16,6 +17,7 @@ public class FileBlock{
     private int block_size;
     private byte[] buffer;
     private FileInputStream in;
+    private FileOutputStream out;
     private int index=0;
     private byte[] element;
     
@@ -23,30 +25,39 @@ public class FileBlock{
         this.src=src;
         this.block_size=block_size;
         this.buffer=new byte[this.block_size];
-        this.in=new FileInputStream(this.getSrc());
     }
     
-    public byte[] read(){
+    public byte[] read()throws IOException{
+        if(this.in==null){
+            this.in=new FileInputStream(this.getSrc());
+        }
         int bit;
-        try{
-            bit=this.in.read(this.buffer);
-            if(bit==-1){
-                this.close();
-            }else{
-                this.index++;
-                byte[] process=new byte[bit];
-                System.arraycopy(this.buffer,0,process,0,bit);
-                this.element=process;
-                return this.element;
-            }
-        }catch(IOException ex){
+        bit=this.in.read(this.buffer);
+        if(bit==-1){
+            this.close();
             return null;
         }
-        return null;
+        this.index++;
+        byte[] process=new byte[bit];
+        System.arraycopy(this.buffer,0,process,0,bit);
+        this.element=process;
+        return this.element;
+    }
+    
+    public void write(byte[] b)throws IOException{
+        if(this.out==null){
+            this.out=new FileOutputStream(this.getSrc());
+        }
+        this.out.write(b,0,this.block_size);
     }
     
     public void close() throws IOException{
-        this.in.close();
+        if(this.in!=null){
+            this.in.close();
+        }
+        if(this.out!=null){
+            this.out.close();
+        }
     }
     
     // Getters
