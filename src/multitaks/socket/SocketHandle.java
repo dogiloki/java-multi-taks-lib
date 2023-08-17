@@ -3,12 +3,10 @@ package multitaks.socket;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import multitaks.socket.SocketServer.onMessage;
-import multitaks.socket.contracts.SocketServerImpl;
 
 /**
  *
@@ -29,6 +27,14 @@ public class SocketHandle{
     }
     
     public void emit(String channel, Object message) throws IOException{
+        
+    }
+    
+    public void emit(List<Socket> clients, String channel, Object message) throws IOException{
+        
+    }
+    
+    public void emit(Socket socket, String channel, Object message) throws IOException{
         
     }
     

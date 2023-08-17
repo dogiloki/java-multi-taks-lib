@@ -1,5 +1,6 @@
 package test.socket;
 
+import java.net.Socket;
 import javax.swing.JOptionPane;
 import multitaks.socket.SocketClient;
 import multitaks.socket.SocketHandle;
@@ -191,6 +192,13 @@ public class SocketFrom extends javax.swing.JFrame {
         try{
             this.socket=new SocketServer(Integer.parseInt(this.box_port_create.getText()));
             this.socket.start();
+            this.socket.on("connected",(client)->{
+                try{
+                    this.socket.emit((Socket)client,"welcome","Bienvenido "+((Socket)client).getInetAddress());
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
         }
@@ -200,6 +208,9 @@ public class SocketFrom extends javax.swing.JFrame {
         try{
             this.socket=new SocketClient(this.box_ip_conect.getText(),Integer.parseInt(this.box_port_conect.getText()));
             this.socket.start();
+            this.socket.on("welcome",(message)->{
+                JOptionPane.showMessageDialog(null,message);
+            });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
         }

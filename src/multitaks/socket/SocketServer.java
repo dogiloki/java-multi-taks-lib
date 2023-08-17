@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import multitaks.Network;
 import multitaks.socket.contracts.SocketServerImpl;
@@ -34,7 +35,21 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     
     @Override
     public void emit(String channel, Object message) throws IOException{
-        for(Socket client:this.getClients()){
+        this._emit(this.getClients(),channel,message);
+    }
+    
+    @Override
+    public void emit(List<Socket> clients, String channel, Object message) throws IOException{
+        this._emit(clients,channel,message);
+    }
+    
+    @Override
+    public void emit(Socket client, String channel, Object message) throws IOException{
+        this._emit(Collections.singletonList(client),channel,message);
+    }
+    
+    private void _emit(List<Socket> clients, String channel, Object message) throws IOException{
+        for(Socket client:clients){
             this.send(client,new SocketData(channel,message.toString()).toString());
         }
     }
