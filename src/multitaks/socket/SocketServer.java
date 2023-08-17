@@ -9,13 +9,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import multitaks.Network;
+import multitaks.socket.contracts.SocketServerImpl;
 
 /**
  *
  * @author dogi_
  */
 
-public class SocketServer extends SocketHandle implements Runnable{
+public class SocketServer extends SocketHandle implements Runnable, SocketServerImpl{
     
     public interface onMessage{
         public void run(Object message);

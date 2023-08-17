@@ -15,7 +15,7 @@ import multitaks.socket.contracts.SocketServerImpl;
  * @author dogi_
  */
 
-public class SocketHandle implements SocketServerImpl{
+public class SocketHandle{
     
     private Map<String,SocketServer.onMessage> channels=new HashMap<>();
     
@@ -47,11 +47,6 @@ public class SocketHandle implements SocketServerImpl{
     
     public Map<String,SocketServer.onMessage> getChannels(){
         return this.channels;
-    }
-
-    @Override
-    public List<Socket> getClients(){
-        return new ArrayList<>();
     }
     
 }
