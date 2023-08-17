@@ -111,7 +111,7 @@ public class Storage{
      * @param text Contenido a reecribir
      * @return Indicar si se reescribió el archivo
      */
-    public static boolean writerFile(String path, Object text){
+    public static boolean writeFile(String path, Object text){
         return new Storage(path).write(text);
     }
     
