@@ -866,7 +866,7 @@ public class Storage{
      */
     public boolean writeLine(Object text, long number){
         try{
-            RandomAccessFile file=new RandomAccessFile(this.getSrc(),"rw");
+            //RandomAccessFile file=new RandomAccessFile(this.getSrc(),"rw");
             Scanner reader=this.readIterator();
             int current_number=1;
             List<String> lines=new ArrayList<>();
@@ -917,7 +917,7 @@ public class Storage{
     }
     
     /**
-     * Obtiene todo el contenido de un fichero en forma de iterador en lugar de leer todo fichero
+     * Obtiene todo el contenido de un fichero en forma de iterador (cada iteración se divide por \n) en lugar de leer todo fichero
      * @return Scanner con el método en forma de iterador
      */
     public Scanner readIterator(){
@@ -932,6 +932,18 @@ public class Storage{
             ex.printStackTrace();
         }
         return in;
+    }
+    
+    public FileBlock readBloks(int block_size){
+        try{
+            if(!this.open(true)){
+                return null;
+            }
+            FileBlock file_block=new FileBlock(this.getSrc(),block_size);
+            return file_block;
+        }catch(Exception ex){
+            return null;
+        }
     }
     
     /**
