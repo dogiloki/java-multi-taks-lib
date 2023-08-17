@@ -19,14 +19,20 @@ import multitaks.socket.contracts.SocketServerImpl;
 
 public class SocketServer extends SocketHandle implements Runnable, SocketServerImpl{
     
-    public interface onMessage{
-        public void run(Object message);
+    public interface onConnect{
+        public void run(Socket client);
+    }
+    
+    public interface onDisconnect{
+        public void run(Socket client);
     }
     
     private String ip;
     private int port;
     private ServerSocket socket;
     private List<Socket> clients=new ArrayList<>();
+    public onConnect onConnect;
+    public onDisconnect onDisconnect;
     
     public SocketServer(int port) throws IOException{
         this.port=port;
@@ -71,7 +77,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
             try{
                 Socket client=this.socket.accept();
                 this.getClients().add(client);
-                this.getChannels().get("connected").run(client);
+                this.onConnect.run(client);
                 BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String data;
                 while((data=reader.readLine())!=null){
@@ -85,7 +91,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                         ex.printStackTrace();
                     }
                 }
-                this.getChannels().get("disconnected").run(client);
+                this.onDisconnect.run(client);
                 reader.close();
                 this.getClients().remove(client);
                 client.close();

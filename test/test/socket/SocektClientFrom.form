@@ -23,43 +23,37 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="box_port_create" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btn_create" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="172" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="box_ip_conect" pref="271" max="32767" attributes="0"/>
+                      <Component id="box_ip" pref="179" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="box_port_conect" min="-2" pref="95" max="-2" attributes="0"/>
+                      <Component id="box_port" min="-2" pref="95" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btn_conect" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="box_channel_send" min="-2" pref="123" max="-2" attributes="0"/>
+                      <Component id="box_channel" min="-2" pref="123" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="box_message" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btn_send" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="box_channel_on" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="btn_on2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_on" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
@@ -78,21 +72,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="box_port_create" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btn_create" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="box_ip_conect" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="box_port_conect" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="box_ip" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="box_port" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_conect" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -105,7 +92,7 @@
                   <Component id="btn_send" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                       <Component id="box_message" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="box_channel_send" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="box_channel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -113,33 +100,53 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="box_channel_on" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btn_on2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_on" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="146" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="119" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Puerto"/>
+        <Property name="text" type="java.lang.String" value="Port"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="box_port_create">
+    <Component class="javax.swing.JTextField" name="box_port">
       <Properties>
         <Property name="text" type="java.lang.String" value="1234"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btn_create">
+    <Component class="javax.swing.JButton" name="btn_conect">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Crear servidor"/>
+        <Property name="text" type="java.lang.String" value="Conectarse"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_createActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_conectActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="IP"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="box_ip">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="192.168.1.73"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Canal"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="box_channel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="test"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -148,7 +155,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="box_message">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Hola desde "/>
+        <Property name="text" type="java.lang.String" value="Hola desde cliente"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btn_send">
@@ -164,48 +171,13 @@
         <Property name="text" type="java.lang.String" value="test"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel4">
+    <Component class="javax.swing.JButton" name="btn_on">
       <Properties>
-        <Property name="text" type="java.lang.String" value="IP"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="box_ip_conect">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="192.168.1.73"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel5">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Port"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="box_port_conect">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="1234"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btn_conect">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Conectarse"/>
+        <Property name="text" type="java.lang.String" value="Recibir"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_conectActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_onActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Canal"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="box_channel_send">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="test"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel6">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Canal"/>
-      </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -222,13 +194,10 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btn_on2">
+    <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Recibir"/>
+        <Property name="text" type="java.lang.String" value="Canal"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_on2ActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import multitaks.socket.SocketServer.onMessage;
 
 /**
  *
@@ -15,11 +14,14 @@ import multitaks.socket.SocketServer.onMessage;
 
 public class SocketHandle{
     
-    private Map<String,SocketServer.onMessage> channels=new HashMap<>();
+    public interface onMessage{
+        public void run(String message);
+    }
+    
+    private Map<String,SocketHandle.onMessage> channels=new HashMap<>();
     
     public SocketHandle(){
-        this.on("connected",(data)->{});
-        this.on("disconnected",(data)->{});
+        
     }
     
     public void on(String channel, onMessage action){
@@ -51,7 +53,7 @@ public class SocketHandle{
         
     }
     
-    public Map<String,SocketServer.onMessage> getChannels(){
+    public Map<String,SocketHandle.onMessage> getChannels(){
         return this.channels;
     }
     
