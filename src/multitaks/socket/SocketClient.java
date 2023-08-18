@@ -13,8 +13,6 @@ import java.net.Socket;
 
 public class SocketClient extends SocketHandle implements Runnable{
     
-    private String ip;
-    private int port;
     private Socket socket;
     private BufferedReader reader;
     

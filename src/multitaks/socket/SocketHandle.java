@@ -14,6 +14,9 @@ import java.util.Map;
 
 public class SocketHandle{
     
+    protected String ip;
+    protected int port;
+    
     public interface onMessage{
         public void run(Object message);
     }
@@ -38,6 +41,18 @@ public class SocketHandle{
     
     public Map<String,SocketHandle.onMessage> getChannels(){
         return this.channels;
+    }
+    
+    public int getPort(){
+        return this.port;
+    }
+    
+    public String getAddress(){
+        return this.ip+":"+this.port;
+    }
+    
+    public String getIP(){
+        return this.ip;
     }
     
 }

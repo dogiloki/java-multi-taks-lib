@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,6 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         public void run(Socket client);
     }
     
-    private String ip;
-    private int port;
     private ServerSocket socket;
     private Map<String,List<Socket>> clients=new HashMap<>();
     public onConnect onConnect=(client)->{};
@@ -145,16 +144,14 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         this.getClients().put(channel,sockets);
     }
     
+    @Override
     public String getAddress(){
-        return this.ip+":"+this.port;
+        return this.getIP()+":"+this.getPort();
     }
     
+    @Override
     public String getIP(){
         return this.ip;
-    }
-    
-    public int getPort(){
-        return this.port;
     }
     
 }
