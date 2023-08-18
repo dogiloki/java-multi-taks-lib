@@ -23,9 +23,18 @@ public class SocketClient extends SocketHandle implements Runnable{
         this.port=port;
     }
     
+    public void on(String channel, onMessage action){
+        this.getChannels().put(channel,action);
+        try{
+            this.emit(channel,"");
+        }catch(IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     @Override
     public void emit(String channel, Object message) throws IOException{
-        this.send(this.socket,new SocketData(channel,message.toString()).toString());
+        this.send(this.socket,new SocketData(channel,message).toString());
     }
     
     @Override

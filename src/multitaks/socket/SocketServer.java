@@ -7,8 +7,9 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import multitaks.Network;
 import multitaks.socket.contracts.SocketServerImpl;
 
@@ -30,7 +31,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     private String ip;
     private int port;
     private ServerSocket socket;
-    private List<Socket> clients=new ArrayList<>();
+    private Map<String,List<Socket>> clients=new HashMap<>();
     public onConnect onConnect;
     public onDisconnect onDisconnect;
     
@@ -40,10 +41,22 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     @Override
-    public void emit(String channel, Object message) throws IOException{
-        this._emit(this.getClients(),channel,message);
+    public void on(String channel, onMessage action){
+        this.getChannels().put(channel,action);
     }
     
+    @Override
+    public void emit(String channel, Object message) throws IOException{
+        List<Socket> clients=this.getClients().get(channel);
+        if(clients==null){
+            clients=new ArrayList<>();
+        }
+        for(Socket client:clients){
+            this.send(client,new SocketData(channel,message).toString());
+        }
+    }
+    
+    /*
     @Override
     public void emit(List<Socket> clients, String channel, Object message) throws IOException{
         this._emit(clients,channel,message);
@@ -55,10 +68,12 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     private void _emit(List<Socket> clients, String channel, Object message) throws IOException{
+        clients=this.getClients().get(channel);
         for(Socket client:clients){
-            this.send(client,new SocketData(channel,message.toString()).toString());
+            this.send(client,new SocketData(channel,message).toString());
         }
     }
+    */
     
     @Override
     public void start(){
@@ -76,15 +91,15 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         while(true){
             try{
                 Socket client=this.socket.accept();
-                this.getClients().add(client);
                 this.onConnect.run(client);
                 BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
                 String data;
                 while((data=reader.readLine())!=null){
                     try{
                         SocketData message=new Gson().fromJson(data,SocketData.class);
+                        this.setClient(message.getChannel(),client);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
-                        if(on_message!=null && !message.getChannel().equals("connected") && !message.getChannel().equals("disconnected")){
+                        if(on_message!=null){
                             on_message.run(message.getMessage());
                         }
                     }catch(Exception ex){
@@ -114,8 +129,19 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         return this.port;
     }
     
-    public List<Socket> getClients(){
+    @Override
+    public Map<String,List<Socket>> getClients(){
         return this.clients;
+    }
+    
+    @Override
+    public void setClient(String channel, Socket client){
+        List<Socket> sockets=this.getClients().get(channel);
+        if(sockets==null){
+            sockets=new ArrayList<>();
+        }
+        sockets.add(client);
+        this.getClients().put(channel,sockets);
     }
     
 }

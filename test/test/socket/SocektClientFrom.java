@@ -170,10 +170,12 @@ public class SocektClientFrom extends javax.swing.JFrame {
             this.client.start();
             this.client.on("welcome",(message)->{
                 try{
-                    byte[] b=Base64.getDecoder().decode(message);
+                    System.out.println(message);
+                    /*
                     Storage s=new Storage("VID-20230210-WA0004.mp4");
                     FileBlock file=s.fileBlock(1024);
-                    file.write(b);
+                    file.write((byte[])message);
+                    */
                 }catch(Exception ex){
                     
                 }
@@ -194,7 +196,7 @@ public class SocektClientFrom extends javax.swing.JFrame {
     private void btn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_onActionPerformed
         try{
             this.client.on(this.box_channel.getText(),(message)->{
-                this.box_messages.setText(this.box_messages.getText()+"\n"+message);
+                this.box_messages.setText(this.box_messages.getText()+message+"\n");
             });
         }catch(Exception ex){
             ex.printStackTrace();

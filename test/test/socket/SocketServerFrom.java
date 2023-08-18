@@ -166,7 +166,7 @@ public class SocketServerFrom extends javax.swing.JFrame{
     private void btn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_onActionPerformed
         try{
             this.server.on(this.box_channel.getText(),(message)->{
-                this.box_messages.setText(this.box_messages.getText()+"\n"+message);
+                this.box_messages.setText(this.box_messages.getText()+message+"\n");
             });
         }catch(Exception ex){
             ex.printStackTrace();

@@ -10,9 +10,9 @@ import com.google.gson.Gson;
 public class SocketData{
     
     private String channel;
-    private String message;
+    private Object message;
     
-    public SocketData(String channel, String message){
+    public SocketData(String channel, Object message){
         this.channel=channel;
         this.message=message;
     }
@@ -26,7 +26,7 @@ public class SocketData{
     public String getChannel(){
         return this.channel;
     }
-    public String getMessage(){
+    public Object getMessage(){
         return this.message;
     }
     
