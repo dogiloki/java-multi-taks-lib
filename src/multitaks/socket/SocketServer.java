@@ -32,8 +32,8 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     private int port;
     private ServerSocket socket;
     private Map<String,List<Socket>> clients=new HashMap<>();
-    public onConnect onConnect;
-    public onDisconnect onDisconnect;
+    public onConnect onConnect=(client)->{};
+    public onDisconnect onDisconnect=(client)->{};
     
     public SocketServer(int port) throws IOException{
         this.port=port;

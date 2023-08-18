@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import multitaks.code.Code;
 import multitaks.directory.FileBlock;
 import multitaks.directory.Storage;
 import multitaks.socket.SocketClient;
@@ -168,18 +169,16 @@ public class SocektClientFrom extends javax.swing.JFrame {
         try{
             this.client=new SocketClient(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
             this.client.start();
+            Storage s=new Storage("VID-20230210-WA0004.mp4");
+            FileBlock file=s.fileBlock(1024);
             this.client.on("welcome",(message)->{
                 try{
-                    System.out.println(message);
-                    /*
-                    Storage s=new Storage("VID-20230210-WA0004.mp4");
-                    FileBlock file=s.fileBlock(1024);
-                    file.write((byte[])message);
-                    */
+                    file.write(Code.byteArrayToString(message.toString(),1024));
                 }catch(Exception ex){
-                    
+                    ex.printStackTrace();
                 }
             });
+            file.close();
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
         }

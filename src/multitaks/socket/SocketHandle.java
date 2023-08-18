@@ -37,8 +37,10 @@ public class SocketHandle{
         PrintWriter writer=new PrintWriter(out,true);
         if(message instanceof byte[]){
             out.write((byte[])message);
+            out.flush();
         }else{
             writer.println(message);
+            out.flush();
         }
     }
     

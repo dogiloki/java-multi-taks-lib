@@ -159,7 +159,7 @@ public class Storage{
      * @param block_size tamaño en bytes
      * @return Instancia de FileBlock
      */
-    public FileBlock fileBlock(String path, int block_size){
+    public static FileBlock fileBlock(String path, int block_size){
         return new Storage(path).fileBlock(block_size);
     }
     
