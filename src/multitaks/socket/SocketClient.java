@@ -18,7 +18,15 @@ public class SocketClient extends SocketHandle implements Runnable{
     private Socket socket;
     private BufferedReader reader;
     
+    public SocketClient(){
+    
+    }
+    
     public SocketClient(String ip, int port){
+        this.init(ip,port);
+    }
+    
+    private void init(String ip, int port){
         this.ip=ip;
         this.port=port;
     }
@@ -32,19 +40,25 @@ public class SocketClient extends SocketHandle implements Runnable{
         }
     }
     
-    @Override
     public void emit(String channel, Object message) throws IOException{
         this.send(this.socket,new SocketData(channel,message).toString());
     }
     
-    @Override
     public void close() throws IOException{
         this.reader.close();
         this.socket.close();
     }
     
-    @Override
+    public void start(String ip, int port) throws IOException{
+        this.init(ip,port);
+        this._start();
+    }
+    
     public void start() throws IOException{
+        this._start();
+    }
+    
+    private void _start() throws IOException{
         this.socket=new Socket(this.ip,this.port);
         new Thread(this).start();
     }
@@ -70,18 +84,6 @@ public class SocketClient extends SocketHandle implements Runnable{
         }catch(Exception ex){
             ex.printStackTrace();
         }
-    }
-    
-    public String getAddress(){
-        return this.ip+":"+this.port;
-    }
-    
-    public String getIP(){
-        return this.ip;
-    }
-    
-    public int getPort(){
-        return this.port;
     }
     
 }

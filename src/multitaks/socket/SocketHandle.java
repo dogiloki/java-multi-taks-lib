@@ -24,14 +24,6 @@ public class SocketHandle{
         
     }
     
-    public void on(String channel, onMessage action){
-        
-    }
-    
-    public void emit(String channel, Object message) throws IOException{
-        
-    }
-    
     public void send(Socket socket, Object message) throws IOException{
         OutputStream out=socket.getOutputStream();
         PrintWriter writer=new PrintWriter(out,true);
@@ -42,14 +34,6 @@ public class SocketHandle{
             writer.println(message);
             out.flush();
         }
-    }
-    
-    public void start() throws IOException{
-        
-    }
-    
-    public void close() throws IOException{
-        
     }
     
     public Map<String,SocketHandle.onMessage> getChannels(){

@@ -35,17 +35,23 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     public onConnect onConnect=(client)->{};
     public onDisconnect onDisconnect=(client)->{};
     
+    public SocketServer(){
+        
+    }
+    
     public SocketServer(int port) throws IOException{
+        this.init(port);
+    }
+    
+    private void init(int port) throws IOException{
         this.port=port;
         this.socket=new ServerSocket(this.port);
     }
     
-    @Override
     public void on(String channel, onMessage action){
         this.getChannels().put(channel,action);
     }
     
-    @Override
     public void emit(String channel, Object message) throws IOException{
         List<Socket> clients=this.getClients().get(channel);
         if(clients==null){
@@ -75,13 +81,20 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     */
     
-    @Override
+    public void start(int port) throws IOException{
+        this.init(port);
+        this._start();
+    }
+    
     public void start(){
+        this._start();
+    }
+    
+    private void _start(){
         this.ip=Network.getIp();
         new Thread(this).start();
     }
     
-    @Override
     public void close() throws IOException{
         this.socket.close();
     }
@@ -117,18 +130,6 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         }
     }
     
-    public String getAddress(){
-        return this.ip+":"+this.port;
-    }
-    
-    public String getIP(){
-        return this.ip;
-    }
-    
-    public int getPort(){
-        return this.port;
-    }
-    
     @Override
     public Map<String,List<Socket>> getClients(){
         return this.clients;
@@ -142,6 +143,18 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         }
         sockets.add(client);
         this.getClients().put(channel,sockets);
+    }
+    
+    public String getAddress(){
+        return this.ip+":"+this.port;
+    }
+    
+    public String getIP(){
+        return this.ip;
+    }
+    
+    public int getPort(){
+        return this.port;
     }
     
 }
