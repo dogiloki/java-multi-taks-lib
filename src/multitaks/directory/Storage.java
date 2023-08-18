@@ -154,6 +154,16 @@ public class Storage{
     }
     
     /**
+     * Obtiene una clase FileBlock para escribir y leer contenido en base a una cantidad especifica de byte[]
+     * @param path Ruta del fichero
+     * @param block_size tamaño en bytes
+     * @return Instancia de FileBlock
+     */
+    public FileBlock fileBlock(String path, int block_size){
+        return new Storage(path).fileBlock(block_size);
+    }
+    
+    /**
      * Obtine el tamaño en bits de un fichero ya sea carpeta o arvhivo
      * @param path Ruta del fichero
      * @return Devuelve el tamaño de ficheros en bits
@@ -932,6 +942,11 @@ public class Storage{
         return in;
     }
     
+    /**
+     * Obtiene una clase FileBlock para escribir y leer contenido en base a una cantidad especifica de byte[]
+     * @param block_size tamaño en bytes
+     * @return Instancia de FileBlock
+     */
     public FileBlock fileBlock(int block_size){
         try{
             if(!this.open(true)){
