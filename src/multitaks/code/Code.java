@@ -34,13 +34,13 @@ public class Code{
         return binary;
     }
     
-    /*public static String binaryToText(String binary){
+    public static String binaryToText(String binary){
         String text="";
         
         return text;
-    }*/
+    }
     
-    /*public static String[] splitSegment(String text, int number, onSplitSegment action){
+    public static String[] splitSegment(String text, int number, onSplitSegment action){
         int each=(int)Math.ceil(text.length()/number);
         String[] array=new String[each];
         int count=0;
@@ -56,7 +56,7 @@ public class Code{
             action.run(text_block,count);
         }
         return array;
-    }*/
+    }
     
     public static byte[] byteArrayToString(String text, int byte_size){
         String[] parts=text.replace("[","").replace("]","").split(",");
