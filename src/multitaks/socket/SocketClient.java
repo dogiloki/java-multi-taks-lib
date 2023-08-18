@@ -84,4 +84,8 @@ public class SocketClient extends SocketHandle implements Runnable{
         }
     }
     
+    public Socket getSocket(){
+        return this.socket;
+    }
+    
 }

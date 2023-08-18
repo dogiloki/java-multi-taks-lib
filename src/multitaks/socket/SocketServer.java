@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +151,10 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     @Override
     public String getIP(){
         return this.ip;
+    }
+    
+    public ServerSocket getSocket(){
+        return this.socket;
     }
     
 }
