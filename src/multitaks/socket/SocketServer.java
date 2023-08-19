@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import multitaks.Network;
 import multitaks.socket.contracts.SocketServerImpl;
 
 /**
@@ -120,8 +119,8 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                     }
                 }
                 this.onDisconnect.run(client);
+                this.removeClient(client);
                 reader.close();
-                this.getClients().remove(client);
                 client.close();
             }catch(Exception ex){
                 ex.printStackTrace();
@@ -143,6 +142,18 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         }
         sockets.add(client);
         this.getClients().put(channel,sockets);
+    }
+    
+    public void removeClient(Socket client){
+        for(Map.Entry<String,List<Socket>> entry:this.getClients().entrySet()){
+            String channel=entry.getKey();
+            List<Socket> sockets=entry.getValue();
+            if(sockets==null){
+                sockets=new ArrayList<>();
+            }
+            sockets.remove(client);
+            this.getClients().put(channel,sockets);
+        }
     }
     
     @Override

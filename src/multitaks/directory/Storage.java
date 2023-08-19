@@ -949,12 +949,10 @@ public class Storage{
      */
     public FileBlock fileBlock(int block_size){
         try{
-            if(!this.open(true)){
-                return null;
-            }
             FileBlock file_block=new FileBlock(this.getSrc(),block_size);
             return file_block;
         }catch(Exception ex){
+            ex.printStackTrace();
             return null;
         }
     }

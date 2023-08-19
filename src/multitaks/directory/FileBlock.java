@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import multitaks.directory.enums.DirectoryType;
 
 /**
  *
@@ -64,6 +63,9 @@ public class FileBlock{
     // Getters
     public String getSrc(){
         return this.src;
+    }
+    public int getSizeBlock(){
+        return this.block_size;
     }
     public byte[] getBuffer(){
         return this.buffer;
