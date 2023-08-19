@@ -89,7 +89,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     private void _start(){
-        this.ip=Network.getIp();
+        this.ip=this.socket.getInetAddress().getHostAddress();
         new Thread(this).start();
     }
     

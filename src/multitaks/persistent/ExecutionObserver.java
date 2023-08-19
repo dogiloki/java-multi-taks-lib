@@ -40,10 +40,10 @@ public class ExecutionObserver{
     private BufferedReader reader;
     private int exit_code;
     public onCaceled onCanceled=(String out_str1, int code)->{
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     };
     public onFinalized onFinalized=(String out_str1,int code)->{
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     };
     
     public ExecutionObserver(){
