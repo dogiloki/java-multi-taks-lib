@@ -94,12 +94,14 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     public void close() throws IOException{
+        this.start=false;
         this.socket.close();
     }
     
     @Override
     public void run(){
-        while(true){
+        this.start=true;
+        while(this.isStart()){
             try{
                 Socket client=this.socket.accept();
                 this.onConnect.run(client);
@@ -111,7 +113,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                         this.setClient(message.getChannel(),client);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
                         if(on_message!=null){
-                            on_message.run(message.getMessage());
+                            on_message.run(message.getMessage().toString());
                         }
                     }catch(Exception ex){
                         ex.printStackTrace();

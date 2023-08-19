@@ -43,6 +43,7 @@ public class SocketClient extends SocketHandle implements Runnable{
     }
     
     public void close() throws IOException{
+        this.start=false;
         this.reader.close();
         this.socket.close();
     }
@@ -63,16 +64,17 @@ public class SocketClient extends SocketHandle implements Runnable{
     
     @Override
     public void run(){
+        this.start=true;
         try{
             this.reader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            while(true){
+            while(this.isStart()){
                 String data;
                 while((data=this.reader.readLine())!=null){
                     try{
                         SocketData message=new Gson().fromJson(data,SocketData.class);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
                         if(on_message!=null){
-                            on_message.run(message.getMessage());
+                            on_message.run(message.getMessage().toString());
                         }
                     }catch(Exception ex){
                         ex.printStackTrace();

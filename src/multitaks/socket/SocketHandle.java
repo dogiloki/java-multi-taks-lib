@@ -16,9 +16,10 @@ public class SocketHandle{
     
     protected String ip;
     protected int port;
+    protected boolean start=false;
     
     public interface onMessage{
-        public void run(Object message);
+        public void run(String message);
     }
     
     private Map<String,SocketHandle.onMessage> channels=new HashMap<>();
@@ -53,6 +54,10 @@ public class SocketHandle{
     
     public String getIP(){
         return this.ip;
+    }
+    
+    public boolean isStart(){
+        return this.start;
     }
     
 }
