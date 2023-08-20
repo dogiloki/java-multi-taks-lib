@@ -1,6 +1,5 @@
 package multitaks.code;
 
-import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -59,8 +58,11 @@ public class Code{
     }
     
     public static byte[] byteArrayToString(String text, int byte_size){
-        String[] parts=text.replace("[","").replace("]","").split(",");
         byte[] b=new byte[byte_size];
+        if(text.isEmpty()){
+            return b;
+        }
+        String[] parts=text.replace("[","").replace("]","").split(",");
         for(int index=0; index<parts.length; index++){
             int num=(int)Double.parseDouble(parts[index].trim());
             b[index]=Byte.parseByte(String.valueOf(num));
