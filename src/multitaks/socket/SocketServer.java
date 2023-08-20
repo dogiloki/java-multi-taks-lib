@@ -108,27 +108,33 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                 }catch(Exception ex){
                     break;
                 }
-                this.onConnect.run(client);
-                try(BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()))){
-                    String data;
-                        while(this.isStart() && reader!=null && (data=reader.readLine())!=null){
-                            try{
-                                SocketData message=new Gson().fromJson(data,SocketData.class);
-                                this.setClient(message.getChannel(),client);
-                                SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
-                                if(on_message!=null){
-                                    on_message.run(message.getMessage().toString());
+                new Thread(this){
+                    @Override
+                    public void run(){
+                        try{
+                            try(BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()))){
+                                onConnect.run(client);
+                                String data;
+                                while(isStart() && reader!=null && (data=reader.readLine())!=null){
+                                    SocketData message=new Gson().fromJson(data,SocketData.class);
+                                    setClient(message.getChannel(),client);
+                                    SocketServer.onMessage on_message=getChannels().get(message.getChannel());
+                                    if(on_message!=null){
+                                        on_message.run(message.getMessage().toString());
+                                    }
                                 }
+                                onDisconnect.run(client);
+                                removeClient(client);
+                                client.close();
+                                reader.close();
                             }catch(Exception ex){
-                                ex.printStackTrace();
+                                
                             }
-                        }    
-                }catch(Exception ex){
-                
-                }
-                this.onDisconnect.run(client);
-                this.removeClient(client);
-                client.close();
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                }.start();
             }
         }catch(Exception ex){
             ex.printStackTrace();
