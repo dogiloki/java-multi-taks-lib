@@ -958,7 +958,7 @@ public class Storage{
     }
     
     /**
-     * Cierra fichero, cerrando su BufferedWriter y BufferedReader
+     * Cierra su BufferedWriter y BufferedReader
      * @return 
      */
     public boolean close(){
@@ -981,6 +981,7 @@ public class Storage{
      */
     public boolean delete(){
         try{
+            this.close();
             if(this.getType()==DirectoryType.FOLDER){
                 Storage.deleteFolder(this.getSrc());
             }else{

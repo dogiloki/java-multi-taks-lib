@@ -40,6 +40,7 @@ public class Cursor<T>{
             return false;
         }
         if(!this.iterator.hasNext()){
+            this.iterator.close();
             return false;
         }
         return true;
@@ -54,6 +55,7 @@ public class Cursor<T>{
         }else{
             record=this.record_list.next();
             if(record==null){
+                this.record_list.getIterator().close();
                 return null;
             }
             json=record.getJson();
@@ -75,6 +77,10 @@ public class Cursor<T>{
     
     public T firt(){
         return this.hasNext()?this.next():null;
+    }
+    
+    public Scanner getIterator(){
+        return this.iterator;
     }
     
 }

@@ -34,6 +34,7 @@ public class RecordList{
     
     private boolean hasNext(){
         if(!this.iterator.hasNextLine()){
+            this.iterator.close();
             return false;
         }
         return true;
@@ -93,6 +94,10 @@ public class RecordList{
         Record record_found=new Record(fields,record.getLineNumber());
         this.current=record_found;
         return this.current;
+    }
+    
+    public Scanner getIterator(){
+        return this.iterator;
     }
     
 }

@@ -120,6 +120,7 @@ public class ModelDB extends Record{
             }
             Collection collection=this.getConnection().collection(annot_table.src());
             RecordList records_find=collection.find(record);
+            collection.close();
             return new Cursor(records_find,instance.getClass());
         }catch(Exception ex){
             ex.printStackTrace();
@@ -140,6 +141,7 @@ public class ModelDB extends Record{
             }
             Collection collection=this.getCollection();
             RecordList records=collection.all();
+            collection.close();
             return new Cursor(records,instance.getClass());
         }catch(Exception ex){
             ex.printStackTrace();
