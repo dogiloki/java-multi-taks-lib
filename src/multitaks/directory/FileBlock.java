@@ -64,6 +64,9 @@ public class FileBlock{
     public String getSrc(){
         return this.src;
     }
+    public int getBlockSize(){
+        return this.block_size;
+    }
     public int getSizeBlock(){
         return this.block_size;
     }
