@@ -38,47 +38,51 @@ public class SocketClient extends SocketHandle implements Runnable{
         }
     }
     
-    public void emit(String channel, Object message) throws IOException{
+    public void emit(String channel, Object message)throws IOException{
         this.send(this.socket,new SocketData(channel,message).toString());
     }
     
-    public void close() throws IOException{
-        this.start=false;
-        this.reader.close();
-        this.socket.close();
-    }
-    
-    public void start(String ip, int port) throws IOException{
+    public void start(String ip, int port)throws IOException{
         this.init(ip,port);
         this._start();
     }
     
-    public void start() throws IOException{
+    public void start()throws IOException{
         this._start();
     }
     
-    private void _start() throws IOException{
+    private void _start()throws IOException{
         this.socket=new Socket(this.ip,this.port);
         new Thread(this).start();
+    }
+    
+    public void close()throws IOException{
+        this.start=false;
+        this.socket.close();
+        this.reader.close();
     }
     
     @Override
     public void run(){
         this.start=true;
         try{
-            this.reader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            try{
+                this.reader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            }catch(Exception ex){
+                
+            }
             while(this.isStart()){
                 String data;
-                while((data=this.reader.readLine())!=null){
-                    try{
+                try{
+                    while(this.isStart() && (data=this.reader.readLine())!=null){
                         SocketData message=new Gson().fromJson(data,SocketData.class);
                         SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
                         if(on_message!=null){
                             on_message.run(message.getMessage().toString());
                         }
-                    }catch(Exception ex){
-                        ex.printStackTrace();
                     }
+                }catch(Exception ex){
+                
                 }
             }
         }catch(Exception ex){

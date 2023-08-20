@@ -14,6 +14,7 @@ public class SocketServerFrom extends javax.swing.JFrame{
 
     public SocketServerFrom(){
         initComponents();
+        this.server=new SocketServer();
     }
     
     @SuppressWarnings("unchecked")
@@ -145,13 +146,16 @@ public class SocketServerFrom extends javax.swing.JFrame{
 
     private void btn_createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_createActionPerformed
         try{
-            this.server=new SocketServer(Integer.parseInt(this.box_port.getText()));
-            this.server.start();
+            if(this.server.isStart()){
+                this.server.close();
+                return;
+            }
+            this.server.start(Integer.parseInt(this.box_port.getText()));
             this.server.onConnect=(message)->{
                 JOptionPane.showMessageDialog(null,message);
             };
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_createActionPerformed
 
@@ -159,7 +163,7 @@ public class SocketServerFrom extends javax.swing.JFrame{
         try{
             this.server.emit(this.box_channel.getText(),this.box_message.getText());
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_sendActionPerformed
 

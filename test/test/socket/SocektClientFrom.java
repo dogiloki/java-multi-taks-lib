@@ -21,6 +21,7 @@ public class SocektClientFrom extends javax.swing.JFrame {
     
     public SocektClientFrom() {
         initComponents();
+        this.client=new SocketClient();
     }
     
     @SuppressWarnings("unchecked")
@@ -167,8 +168,11 @@ public class SocektClientFrom extends javax.swing.JFrame {
 
     private void btn_conectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_conectActionPerformed
         try{
-            this.client=new SocketClient(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
-            this.client.start();
+            if(this.client.isStart()){
+                this.client.close();
+                return;
+            }
+            this.client.start(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
             Storage s=new Storage("VID-20230210-WA0004.mp4");
             FileBlock file=s.fileBlock(1024);
             this.client.on("welcome",(message)->{
@@ -178,9 +182,8 @@ public class SocektClientFrom extends javax.swing.JFrame {
                     ex.printStackTrace();
                 }
             });
-            file.close();
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_conectActionPerformed
 
@@ -188,7 +191,7 @@ public class SocektClientFrom extends javax.swing.JFrame {
         try{
             this.client.emit(this.box_channel.getText(),this.box_message.getText());
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,"Error",ex.getMessage(),JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_sendActionPerformed
 

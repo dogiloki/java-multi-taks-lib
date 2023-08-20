@@ -36,11 +36,11 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         
     }
     
-    public SocketServer(int port) throws IOException{
+    public SocketServer(int port)throws IOException{
         this.init(port);
     }
     
-    private void init(int port) throws IOException{
+    private void init(int port)throws IOException{
         this.port=port;
         this.socket=new ServerSocket(this.port);
     }
@@ -49,7 +49,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         this.getChannels().put(channel,action);
     }
     
-    public void emit(String channel, Object message) throws IOException{
+    public void emit(String channel, Object message)throws IOException{
         List<Socket> clients=this.getClients().get(channel);
         if(clients==null){
             clients=new ArrayList<>();
@@ -78,7 +78,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     */
     
-    public void start(int port) throws IOException{
+    public void start(int port)throws IOException{
         this.init(port);
         this._start();
     }
@@ -92,7 +92,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         new Thread(this).start();
     }
     
-    public void close() throws IOException{
+    public void close()throws IOException{
         this.start=false;
         this.socket.close();
     }
@@ -100,32 +100,38 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     @Override
     public void run(){
         this.start=true;
-        while(this.isStart()){
-            try{
-                Socket client=this.socket.accept();
+        try{
+            while(this.isStart()){
+                Socket client;
+                try{
+                    client=this.socket.accept();
+                }catch(Exception ex){
+                    break;
+                }
                 this.onConnect.run(client);
-                BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()));
-                String data;
-                while((data=reader.readLine())!=null){
-                    try{
-                        SocketData message=new Gson().fromJson(data,SocketData.class);
-                        this.setClient(message.getChannel(),client);
-                        SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
-                        if(on_message!=null){
-                            on_message.run(message.getMessage().toString());
-                        }
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                    }
+                try(BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()))){
+                    String data;
+                        while(this.isStart() && reader!=null && (data=reader.readLine())!=null){
+                            try{
+                                SocketData message=new Gson().fromJson(data,SocketData.class);
+                                this.setClient(message.getChannel(),client);
+                                SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
+                                if(on_message!=null){
+                                    on_message.run(message.getMessage().toString());
+                                }
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }    
+                }catch(Exception ex){
+                
                 }
                 this.onDisconnect.run(client);
                 this.removeClient(client);
-                reader.close();
                 client.close();
-            }catch(Exception ex){
-                ex.printStackTrace();
             }
-            
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
     }
     
