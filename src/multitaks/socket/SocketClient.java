@@ -1,10 +1,10 @@
 package multitaks.socket;
 
 import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 /**
  *
@@ -13,8 +13,8 @@ import java.net.Socket;
 
 public class SocketClient extends SocketHandle implements Runnable{
     
-    private Socket socket;
-    private BufferedReader reader;
+    private SocketChannel socket;
+    private ByteBuffer buffer;
     
     public SocketClient(){
     
@@ -29,17 +29,16 @@ public class SocketClient extends SocketHandle implements Runnable{
         this.port=port;
     }
     
-    public void on(String channel, onMessage action){
-        this.getChannels().put(channel,action);
-        try{
-            this.emit(channel,"");
-        }catch(IOException ex) {
-            ex.printStackTrace();
-        }
+    public void on(String channel_name, SocketHandle.onMessage action)throws IOException{
+        this.getChannels().put(channel_name, new ChannelHandle(channel_name,action));
+        this.emit(channel_name,"");
     }
     
-    public void emit(String channel, Object message)throws IOException{
-        this.send(this.socket,new SocketData(channel,message).toString());
+    public void emit(String channel_name, Object message)throws IOException{
+        this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
+        this.buffer.flip();
+        this.socket.write(this.buffer);
+        this.buffer.clear();
     }
     
     public void start(String ip, int port)throws IOException{
@@ -52,37 +51,35 @@ public class SocketClient extends SocketHandle implements Runnable{
     }
     
     private void _start()throws IOException{
-        this.socket=new Socket(this.ip,this.port);
+        this.socket=SocketChannel.open();
+        this.socket.connect(new InetSocketAddress(this.getIP(),this.getPort()));
+        this.buffer=ByteBuffer.allocate(1024);
         new Thread(this).start();
     }
     
     public void close()throws IOException{
         this.start=false;
         this.socket.close();
-        this.reader.close();
+        this.buffer.clear();
     }
     
     @Override
     public void run(){
         this.start=true;
         try{
-            try{
-                this.reader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            }catch(Exception ex){
-                
-            }
             while(this.isStart()){
-                String data;
-                try{
-                    while(this.isStart() && (data=this.reader.readLine())!=null){
-                        SocketData message=new Gson().fromJson(data,SocketData.class);
-                        SocketServer.onMessage on_message=this.getChannels().get(message.getChannel());
-                        if(on_message!=null){
-                            on_message.run(message.getMessage().toString());
-                        }
-                    }
-                }catch(Exception ex){
-                
+                this.buffer.clear();
+                int bytes_read=this.socket.read(this.buffer);
+                if(bytes_read<=0){
+                    continue;
+                }
+                this.buffer.flip();
+                byte[] data=new byte[bytes_read];
+                this.buffer.get(data);
+                SocketData message=new Gson().fromJson(new String(data),SocketData.class);
+                ChannelHandle on_action=this.getChannels().get(message.getChannel());
+                if(on_action!=null){
+                    on_action.getAction().run(message.getMessage().toString());
                 }
             }
         }catch(Exception ex){
@@ -90,7 +87,7 @@ public class SocketClient extends SocketHandle implements Runnable{
         }
     }
     
-    public Socket getSocket(){
+    public SocketChannel getSocket(){
         return this.socket;
     }
     

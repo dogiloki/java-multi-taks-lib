@@ -1,6 +1,6 @@
 package multitaks.socket.contracts;
 
-import java.net.Socket;
+import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +11,5 @@ import java.util.Map;
 
 public interface SocketServerImpl{
     
-    public Map<String,List<Socket>> getClients();
-    public void setClient(String channel, Socket client);
     
 }

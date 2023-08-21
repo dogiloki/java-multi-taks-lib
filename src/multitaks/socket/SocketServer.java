@@ -1,15 +1,13 @@
 package multitaks.socket;
 
-import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.InetSocketAddress;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import multitaks.socket.contracts.SocketServerImpl;
 
 /**
@@ -20,15 +18,16 @@ import multitaks.socket.contracts.SocketServerImpl;
 public class SocketServer extends SocketHandle implements Runnable, SocketServerImpl{
     
     public interface onConnect{
-        public void run(Socket client);
+        public void run(ClientHandle client);
     }
     
     public interface onDisconnect{
-        public void run(Socket client);
+        public void run(ClientHandle client);
     }
     
-    private ServerSocket socket;
-    private Map<String,List<Socket>> clients=new HashMap<>();
+    private ServerSocketChannel socket;
+    private List<ClientHandle> clients=new ArrayList<>();
+    private ExecutorService executor;
     public onConnect onConnect=(client)->{};
     public onDisconnect onDisconnect=(client)->{};
     
@@ -36,59 +35,49 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         
     }
     
-    public SocketServer(int port)throws IOException{
+    public SocketServer(int port){
         this.init(port);
     }
     
-    private void init(int port)throws IOException{
+    private void init(int port){
         this.port=port;
-        this.socket=new ServerSocket(this.port);
     }
     
-    public void on(String channel, onMessage action){
-        this.getChannels().put(channel,action);
+    public void on(String channel_name, SocketHandle.onMessage action){
+        this.getChannels().put(channel_name, new ChannelHandle(channel_name,action));
     }
     
-    public void emit(String channel, Object message)throws IOException{
-        List<Socket> clients=this.getClients().get(channel);
-        if(clients==null){
-            clients=new ArrayList<>();
-        }
-        for(Socket client:clients){
-            this.send(client,new SocketData(channel,message).toString());
+    public void emit(String channel_name, Object message)throws IOException{
+        for(ClientHandle client:this.getClients()){
+            client.emit(channel_name,message);
         }
     }
     
-    /*
-    @Override
-    public void emit(List<Socket> clients, String channel, Object message) throws IOException{
-        this._emit(clients,channel,message);
-    }
-    
-    @Override
-    public void emit(Socket client, String channel, Object message) throws IOException{
-        this._emit(Collections.singletonList(client),channel,message);
-    }
-    
-    private void _emit(List<Socket> clients, String channel, Object message) throws IOException{
-        clients=this.getClients().get(channel);
-        for(Socket client:clients){
-            this.send(client,new SocketData(channel,message).toString());
+    public void emit(List<ClientHandle> clients, String channel_name, Object message)throws IOException{
+        for(ClientHandle client:clients){
+            client.emit(channel_name,message);
         }
     }
-    */
+    
+    public void emit(ClientHandle client, String channel_name, Object message)throws IOException{
+        client.emit(channel_name,message);
+    }
     
     public void start(int port)throws IOException{
         this.init(port);
         this._start();
     }
     
-    public void start(){
+    public void start()throws IOException{
         this._start();
     }
     
-    private void _start(){
-        this.ip=this.socket.getInetAddress().getHostAddress();
+    private void _start()throws IOException{
+        this.socket=ServerSocketChannel.open();
+        this.socket.bind(new InetSocketAddress("192.168.1.73",this.port));
+        this.socket.configureBlocking(false);
+        this.executor=Executors.newFixedThreadPool(10);
+        this.ip=this.socket.getLocalAddress().toString().split(":")[0];
         new Thread(this).start();
     }
     
@@ -102,69 +91,23 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         this.start=true;
         try{
             while(this.isStart()){
-                Socket client;
-                try{
-                    client=this.socket.accept();
-                }catch(Exception ex){
-                    break;
+                SocketChannel client=this.socket.accept();
+                if(client==null){
+                    continue;
                 }
-                new Thread(this){
-                    @Override
-                    public void run(){
-                        try{
-                            try(BufferedReader reader=new BufferedReader(new InputStreamReader(client.getInputStream()))){
-                                onConnect.run(client);
-                                String data;
-                                while(isStart() && reader!=null && (data=reader.readLine())!=null){
-                                    SocketData message=new Gson().fromJson(data,SocketData.class);
-                                    setClient(message.getChannel(),client);
-                                    SocketServer.onMessage on_message=getChannels().get(message.getChannel());
-                                    if(on_message!=null){
-                                        on_message.run(message.getMessage().toString());
-                                    }
-                                }
-                                onDisconnect.run(client);
-                                removeClient(client);
-                                client.close();
-                                reader.close();
-                            }catch(Exception ex){
-                                
-                            }
-                        }catch(Exception ex){
-                            ex.printStackTrace();
-                        }
+                this.executor.submit(()->{
+                    try{
+                        ClientHandle client_handle=new ClientHandle(this,client);
+                        this.onConnect.run(client_handle);
+                        this.getClients().add(client_handle);
+                        client_handle.listener();
+                    }catch(Exception ex){
+                        ex.printStackTrace();
                     }
-                }.start();
+                });
             }
         }catch(Exception ex){
             ex.printStackTrace();
-        }
-    }
-    
-    @Override
-    public Map<String,List<Socket>> getClients(){
-        return this.clients;
-    }
-    
-    @Override
-    public void setClient(String channel, Socket client){
-        List<Socket> sockets=this.getClients().get(channel);
-        if(sockets==null){
-            sockets=new ArrayList<>();
-        }
-        sockets.add(client);
-        this.getClients().put(channel,sockets);
-    }
-    
-    public void removeClient(Socket client){
-        for(Map.Entry<String,List<Socket>> entry:this.getClients().entrySet()){
-            String channel=entry.getKey();
-            List<Socket> sockets=entry.getValue();
-            if(sockets==null){
-                sockets=new ArrayList<>();
-            }
-            sockets.remove(client);
-            this.getClients().put(channel,sockets);
         }
     }
     
@@ -178,7 +121,11 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         return this.ip;
     }
     
-    public ServerSocket getSocket(){
+    public List<ClientHandle> getClients(){
+        return this.clients;
+    }
+    
+    public ServerSocketChannel getSocket(){
         return this.socket;
     }
     
