@@ -34,9 +34,13 @@ public final class ClientHandle{
             this.buffer.get(data);
             SocketData message=new Gson().fromJson(new String(data),SocketData.class);
             this.getChannels().put(message.getChannel(),null);
-            ChannelHandle on_action=this.server.getChannels().get(message.getChannel());
-            if(on_action!=null){
-                on_action.getAction().run(message.getMessage().toString());
+            ChannelHandle channel_server=this.server.getChannels().get(message.getChannel());
+            ChannelHandle channel_client=this.getChannels().get(message.getChannel());
+            if(channel_server!=null){
+                channel_server.getAction().run(message.getMessage().toString());
+            }
+            if(channel_client!=null){
+                channel_client.getAction().run(message.getMessage().toString());
             }
             this.buffer.clear();
         }
