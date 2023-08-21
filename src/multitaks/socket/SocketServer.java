@@ -48,15 +48,15 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     public void emit(String channel_name, Object message)throws IOException{
-        for(ClientHandle client:this.getClients()){
+        this.getClients().forEach((client)->{
             client.emit(channel_name,message);
-        }
+        });
     }
     
     public void emit(List<ClientHandle> clients, String channel_name, Object message)throws IOException{
-        for(ClientHandle client:clients){
+        clients.forEach((client)->{
             client.emit(channel_name,message);
-        }
+        });
     }
     
     public void emit(ClientHandle client, String channel_name, Object message)throws IOException{
@@ -98,13 +98,13 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                 this.executor.submit(()->{
                     try{
                         ClientHandle client_handle=new ClientHandle(this,client);
-                        this.onConnect.run(client_handle);
                         this.getClients().add(client_handle);
+                        this.onConnect.run(client_handle);
                         client_handle.listener();
                         this.getClients().remove(client_handle);
                         this.onDisconnect.run(client_handle);
                     }catch(Exception ex){
-                        ex.printStackTrace();
+                        
                     }
                 });
             }

@@ -47,18 +47,26 @@ public final class ClientHandle{
         this.socket.close();
     }
     
-    public void on(String channel_name, SocketHandle.onMessage action)throws IOException{
+    public void on(String channel_name, SocketHandle.onMessage action){
         this.getChannels().put(channel_name,new ChannelHandle(channel_name,action));
     }
     
-    public void emit(String channel_name, Object message)throws IOException{
+    public void emit(String channel_name, Object message){
         if(!this.getChannels().containsKey(channel_name)){
             return;
         }
-        this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
-        this.buffer.flip();
-        this.socket.write(this.buffer);
-        this.buffer.clear();
+        this.write(channel_name,message);
+    }
+    
+    public void write(String channel_name, Object message){
+        try{
+            this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
+            this.buffer.flip();
+            this.socket.write(this.buffer);
+            this.buffer.clear();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
     
     // Getters

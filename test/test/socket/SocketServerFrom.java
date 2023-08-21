@@ -151,8 +151,12 @@ public class SocketServerFrom extends javax.swing.JFrame{
                 return;
             }
             this.server.start(Integer.parseInt(this.box_port.getText()));
-            this.server.onConnect=(message)->{
-                JOptionPane.showMessageDialog(null,message);
+            this.server.onConnect=(socket)->{
+                try{
+                    socket.write("welcome","Bienvenido al servidor");
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
             };
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);

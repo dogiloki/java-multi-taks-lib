@@ -83,7 +83,7 @@ public class SocketClient extends SocketHandle implements Runnable{
                 }
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            
         }
     }
     

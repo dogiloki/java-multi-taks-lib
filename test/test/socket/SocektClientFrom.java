@@ -173,17 +173,8 @@ public class SocektClientFrom extends javax.swing.JFrame {
                 return;
             }
             this.client.start(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
-            Storage s=new Storage("VID-20230210-WA0004.mp4");
-            FileBlock file=s.fileBlock(1024);
-            this.client.on("welcome",(message)->{
-                try{
-                    file.write(Code.byteArrayToString(message.toString(),1024));
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
-            });
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex,"Error2",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_conectActionPerformed
 
