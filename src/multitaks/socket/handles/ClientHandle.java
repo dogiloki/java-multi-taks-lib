@@ -94,5 +94,8 @@ public final class ClientHandle{
     public EmitHandle getMapEmit(){
         return this.map_emit;
     }
+    public String getAddress(){
+        return this.address;
+    }
     
 }
