@@ -1,5 +1,7 @@
 package multitaks.socket;
 
+import multitaks.socket.handles.SocketHandle;
+import multitaks.socket.handles.ClientHandle;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
@@ -44,23 +46,14 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     public void on(String channel_name, SocketHandle.onMessage action){
-        this.getChannels().put(channel_name, new ChannelHandle(channel_name,action));
+        this.getMapOn().put(channel_name,action); 
     }
     
-    public void emit(String channel_name, Object message)throws IOException{
+    public void emit(String channel_name, Object message){
+        this.getMapEmit().put(channel_name,message);
         this.getClients().forEach((client)->{
             client.emit(channel_name,message);
         });
-    }
-    
-    public void emit(List<ClientHandle> clients, String channel_name, Object message)throws IOException{
-        clients.forEach((client)->{
-            client.emit(channel_name,message);
-        });
-    }
-    
-    public void emit(ClientHandle client, String channel_name, Object message)throws IOException{
-        client.emit(channel_name,message);
     }
     
     public void start(int port)throws IOException{

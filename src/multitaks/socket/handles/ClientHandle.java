@@ -1,11 +1,11 @@
-package multitaks.socket;
+package multitaks.socket.handles;
 
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Map;
+import multitaks.socket.SocketData;
+import multitaks.socket.SocketServer;
 
 /**
  *
@@ -18,7 +18,8 @@ public final class ClientHandle{
     private int bytes_read;
     private SocketServer server;
     private SocketChannel socket;
-    private Map<String,ChannelHandle> channels=new HashMap<>();
+    private final OnHandle map_on=new OnHandle();
+    private final EmitHandle map_emit=new EmitHandle();
     private String address;
     
     public ClientHandle(SocketServer server, SocketChannel socket) throws IOException{
@@ -33,33 +34,38 @@ public final class ClientHandle{
             byte[] data=new byte[this.bytes_read];
             this.buffer.get(data);
             SocketData message=new Gson().fromJson(new String(data),SocketData.class);
-            this.getChannels().put(message.getChannel(),null);
-            ChannelHandle channel_server=this.server.getChannels().get(message.getChannel());
-            ChannelHandle channel_client=this.getChannels().get(message.getChannel());
-            if(channel_server!=null){
-                channel_server.getAction().run(message.getMessage().toString());
-            }
-            if(channel_client!=null){
-                channel_client.getAction().run(message.getMessage().toString());
-            }
             this.buffer.clear();
+            // Enviar mensaje al cliente
+            /*
+            if(this.getMapEmit().containsKey(message.getChannel())){
+                this.write(message.getChannel(),this.getMapEmit().get(message.getChannel()));
+            }
+            */
+            // Ejecutar callback de entrada de mensaje del cliente
+            SocketHandle.onMessage on_client=this.getMapOn().get(message.getChannel());
+            if(on_client!=null){
+                on_client.run(message.getMessage().toString());
+            }
+            SocketHandle.onMessage on_server=this.server.getMapOn().get(message.getChannel());
+            if(on_server!=null){
+                on_server.run(message.getMessage().toString());
+            }
         }
         this.socket.close();
     }
     
     public void on(String channel_name, SocketHandle.onMessage action){
-        this.getChannels().put(channel_name,new ChannelHandle(channel_name,action));
+        this.getMapOn().put(channel_name,action);
     }
     
     public void emit(String channel_name, Object message){
-        if(!this.getChannels().containsKey(channel_name)){
-            return;
-        }
+        this.getMapEmit().put(channel_name,message);
         this.write(channel_name,message);
     }
     
     public void write(String channel_name, Object message){
         try{
+            this.buffer.clear();
             this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
             this.buffer.flip();
             this.socket.write(this.buffer);
@@ -82,11 +88,11 @@ public final class ClientHandle{
     public SocketChannel getSocket(){
         return this.socket;
     }
-    public Map<String,ChannelHandle> getChannels(){
-        return this.channels;
+    public OnHandle getMapOn(){
+        return this.map_on;
     }
-    public String getAdress(){
-        return this.address;
+    public EmitHandle getMapEmit(){
+        return this.map_emit;
     }
     
 }

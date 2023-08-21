@@ -1,7 +1,6 @@
-package multitaks.socket;
+package multitaks.socket.handles;
 
-import java.util.HashMap;
-import java.util.Map;
+import multitaks.socket.handles.EmitHandle;
 
 /**
  *
@@ -10,22 +9,18 @@ import java.util.Map;
 
 public class SocketHandle{
     
-    protected String ip;
-    protected int port;
-    protected boolean start=false;
-    
     public interface onMessage{
         public void run(String message);
     }
     
-    private Map<String,ChannelHandle> channels=new HashMap<>();
+    protected String ip;
+    protected int port;
+    protected boolean start=false;
+    protected final OnHandle map_on=new OnHandle();
+    protected final EmitHandle map_emit=new EmitHandle();
     
     public SocketHandle(){
         
-    }
-    
-    public Map<String,ChannelHandle> getChannels(){
-        return this.channels;
     }
     
     public String getIP(){
@@ -42,6 +37,14 @@ public class SocketHandle{
     
     public boolean isStart(){
         return this.start;
+    }
+    
+    public OnHandle getMapOn(){
+        return this.map_on;
+    }
+    
+    public EmitHandle getMapEmit(){
+        return this.map_emit;
     }
     
 }

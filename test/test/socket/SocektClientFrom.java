@@ -173,6 +173,9 @@ public class SocektClientFrom extends javax.swing.JFrame {
                 return;
             }
             this.client.start(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
+            this.client.on("welcome",(message)->{
+                this.box_messages.setText(this.box_messages.getText()+message+"\n");
+            });
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,ex,"Error2",JOptionPane.ERROR_MESSAGE);
         }

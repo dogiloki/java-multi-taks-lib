@@ -153,7 +153,7 @@ public class SocketServerFrom extends javax.swing.JFrame{
             this.server.start(Integer.parseInt(this.box_port.getText()));
             this.server.onConnect=(socket)->{
                 try{
-                    socket.write("welcome","Bienvenido al servidor");
+                    socket.emit("welcome","Bienvenido al servidor");
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }

@@ -1,5 +1,6 @@
 package multitaks.socket;
 
+import multitaks.socket.handles.SocketHandle;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -29,16 +30,25 @@ public class SocketClient extends SocketHandle implements Runnable{
         this.port=port;
     }
     
-    public void on(String channel_name, SocketHandle.onMessage action)throws IOException{
-        this.getChannels().put(channel_name, new ChannelHandle(channel_name,action));
-        this.emit(channel_name,"");
+    public void on(String channel_name, SocketHandle.onMessage action){
+        this.getMapOn().put(channel_name,action);
     }
     
-    public void emit(String channel_name, Object message)throws IOException{
-        this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
-        this.buffer.flip();
-        this.socket.write(this.buffer);
-        this.buffer.clear();
+    public void write(String channel_name, Object message){
+        try{
+            this.buffer.clear();
+            this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
+            this.buffer.flip();
+            this.socket.write(this.buffer);
+            this.buffer.clear();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
+    public void emit(String channel_name, Object message){
+        this.getMapEmit().put(channel_name,message);
+        this.write(channel_name,message);
     }
     
     public void start(String ip, int port)throws IOException{
@@ -77,9 +87,15 @@ public class SocketClient extends SocketHandle implements Runnable{
                 byte[] data=new byte[bytes_read];
                 this.buffer.get(data);
                 SocketData message=new Gson().fromJson(new String(data),SocketData.class);
-                ChannelHandle on_action=this.getChannels().get(message.getChannel());
+                this.buffer.clear();
+                /*
+                if(this.getMapEmit().containsKey(message.getChannel())){
+                    this.write(message.getChannel(),this.getMapEmit().get(message.getChannel()));
+                }
+                */
+                SocketHandle.onMessage on_action=this.getMapOn().get(message.getChannel());
                 if(on_action!=null){
-                    on_action.getAction().run(message.getMessage().toString());
+                    on_action.run(message.getMessage().toString());
                 }
             }
         }catch(Exception ex){
