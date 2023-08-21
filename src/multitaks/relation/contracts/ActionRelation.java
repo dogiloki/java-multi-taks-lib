@@ -1,4 +1,4 @@
-package multitaks.relation.interfaces;
+package multitaks.relation.contracts;
 
 import java.util.List;
 

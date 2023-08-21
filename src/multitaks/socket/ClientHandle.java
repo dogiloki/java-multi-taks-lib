@@ -40,9 +40,7 @@ public final class ClientHandle{
             }
             this.buffer.clear();
         }
-        this.server.onDisconnect.run(this);
         this.socket.close();
-        this.server.getClients().remove(this);
     }
     
     public void on(String channel_name, SocketHandle.onMessage action)throws IOException{

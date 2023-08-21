@@ -3,9 +3,9 @@ package multitaks.relation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import multitaks.relations.annotations.Relation;
+import multitaks.relation.annotations.Relation;
 import multitaks.relation.enums.RelationType;
-import multitaks.relation.interfaces.ActionRelation;
+import multitaks.relation.contracts.ActionRelation;
 
 /**
  *

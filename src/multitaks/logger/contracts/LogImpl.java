@@ -1,4 +1,4 @@
-package multitaks.loguer.contracts;
+package multitaks.logger.contracts;
 
 import multitaks.logger.Logger;
 

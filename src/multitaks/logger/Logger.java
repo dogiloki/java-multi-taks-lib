@@ -7,8 +7,8 @@ import multitaks.GlobalVar;
 import multitaks.directory.ModelDirectory;
 import multitaks.directory.annotations.Directory;
 import multitaks.directory.enums.DirectoryType;
-import multitaks.loguer.contracts.LogImpl;
-import multitaks.loguer.enums.LogType;
+import multitaks.logger.contracts.LogImpl;
+import multitaks.logger.enums.LogType;
 
 /**
  *

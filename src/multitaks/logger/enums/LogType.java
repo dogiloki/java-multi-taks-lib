@@ -1,4 +1,4 @@
-package multitaks.loguer.enums;
+package multitaks.logger.enums;
 
 /**
  *

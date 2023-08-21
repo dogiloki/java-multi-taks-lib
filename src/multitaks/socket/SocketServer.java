@@ -101,6 +101,8 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
                         this.onConnect.run(client_handle);
                         this.getClients().add(client_handle);
                         client_handle.listener();
+                        this.getClients().remove(client_handle);
+                        this.onDisconnect.run(client_handle);
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }

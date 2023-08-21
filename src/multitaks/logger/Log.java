@@ -3,7 +3,7 @@ package multitaks.logger;
 import multitaks.directory.ModelDirectory;
 import multitaks.directory.annotations.Directory;
 import multitaks.directory.enums.DirectoryType;
-import multitaks.loguer.enums.LogType;
+import multitaks.logger.enums.LogType;
 
 /**
  *
