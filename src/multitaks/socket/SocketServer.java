@@ -67,7 +67,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     
     private void _start()throws IOException{
         this.socket=ServerSocketChannel.open();
-        this.socket.bind(new InetSocketAddress("192.168.1.73",this.port));
+        this.socket.bind(new InetSocketAddress("0.0.0.0",this.port));
         this.socket.configureBlocking(false);
         this.executor=Executors.newFixedThreadPool(10);
         this.ip=this.socket.getLocalAddress().toString().split(":")[0];

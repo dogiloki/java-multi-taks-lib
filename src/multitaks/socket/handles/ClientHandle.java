@@ -1,8 +1,10 @@
 package multitaks.socket.handles;
 
 import com.google.gson.Gson;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.channels.SocketChannel;
 import multitaks.socket.SocketData;
 import multitaks.socket.SocketServer;
@@ -13,14 +15,12 @@ import multitaks.socket.SocketServer;
  */
 
 public final class ClientHandle{
-    
-    private ByteBuffer buffer=ByteBuffer.allocate(1024);
-    private int bytes_read;
-    private SocketServer server;
-    private SocketChannel socket;
+
+    private final SocketServer server;
+    private final SocketChannel socket;
     private final OnHandle map_on=new OnHandle();
     private final EmitHandle map_emit=new EmitHandle();
-    private String address;
+    private final String address;
     
     public ClientHandle(SocketServer server, SocketChannel socket) throws IOException{
         this.server=server;
@@ -29,28 +29,21 @@ public final class ClientHandle{
     }
     
     public void listener()throws IOException{
-        while((this.bytes_read=this.socket.read(this.buffer))>0 && this.server.isStart()){
-            this.buffer.flip();
-            byte[] data=new byte[this.bytes_read];
-            this.buffer.get(data);
-            SocketData message=new Gson().fromJson(new String(data),SocketData.class);
-            this.buffer.clear();
-            // Enviar mensaje al cliente
-            /*
-            if(this.getMapEmit().containsKey(message.getChannel())){
-                this.write(message.getChannel(),this.getMapEmit().get(message.getChannel()));
-            }
-            */
+        BufferedReader reader=new BufferedReader(new InputStreamReader(this.socket.socket().getInputStream()));
+        String message;
+        while((message=reader.readLine())!=null && this.server.isStart()){
+            SocketData data=new Gson().fromJson(message,SocketData.class);
             // Ejecutar callback de entrada de mensaje del cliente
-            SocketHandle.onMessage on_client=this.getMapOn().get(message.getChannel());
+            SocketHandle.onMessage on_client=this.getMapOn().get(data.getChannel());
             if(on_client!=null){
-                on_client.run(message.getMessage().toString());
+                on_client.run(data.getMessage().toString());
             }
-            SocketHandle.onMessage on_server=this.server.getMapOn().get(message.getChannel());
+            SocketHandle.onMessage on_server=this.server.getMapOn().get(data.getChannel());
             if(on_server!=null){
-                on_server.run(message.getMessage().toString());
+                on_server.run(data.getMessage().toString());
             }
         }
+        reader.close();
         this.socket.close();
     }
     
@@ -59,29 +52,17 @@ public final class ClientHandle{
     }
     
     public void emit(String channel_name, Object message){
-        this.getMapEmit().put(channel_name,message);
-        this.write(channel_name,message);
-    }
-    
-    public void write(String channel_name, Object message){
         try{
-            this.buffer.clear();
-            this.buffer.put(new SocketData(channel_name,message).toString().getBytes());
-            this.buffer.flip();
-            this.socket.write(this.buffer);
-            this.buffer.clear();
+            this.getMapEmit().put(channel_name,message);
+            PrintWriter writer=new PrintWriter(this.socket.socket().getOutputStream(),true);
+            writer.println(new SocketData(channel_name,message).toString());
+            writer.flush();
         }catch(Exception ex){
             ex.printStackTrace();
         }
     }
     
     // Getters
-    public ByteBuffer getBuffer(){
-        return this.buffer;
-    }
-    public int getBytesRead(){
-        return this.bytes_read;
-    }
     public SocketServer getServer(){
         return this.server;
     }

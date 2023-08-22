@@ -1,7 +1,5 @@
 package multitaks.socket.handles;
 
-import multitaks.socket.handles.EmitHandle;
-
 /**
  *
  * @author dogi_
