@@ -1,5 +1,10 @@
 package multitaks.socket.handles;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import multitaks.socket.SocketData;
+
 /**
  *
  * @author dogi_
@@ -19,6 +24,25 @@ public class SocketHandle{
     
     public SocketHandle(){
         
+    }
+    
+    public void on(String channel_name, SocketHandle.onMessage action){
+        this.getMapOn().put(channel_name,action);
+    }
+    
+    public void emit(String channel_name, Object message){
+        this.getMapEmit().put(channel_name,message);
+    }
+    
+    public void send(Socket socket, String channel_name, Object message){
+        try{
+            OutputStream out=socket.getOutputStream();
+            PrintWriter writer=new PrintWriter(out,true);
+            writer.println(new SocketData(channel_name,message).toString());
+            out.flush();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
     }
     
     public String getIP(){

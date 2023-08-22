@@ -3,9 +3,8 @@ package multitaks.socket;
 import multitaks.socket.handles.SocketHandle;
 import multitaks.socket.handles.ClientHandle;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,7 +26,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         public void run(ClientHandle client);
     }
     
-    private ServerSocketChannel socket;
+    private ServerSocket socket;
     private List<ClientHandle> clients=new ArrayList<>();
     private ExecutorService executor;
     public onConnect onConnect=(client)->{};
@@ -45,12 +44,9 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         this.port=port;
     }
     
-    public void on(String channel_name, SocketHandle.onMessage action){
-        this.getMapOn().put(channel_name,action); 
-    }
-    
+    @Override
     public void emit(String channel_name, Object message){
-        this.getMapEmit().put(channel_name,message);
+        super.emit(channel_name,message);
         this.getClients().forEach((client)->{
             client.emit(channel_name,message);
         });
@@ -66,11 +62,9 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
     }
     
     private void _start()throws IOException{
-        this.socket=ServerSocketChannel.open();
-        this.socket.bind(new InetSocketAddress("0.0.0.0",this.port));
-        this.socket.configureBlocking(false);
+        this.socket=new ServerSocket(this.port);
         this.executor=Executors.newFixedThreadPool(10);
-        this.ip=this.socket.getLocalAddress().toString().split(":")[0];
+        this.ip=this.socket.getInetAddress().getHostAddress();
         new Thread(this).start();
     }
     
@@ -84,7 +78,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         this.start=true;
         try{
             while(this.isStart()){
-                SocketChannel client=this.socket.accept();
+                Socket client=this.socket.accept();
                 if(client==null){
                     continue;
                 }
@@ -120,7 +114,7 @@ public class SocketServer extends SocketHandle implements Runnable, SocketServer
         return this.clients;
     }
     
-    public ServerSocketChannel getSocket(){
+    public ServerSocket getSocket(){
         return this.socket;
     }
     

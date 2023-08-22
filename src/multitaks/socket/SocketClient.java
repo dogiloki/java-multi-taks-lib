@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.nio.channels.SocketChannel;
+import java.net.Socket;
 
 /**
  *
@@ -16,7 +14,7 @@ import java.nio.channels.SocketChannel;
 
 public class SocketClient extends SocketHandle implements Runnable{
 
-    private SocketChannel socket;
+    private Socket socket;
     
     public SocketClient(){
         
@@ -31,19 +29,10 @@ public class SocketClient extends SocketHandle implements Runnable{
         this.port=port;
     }
     
-    public void on(String channel_name, SocketHandle.onMessage action){
-        this.getMapOn().put(channel_name,action);
-    }
-    
+    @Override
     public void emit(String channel_name, Object message){
-        try{
-            this.getMapEmit().put(channel_name,message);
-            PrintWriter writer=new PrintWriter(socket.socket().getOutputStream(),true);
-            writer.println(new SocketData(channel_name,message).toString());
-            writer.flush();
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+        super.emit(channel_name,message);
+        this.send(this.socket,channel_name,message);
     }
     
     public void start(String ip, int port)throws IOException{
@@ -56,8 +45,7 @@ public class SocketClient extends SocketHandle implements Runnable{
     }
     
     private void _start()throws IOException{
-        this.socket=SocketChannel.open();
-        this.socket.connect(new InetSocketAddress(this.getIP(),this.getPort()));
+        this.socket=new Socket(this.ip,this.port);
         new Thread(this).start();
     }
     
@@ -69,7 +57,7 @@ public class SocketClient extends SocketHandle implements Runnable{
     public void run(){
         this.start=true;
         try{
-            BufferedReader reader=new BufferedReader(new InputStreamReader(this.socket.socket().getInputStream()));
+            BufferedReader reader=new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             String message;
             while((message=reader.readLine())!=null && this.isStart()){
                 SocketData data=new Gson().fromJson(message,SocketData.class);
@@ -85,7 +73,7 @@ public class SocketClient extends SocketHandle implements Runnable{
         }
     }
     
-    public SocketChannel getSocket(){
+    public Socket getSocket(){
         return this.socket;
     }
     
