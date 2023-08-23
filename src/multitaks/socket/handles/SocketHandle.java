@@ -36,10 +36,8 @@ public class SocketHandle{
     
     public void send(Socket socket, String channel_name, Object message){
         try{
-            OutputStream out=socket.getOutputStream();
-            PrintWriter writer=new PrintWriter(out,true);
+            PrintWriter writer=new PrintWriter(socket.getOutputStream(),true);
             writer.println(new SocketData(channel_name,message).toString());
-            out.flush();
         }catch(Exception ex){
             ex.printStackTrace();
         }

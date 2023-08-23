@@ -21,6 +21,8 @@ public final class ClientHandle extends SocketHandle{
     public ClientHandle(SocketServer server, Socket socket) throws IOException{
         this.server=server;
         this.socket=socket;
+        this.ip=socket.getInetAddress().getHostAddress();
+        this.port=socket.getLocalPort();
     }
     
     public void listener()throws IOException{
