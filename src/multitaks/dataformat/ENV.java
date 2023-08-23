@@ -39,6 +39,7 @@ public class ENV implements DataFormat{
         }
     }
     
+    @Override
     public Object getValue(String key){
         return this.datas.get(key);
     }
