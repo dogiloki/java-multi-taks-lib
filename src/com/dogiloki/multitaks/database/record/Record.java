@@ -17,7 +17,7 @@ public class Record{
     }
     
     public String field_id="_id";
-    private RecordField fields;
+    private RecordField fields=new RecordField();
     private long line_number=0;
     
     public Record(){

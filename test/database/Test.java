@@ -17,7 +17,10 @@ public class Test{
         Database db=new Database("db");
         Record r=new Record();
         Filter f=new Filter();
-        RecordList personas=db.collection("personas").find(f);
+        r.set("nombre","dasa");
+        f.expression(new ComparisonExpression("nombre",CompOp.NE,"dsa"));
+        db.collection("personas").update(f,r);
+        RecordList personas=db.collection("personas").all();
         Record persona;
         while((persona=personas.next())!=null){
             System.out.println(persona.get("nombre"));

@@ -886,7 +886,6 @@ public class Storage{
                 }
                 current_number++;
             }
-            this.close();
             this.clean();
             if(!this.open(true)){
                 return false;
