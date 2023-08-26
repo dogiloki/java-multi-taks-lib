@@ -23,13 +23,16 @@ public class Test{
                 .set("apellido","Torrez")
                 .set("edad",19);
         //db.collection("personas").insert(r);
-        Filter f=new LogicalExpression(LogicalOp.OR,
-                new ComparisonExpression("nombre",CompOp.EQ,"Marlón"),
-                new ComparisonExpression("apellido",CompOp.EQ,"Torrez")
+        Filter f=new LogicalExpression(LogicalOp.AND,
+                new LogicalExpression(LogicalOp.OR,
+                    new ComparisonExpression("nombre",CompOp.EQ,"Marlón"),
+                    new ComparisonExpression("apellido",CompOp.EQ,"Villanueva")
+                ),
+                new ComparisonExpression("nombre",CompOp.EQ,"Marlón")
         );
         //r.set("nombre","dasa");
         //db.collection("personas").update(f,r);
-        RecordList personas=db.collection("personas").find(f);
+        RecordList personas=db.collection("personas").all().limit(3,5);
         Record persona;
         while((persona=personas.next())!=null){
             System.out.println(persona.getFields());

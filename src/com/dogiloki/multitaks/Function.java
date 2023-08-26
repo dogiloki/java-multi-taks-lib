@@ -72,11 +72,11 @@ public class Function<T>{
     /**
      * Verificar si esta dentro del rango
      * @param num Número a verificar
-     * @param min Número máximo
-     * @param max Númer minímo
+     * @param min Número mínímo
+     * @param max Númer máximo
      * @return Indicar si esta dentro del rango
      */
-    public static boolean isRange(int num, int min, int max){
+    public static boolean withinRange(int num, int min, int max){
         return num>=min && num<=max;
     }
     
