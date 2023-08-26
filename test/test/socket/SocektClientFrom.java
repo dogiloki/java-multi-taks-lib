@@ -5,10 +5,10 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import multitaks.code.Code;
-import multitaks.directory.FileBlock;
-import multitaks.directory.Storage;
-import multitaks.socket.SocketClient;
+import com.dogiloki.multitaks.code.Code;
+import com.dogiloki.multitaks.directory.FileBlock;
+import com.dogiloki.multitaks.directory.Storage;
+import com.dogiloki.multitaks.socket.SocketClient;
 
 /**
  *

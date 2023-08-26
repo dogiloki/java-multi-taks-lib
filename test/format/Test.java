@@ -1,6 +1,6 @@
 package format;
 
-import multitaks.dataformat.JSON;
+import com.dogiloki.multitaks.dataformat.JSON;
 
 /**
  *

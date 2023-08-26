@@ -1,9 +1,9 @@
 package test.storage;
 
 import java.util.Base64;
-import multitaks.code.Code;
-import multitaks.directory.FileBlock;
-import multitaks.directory.Storage;
+import com.dogiloki.multitaks.code.Code;
+import com.dogiloki.multitaks.directory.FileBlock;
+import com.dogiloki.multitaks.directory.Storage;
 
 /**
  *
