@@ -36,7 +36,7 @@ public class Collection extends Storage{
         for(Record record:records){
             this.aim(this.getSrc(),DirectoryType.FILE);
             record.generateId();
-            this.append(new Gson().toJson(record.getFields())+"\n");
+            this.append(new Gson().toJson((Map)record.getFields())+"\n");
         }
         return true;
     }

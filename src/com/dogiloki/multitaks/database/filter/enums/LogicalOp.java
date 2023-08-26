@@ -4,7 +4,7 @@ package com.dogiloki.multitaks.database.filter.enums;
  *
  * @author dogi_
  */
-public enum LogicalOp{
+public enum LogicalOp implements OpImpl{
     
     AND("&"),
     OR("|"),

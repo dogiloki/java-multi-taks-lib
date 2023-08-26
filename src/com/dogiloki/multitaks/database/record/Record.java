@@ -37,6 +37,11 @@ public class Record{
         this.setLineNumber(number);
     }
     
+    public boolean filter(Filter f){
+        f.record(this);
+        return f.logic();
+    }
+    
     public void setLineNumber(long number){
         this.line_number=number;
     }
@@ -45,7 +50,7 @@ public class Record{
         return this.line_number;
     }
     
-    public Map<String,Object> getFields(){
+    public RecordField getFields(){
         return this.fields;
     }
     

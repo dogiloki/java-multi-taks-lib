@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.database.filter;
 
+import com.dogiloki.multitaks.database.filter.enums.OpImpl;
 import com.dogiloki.multitaks.database.record.Record;
 
 /**
@@ -7,22 +8,33 @@ import com.dogiloki.multitaks.database.record.Record;
  * @author dogi_
  */
 
-public class Filter{
+public class Filter implements FilterImpl{
     
-    public interface onLogical{
-        public void run(Filter expression);
-    }
+    private Record record;
     
-    private Expression expression=new Expression();
+    public Filter(){
     
-    public Filter expression(Expression expression){
-        this.expression=expression;
-        return this;
     }
     
     public boolean apply(Record record){
-        this.expression.record(record);
-        return this.expression.logic();
+        this.record(record);
+        return this.logic();
+    }
+    
+    public void record(Record record){
+        this.record=record;
+    }
+    
+    public boolean logic(){
+        return false;
+    }
+    
+    public Record getRecord(){
+        return this.record;
+    }
+    
+    public OpImpl getOperator(){
+        return null;
     }
     
 }

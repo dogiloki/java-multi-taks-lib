@@ -1,6 +1,7 @@
 package com.dogiloki.multitaks.database.filter;
 
 import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -8,23 +9,28 @@ import java.util.List;
  * @author dogi_
  */
 
-public class LogicalExpression extends Expression{
+public class LogicalExpression extends Filter{
     
     private final LogicalOp operator;
-    private List<Expression> expressions;
+    private List<Filter> expressions;
     
     public LogicalExpression(LogicalOp operator){
         this.operator=operator;
     }
     
-    public LogicalExpression add(Expression expression){
+    public LogicalExpression(LogicalOp operator, Filter... expressions){
+        this.operator=operator;
+        this.expressions=Arrays.asList(expressions);
+    }
+    
+    public LogicalExpression add(Filter expression){
         this.expressions.add(expression);
         return this;
     }
     
     @Override
     public boolean logic(){
-        for(Expression expression:this.expressions){
+        for(Filter expression:this.expressions){
             expression.record(this.getRecord());
             switch(this.operator){
                 case AND:{
@@ -45,6 +51,11 @@ public class LogicalExpression extends Expression{
             }
         }
         return true;
+    }
+    
+    @Override
+    public LogicalOp getOperator(){
+        return this.operator;
     }
     
 }

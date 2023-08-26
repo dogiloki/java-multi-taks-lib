@@ -8,7 +8,7 @@ import com.dogiloki.multitaks.database.record.Record;
  * @author dogi_
  */
 
-public class ComparisonExpression extends Expression{
+public class ComparisonExpression extends Filter{
     
     private final String key;
     private final CompOp operator;
@@ -48,6 +48,11 @@ public class ComparisonExpression extends Expression{
             }
         }
         return true;
+    }
+
+    @Override
+    public CompOp getOperator(){
+        return this.operator;
     }
     
 }

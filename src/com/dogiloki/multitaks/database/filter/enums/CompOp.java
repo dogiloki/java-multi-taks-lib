@@ -6,7 +6,7 @@ package com.dogiloki.multitaks.database.filter.enums;
  */
 
 // Comparison Operators
-public enum CompOp{
+public enum CompOp implements OpImpl{
     
     EQ("="),
     NE("!="),
