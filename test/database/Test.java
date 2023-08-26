@@ -1,9 +1,11 @@
 package database;
 
-import com.dogiloki.multitaks.database.Collection;
 import com.dogiloki.multitaks.database.Database;
-import com.dogiloki.multitaks.database.Record;
-import com.dogiloki.multitaks.database.RecordList;
+import com.dogiloki.multitaks.database.filter.ComparisonExpression;
+import com.dogiloki.multitaks.database.filter.Filter;
+import com.dogiloki.multitaks.database.filter.enums.CompOp;
+import com.dogiloki.multitaks.database.record.Record;
+import com.dogiloki.multitaks.database.record.RecordList;
 
 /**
  *
@@ -13,9 +15,9 @@ public class Test{
     
     public Test(){
         Database db=new Database("db");
-        Record record=new Record();
-        record.set("nombre","dsa");
-        RecordList personas=db.collection("personas").find(record);
+        Record r=new Record();
+        Filter f=new Filter();
+        RecordList personas=db.collection("personas").find(f);
         Record persona;
         while((persona=personas.next())!=null){
             System.out.println(persona.get("nombre"));

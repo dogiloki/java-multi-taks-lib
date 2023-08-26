@@ -1,10 +1,13 @@
 package com.dogiloki.multitaks.database;
 
+import com.dogiloki.multitaks.database.record.Record;
+import com.dogiloki.multitaks.database.record.RecordList;
+import com.dogiloki.multitaks.database.filter.Filter;
 import com.google.gson.Gson;
-import java.util.Map;
 import java.util.Scanner;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import java.util.Map;
 
 /**
  *
@@ -38,12 +41,12 @@ public class Collection extends Storage{
         return true;
     }
     
-    public boolean update(Record record_find, Record record_operations){
-        record_find=this.find(record_find).first();
-        if(record_find==null || record_operations==null){
+    public boolean update(Filter filter, Record record){
+        Record record_find=this.find(filter).first();
+        if(record_find==null || record==null){
             return false;
         }
-        for(Map.Entry<String,Object> entry:record_operations.getFields().entrySet()){
+        for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
             if(entry.getKey().equals(record_find.field_id)){
                 continue;
             }
@@ -52,17 +55,17 @@ public class Collection extends Storage{
         return this.writeLine(new Gson().toJson(record_find.getFields()),record_find.getLineNumber());
     }
     
-    public boolean delete(Record record_find){
-        record_find=this.find(record_find).first();
+    public boolean delete(Filter filter){
+        Record record_find=this.find(filter).first();
         if(record_find==null){
             return false;
         }
         return this.writeLine("",record_find.getLineNumber());
     }
     
-    public RecordList find(Record record){
+    public RecordList find(Filter filter){
         Scanner lines=this.readIterator();
-        return new RecordList(lines,record);
+        return new RecordList(lines,filter);
     }
     
     public RecordList all(){

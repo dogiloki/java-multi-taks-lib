@@ -1,10 +1,8 @@
-package com.dogiloki.multitaks.database;
+package com.dogiloki.multitaks.database.record;
 
 import com.dogiloki.multitaks.ObjectId;
+import com.dogiloki.multitaks.database.filter.Filter;
 import com.google.gson.Gson;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +17,7 @@ public class Record{
     }
     
     public String field_id="_id";
-    private Map<String,Object> fields=new HashMap<>();
-    private List<Operation> operations=new ArrayList<>();
+    private RecordField fields;
     private long line_number=0;
     
     public Record(){
@@ -31,11 +28,11 @@ public class Record{
         this.setLineNumber(number);
     }
     
-    public Record(Map<String,Object> fields){
+    public Record(RecordField fields){
         this.fields=fields;
     }
     
-    public Record(Map<String,Object> fields, long number){
+    public Record(RecordField fields, long number){
         this.fields=fields;
         this.setLineNumber(number);
     }
@@ -60,12 +57,12 @@ public class Record{
         }
     }
     
-    public Record setFields(Map<String,Object> fields){
+    public Record setFields(RecordField fields){
         this.fields=fields;
         return this;
     }
     
-    public String getJson(){
+    public String toJson(){
         return new Gson().toJson(this.getFields());
     }
     
@@ -83,8 +80,8 @@ public class Record{
         return this;
     }
     
-    public String get(String key){
-        return (String)this.fields.get(key);
+    public Object get(String key){
+        return this.fields.get(key);
     }
     
     public Record set(String key, Object value){
@@ -95,15 +92,6 @@ public class Record{
     public Record remove(String key){
         this.fields.remove(key);
         return this;
-    }
-    
-    public Record setOperation(Operation operation){
-        this.operations.add(operation);
-        return this;
-    }
-    
-    public List<Operation> getOperations(){
-        return this.operations;
     }
     
 }

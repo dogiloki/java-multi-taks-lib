@@ -1,5 +1,7 @@
 package com.dogiloki.multitaks.database;
 
+import com.dogiloki.multitaks.database.record.Record;
+import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
@@ -58,7 +60,7 @@ public class Cursor<T>{
                 this.record_list.getIterator().close();
                 return null;
             }
-            json=record.getJson();
+            json=record.toJson();
         }
         try{
             Map<String,Object> fields;

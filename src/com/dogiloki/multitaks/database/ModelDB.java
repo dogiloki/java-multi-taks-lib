@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.database;
 
+import com.dogiloki.multitaks.database.record.Record;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,8 @@ import com.dogiloki.multitaks.database.annotations.Collect;
  */
 
 public class ModelDB extends Record{
+    
+    /*
     
     private Database db=null;
     private String date_format="dd-MM-yyyy HH:mm:ss";
@@ -164,5 +167,6 @@ public class ModelDB extends Record{
             return collection.delete(record);
         }
     }
+    */
     
 }
