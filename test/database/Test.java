@@ -25,7 +25,7 @@ public class Test{
         //db.collection("personas").insert(r);
         Filter f=new LogicalExpression(LogicalOp.OR,
                 new ComparisonExpression("nombre",CompOp.EQ,"Marlón"),
-                new ComparisonExpression("apellido",CompOp.EQ,"Taorrez")
+                new ComparisonExpression("apellido",CompOp.EQ,"Torrez")
         );
         //r.set("nombre","dasa");
         //db.collection("personas").update(f,r);

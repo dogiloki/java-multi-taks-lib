@@ -30,27 +30,39 @@ public class LogicalExpression extends Filter{
     
     @Override
     public boolean logic(){
-        for(Filter expression:this.expressions){
-            expression.record(this.getRecord());
-            switch(this.operator){
-                case AND:{
-                    if(!expression.logic()){
-                        return false;
-                    }
-                    break;
-                }
-                case OR:{
+        int count=0;
+        boolean logic=false;
+        switch(this.operator){
+            case AND:{
+                for(Filter expression:this.expressions){
+                    expression.record(this.getRecord());
                     if(expression.logic()){
-                        return true;
+                        count++;
                     }
-                    break;
                 }
-                case NOT:{
-                    return !expression.logic();
+                logic=(count==this.expressions.size() && count!=0);
+                break;
+            }
+            case OR:{
+                loopout:for(Filter expression:this.expressions){
+                    expression.record(this.getRecord());
+                    if(expression.logic()){
+                        count++;
+                        break loopout;
+                    }
                 }
+                logic=count!=0;
+                break;
+            }
+            case NOT:{
+                for(Filter expression:this.expressions){
+                    expression.record(this.getRecord());
+                    logic=expression.logic();
+                }
+                logic=this.expressions.size()<=0?true:(logic?false:true);
             }
         }
-        return true;
+        return logic;
     }
     
     @Override
