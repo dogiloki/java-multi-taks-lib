@@ -1,6 +1,7 @@
 package com.dogiloki.multitaks.database;
 
 import com.dogiloki.multitaks.database.record.Record;
+import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -70,12 +71,14 @@ public class Cursor<T>{
                 fields=record.getFields();
             }
             this.current=JSON.builder().fromJson(json,this.clazz);
-            this.current.getClass().getMethod("setFields",Map.class).invoke(this.current,fields);
+            this.current.getClass().getMethod("setFields",RecordField.class).invoke(this.current,fields);
         }catch(Exception ex){
             ex.printStackTrace();
         }
         return (T)this.current;
     }
+    
+    
     
     public T firt(){
         return this.hasNext()?this.next():null;

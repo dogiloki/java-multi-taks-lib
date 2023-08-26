@@ -16,7 +16,7 @@ public class Record{
         public void execute(String key, Object value);
     }
     
-    public String field_id="_id";
+    private String field_id="_id";
     private RecordField fields=new RecordField();
     private long line_number=0;
     
@@ -73,6 +73,15 @@ public class Record{
     
     public String getId(){
         return (String)this.fields.get(this.field_id);
+    }
+    
+    public String fieldId(){
+        return this.field_id;
+    }
+    
+    public String fieldId(String field_id){
+        this.field_id=field_id;
+        return this.fieldId();
     }
     
     public Record setId(Object value){

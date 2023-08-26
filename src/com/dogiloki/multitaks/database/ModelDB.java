@@ -10,6 +10,12 @@ import java.util.Map;
 import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.database.annotations.Collect;
+import com.dogiloki.multitaks.database.filter.ComparisonExpression;
+import com.dogiloki.multitaks.database.filter.Filter;
+import com.dogiloki.multitaks.database.filter.LogicalExpression;
+import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
+import com.dogiloki.multitaks.database.record.RecordField;
+import com.dogiloki.multitaks.database.record.RecordList;
 
 /**
  *
@@ -17,12 +23,6 @@ import com.dogiloki.multitaks.database.annotations.Collect;
  */
 
 public class ModelDB extends Record{
-    
-    /*
-    
-    private Database db=null;
-    private String date_format="dd-MM-yyyy HH:mm:ss";
-    private boolean with_trashed;
     
     public static Cursor all(Class<?> clazz){
         try{
@@ -34,37 +34,65 @@ public class ModelDB extends Record{
         return null;
     }
     
-    public static <T> T find(Class<?> clazz, Record record){
+    public static <T> T find(Class<?> clazz, Filter filter){
         try{
             Object instance=clazz.newInstance();
-            return (T)instance.getClass().getMethod("find",Record.class).invoke(instance,record);
+            return (T)instance.getClass().getMethod("find",Record.class).invoke(instance,filter);
         }catch(Exception ex){
             ex.printStackTrace();
         }
         return null;
     }
     
+    private String date_format="dd-MM-yyyy HH:mm:ss";
+    private boolean with_trashed;
+    private Database db=null;
+    
     public ModelDB(){
-        if(this.db==null){
-            String src=(String)GlobalVar.group("db").get("name");
-            this.db=new Database(src);
+        
+    }
+    
+    public ModelDB(String src){
+        this.db=new Database(src);
+    }
+    
+    public boolean save(){
+        Collection collection=this.getCollection();
+        Object instance=this.getInstance();
+        String json=JSON.builder().toJson(instance);
+        RecordField fields=new Gson().fromJson(json,RecordField.class);
+        Record record=new Record();
+        record.setFields(fields);
+        record.setId(this.getId());
+        boolean status;
+        Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
+        if(collection.find(filter).first()==null){
+            record.generateId();
+            record.set("created_at",this.getDateTime());
+            record.set("update_at","");
+            status=collection.insert(record);
+        }else{
+            record.set("update_at",this.getDateTime());
+            status=collection.update(filter,record);
         }
-    }
-    
-    private Database getConnection(){
-        return this.db;
-    }
-    
-    protected Object getInstance(){
-        return this;
+        this.setFields(record.getFields());
+        return status;
     }
     
     protected boolean deleteSave(){
         return false;
     }
     
-    public String getDateTime(){
-        return new SimpleDateFormat(this.date_format).format(new Date());
+    public Object getInstance(){
+        return this;
+    }
+    
+    public Database getConnection(){
+        if(this.db==null){
+            String src=(String)GlobalVar.group("db").get("name");
+            this.db=new Database(src);
+        }
+        return this.db;
     }
     
     public Collection getCollection(){
@@ -75,26 +103,8 @@ public class ModelDB extends Record{
         return this.getConnection().collection(annot_table.src());
     }
     
-    public boolean save(){
-        Collection collection=this.getCollection();
-        Object instance=this.getInstance();
-        String json=JSON.builder().toJson(instance);
-        Map<String,Object> fields=new Gson().fromJson(json,new TypeToken<HashMap<String,Object>>(){}.getType());
-        Record record=new Record();
-        record.setFields(fields);
-        record.setId(this.getId());
-        boolean status;
-        if(collection.find(new Record().setId(record.getId())).first()==null){
-            record.generateId();
-            record.set("created_at",this.getDateTime());
-            record.set("update_at","");
-            status=collection.insert(record);
-        }else{
-            record.set("update_at",this.getDateTime());
-            status=collection.update(new Record().setId(record.getId()),record);
-        }
-        this.setFields(record.getFields());
-        return status;
+    public String getDateTime(){
+        return new SimpleDateFormat(this.date_format).format(new Date());
     }
     
     public ModelDB withTrashed(){
@@ -107,12 +117,17 @@ public class ModelDB extends Record{
         Record record=new Record();
         record.setId(this.getId());
         record.set("delete_at",null);
-        return collection.update(new Record().setId(record.getId()),record);
+        Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
+        return collection.update(filter,record);
     }
     
-    public Cursor find(Record record){
+    public Cursor find(Filter filter_old){
+        LogicalExpression filter=new LogicalExpression(LogicalOp.AND);
         if(this.deleteSave() && !this.with_trashed){
-            record.setOperation(new Operation("delete_at",null));
+            filter.add(filter_old);
+            filter.add(new ComparisonExpression("delete_at",null));
+        }else{
+            filter.add(filter_old);
         }
         this.with_trashed=false;
         try{
@@ -122,7 +137,7 @@ public class ModelDB extends Record{
                 return null;
             }
             Collection collection=this.getConnection().collection(annot_table.src());
-            RecordList records_find=collection.find(record);
+            RecordList records_find=collection.find(filter);
             collection.close();
             return new Cursor(records_find,instance.getClass());
         }catch(Exception ex){
@@ -133,7 +148,7 @@ public class ModelDB extends Record{
     
     public Cursor all(){
         if(this.deleteSave() && !this.with_trashed){
-            return this.find(new Record());
+            return this.find(new Filter());
         }
         this.with_trashed=false;
         try{
@@ -160,13 +175,13 @@ public class ModelDB extends Record{
         }
         Collection collection=this.getConnection().collection(annot_table.src());
         Record record=new Record().setId(this.getId());
+        Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         if(this.deleteSave()){
             record.set("delete_at",this.getDateTime());
-            return collection.update(new Record().setId(record.getId()),record);
+            return collection.update(filter,record);
         }else{
-            return collection.delete(record);
+            return collection.delete(filter);
         }
     }
-    */
     
 }

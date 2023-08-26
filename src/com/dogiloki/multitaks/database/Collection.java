@@ -47,7 +47,7 @@ public class Collection extends Storage{
             return false;
         }
         for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
-            if(entry.getKey().equals(record_find.field_id)){
+            if(entry.getKey().equals(record_find.fieldId())){
                 continue;
             }
             record_find.set(entry.getKey(),entry.getValue());

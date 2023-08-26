@@ -20,11 +20,17 @@ public class ComparisonExpression extends Filter{
         this.operator=operator;
         this.value=value;
     }
+    
+    public ComparisonExpression(String key, Object value){
+        this.key=key;
+        this.operator=CompOp.EQ;
+        this.value=value;
+    }
 
     @Override
     public boolean logic(){
         Record record=this.getRecord();
-        if(record==null){
+        if(record==null || this.value==null || record.get(this.key)==null){
             return false;
         }
         switch(this.operator){

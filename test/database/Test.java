@@ -1,6 +1,8 @@
 package database;
 
+import com.dogiloki.multitaks.database.Cursor;
 import com.dogiloki.multitaks.database.Database;
+import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.database.filter.ComparisonExpression;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.database.filter.LogicalExpression;
@@ -8,6 +10,9 @@ import com.dogiloki.multitaks.database.filter.enums.CompOp;
 import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
 import com.dogiloki.multitaks.database.record.Record;
 import com.dogiloki.multitaks.database.record.RecordList;
+import com.github.javafaker.Faker;
+import java.time.LocalDate;
+import java.time.Period;
 
 /**
  *
@@ -17,25 +22,10 @@ import com.dogiloki.multitaks.database.record.RecordList;
 public class Test{
     
     public Test(){
-        Database db=new Database("db");
-        Record r=new Record()
-                .set("nombre","Marlón")
-                .set("apellido","Torrez")
-                .set("edad",19);
-        //db.collection("personas").insert(r);
-        Filter f=new LogicalExpression(LogicalOp.AND,
-                new LogicalExpression(LogicalOp.OR,
-                    new ComparisonExpression("nombre",CompOp.EQ,"Marlón"),
-                    new ComparisonExpression("apellido",CompOp.EQ,"Villanueva")
-                ),
-                new ComparisonExpression("nombre",CompOp.EQ,"Marlón")
-        );
-        //r.set("nombre","dasa");
-        //db.collection("personas").update(f,r);
-        RecordList personas=db.collection("personas").all().limit(3,5);
-        Record persona;
-        while((persona=personas.next())!=null){
-            System.out.println(persona.getFields());
+        Cursor<Persona> per=ModelDB.all(Persona.class);
+        Persona p;
+        while((p=per.next())!=null){
+            System.out.println(p.nombre);
         }
     }
     
