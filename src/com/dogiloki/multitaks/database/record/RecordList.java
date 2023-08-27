@@ -53,8 +53,10 @@ public class RecordList<T extends Record>{
             if(this.clazz==null || Record.class.equals(this.clazz)){
                 this.current=(T)current;
             }else{
-                String json=JSON.builder().toJson(current.getFields());
+                RecordField fields=current.getFields();
+                String json=JSON.builder().toJson(fields);
                 this.current=JSON.builder().fromJson(json,this.clazz);
+                this.current.setFields(fields);
             }
         }
         return this.current();
