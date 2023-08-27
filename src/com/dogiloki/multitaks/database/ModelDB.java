@@ -72,13 +72,7 @@ public class ModelDB extends Record{
     }
     
     public Object getInstance(){
-        try{
-            Class<?> clazz=this.getClass();
-            return clazz.getDeclaredConstructor().newInstance();
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return null;
+        return this;
     }
     
     public Database getConnection(){
