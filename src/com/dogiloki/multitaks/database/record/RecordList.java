@@ -4,10 +4,6 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Scanner;
 
 /**
@@ -106,6 +102,7 @@ public class RecordList<T extends Record>{
         T obj;
         while((obj=this.next())!=null){
             this.current(obj);
+            break;
         }
         return this.current();
     }

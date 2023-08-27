@@ -24,7 +24,7 @@ public class Test{
         RecordList<Persona> personas=new Persona().getCollection().all();
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre);
+            System.out.println(p.delete());
         }
     }
     
