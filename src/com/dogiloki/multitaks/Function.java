@@ -80,6 +80,25 @@ public class Function<T>{
         return num>=min && num<=max;
     }
     
+    /**
+     * Hace uso de Objects.compareTo, antes comprobando si es nulo, es el primer valor es null sera menor al segundo y viceversa.
+     * @param v1 Primer valor
+     * @param v2 Segundo valor
+     * @return Indicar si el primer valor es mayor al segundo con un 1 si es lo contrario con un -1 si son iguales con un 0
+     */
+    public static int compareTo(Object v1, Object v2){
+        if(v1==null && v2!=null){
+            return 1;
+        }
+        if(v1!=null && v2==null){
+            return -1;
+        }
+        if(v1==null || v2==null){
+            return 0;
+        }
+        return v1.toString().compareTo(v2.toString());
+    }
+    
     // Convertir dos parámetro numéricos en dimenciones
     public static Dimension createDimencion(float ancho, float alto){
         return new Dimension((int)ancho,(int)alto);
