@@ -2,35 +2,66 @@ package com.dogiloki.multitaks.database.record;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
+import com.dogiloki.multitaks.dataformat.JSON;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Scanner;
 
 /**
  *
  * @author dogi_
+ * @param <T>
  */
 
-public class RecordList{
+public class RecordList<T extends Record>{
     
     private final Scanner iterator;
-    private Record current;
+    private T current;
     private Filter filter;
     private long line_number=0;
     private int count=0;
     private Integer limit_index=null;
     private Integer limit_end=null;
+    private Class<T> clazz;
     
-    public RecordList(Scanner iterator, Filter filter){
+    public RecordList(Scanner iterator, Filter filter, Class clazz){
         this.iterator=iterator;
         this.filter=filter;
+        this.clazz=clazz;
     }
     
-    public RecordList(Scanner iterator){
+    public RecordList(Scanner iterator, Class clazz){
         this.iterator=iterator;
+        this.clazz=clazz;
     }
     
     public Scanner iterator(){
         return this.iterator;
+    }
+    
+    public boolean isRecord(T obj){
+        return obj instanceof Record;
+    }
+    
+    private T current(Record current){
+        if(current==null){
+            this.current=null;
+        }else{
+            if(this.clazz==null || Record.class.equals(this.clazz)){
+                this.current=(T)current;
+            }else{
+                String json=JSON.builder().toJson(current.getFields());
+                this.current=JSON.builder().fromJson(json,this.clazz);
+            }
+        }
+        return this.current();
+    }
+    
+    private T current(){
+        return this.current;
     }
     
     private boolean hasNext(){
@@ -41,44 +72,40 @@ public class RecordList{
         return true;
     }
     
-    public Record next(){
+    public T next(){
         if(!this.hasNext()){
             return null;
         }
         this.line_number++;
-        this.current=null;
+        this.current(null);
         String json=this.iterator.nextLine();
         RecordField fields=new Gson().fromJson(json,RecordField.class);
         
         Record record=new Record(fields,this.line_number);
         if(this.filter==null){
-            this.current=record;
+            this.current(record);
         }else{
-            this.current=this.filter.apply(record)?record:null;
+            this.current(this.filter.apply(record)?record:null);
         }
-        if(this.current==null){
+        if(this.current()==null){
             return this.next();
         }
         this.count++;
-        if(this.current!=null && this.hasLimit()){
+        if(this.current()!=null && this.hasLimit()){
             if(!this.withinLimit()){
                 return this.next();
             }
         }
-        return this.current;
+        return this.current();
     }
     
-    public Record first(){
-        this.current=null;
-        Record record=this.next();
-        if(record==null){
-            return null;
+    public T first(){
+        this.current(null);
+        T obj;
+        while((obj=this.next())!=null){
+            this.current(obj);
         }
-        String json=record.toJson();
-        RecordField fields=new Gson().fromJson(json,RecordField.class);
-        Record record_found=new Record(fields,record.getLineNumber());
-        this.current=record_found;
-        return this.current;
+        return this.current();
     }
     
     public RecordList limit(int index, int end){

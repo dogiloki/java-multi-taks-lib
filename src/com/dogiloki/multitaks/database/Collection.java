@@ -16,11 +16,14 @@ import java.util.Map;
 
 public class Collection extends Storage{
     
+    private Class clazz;
+    
     public Collection(){
         
     }
     
-    public Collection(String src){
+    public Collection(String src, Class clazz){
+        this.clazz=clazz;
         this.setSrc(src);
         Storage.exists(src,DirectoryType.FILE,true);
         this.aim(this.getSrc(),DirectoryType.FILE);
@@ -42,7 +45,7 @@ public class Collection extends Storage{
     }
     
     public boolean update(Filter filter, Record record){
-        Record record_find=this.find(filter).first();
+        Record record_find=(Record)this.find(filter).first();
         if(record_find==null || record==null){
             return false;
         }
@@ -56,7 +59,7 @@ public class Collection extends Storage{
     }
     
     public boolean delete(Filter filter){
-        Record record_find=this.find(filter).first();
+        Record record_find=(Record)this.find(filter).first();
         if(record_find==null){
             return false;
         }
@@ -65,12 +68,12 @@ public class Collection extends Storage{
     
     public RecordList find(Filter filter){
         Scanner lines=this.readIterator();
-        return new RecordList(lines,filter);
+        return new RecordList(lines,filter,this.clazz);
     }
     
     public RecordList all(){
         Scanner lines=this.readIterator();
-        return new RecordList(lines);
+        return new RecordList(lines,this.clazz);
     }
     
 }

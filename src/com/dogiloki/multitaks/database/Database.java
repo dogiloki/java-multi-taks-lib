@@ -16,8 +16,12 @@ public class Database extends ModelDirectory{
         super.aim(this,src);
     }
     
+    public Collection collection(String name, Class clazz){
+        return new Collection(this.getSrc()+"/"+name,clazz);
+    }
+    
     public Collection collection(String name){
-        return new Collection(this.getSrc()+"/"+name);
+        return new Collection(this.getSrc()+"/"+name,null);
     }
     
 }

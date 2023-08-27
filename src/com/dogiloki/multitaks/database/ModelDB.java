@@ -2,11 +2,8 @@ package com.dogiloki.multitaks.database;
 
 import com.dogiloki.multitaks.database.record.Record;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.database.annotations.Collect;
@@ -16,6 +13,8 @@ import com.dogiloki.multitaks.database.filter.LogicalExpression;
 import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
 import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
+import com.google.gson.annotations.Expose;
+import java.util.Arrays;
 
 /**
  *
@@ -24,25 +23,14 @@ import com.dogiloki.multitaks.database.record.RecordList;
 
 public class ModelDB extends Record{
     
-    public static Cursor all(Class<?> clazz){
-        try{
-            Object instance=clazz.newInstance();
-            return (Cursor)instance.getClass().getMethod("all").invoke(instance);
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return null;
-    }
-    
-    public static <T> T find(Class<?> clazz, Filter filter){
-        try{
-            Object instance=clazz.newInstance();
-            return (T)instance.getClass().getMethod("find",Record.class).invoke(instance,filter);
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return null;
-    }
+    @Expose
+    public String _id;
+    @Expose
+    public String created_at;
+    @Expose
+    public String update_at;
+    @Expose
+    public String delete_at;
     
     private String date_format="dd-MM-yyyy HH:mm:ss";
     private boolean with_trashed;
@@ -84,7 +72,13 @@ public class ModelDB extends Record{
     }
     
     public Object getInstance(){
-        return this;
+        try{
+            Class<?> clazz=this.getClass();
+            return clazz.getDeclaredConstructor().newInstance();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
     
     public Database getConnection(){
@@ -119,50 +113,6 @@ public class ModelDB extends Record{
         record.set("delete_at",null);
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         return collection.update(filter,record);
-    }
-    
-    public Cursor find(Filter filter_old){
-        LogicalExpression filter=new LogicalExpression(LogicalOp.AND);
-        filter.add(filter_old);
-        if(this.deleteSave() && !this.with_trashed){
-            filter.add(new ComparisonExpression("delete_at",null));
-        }
-        this.with_trashed=false;
-        try{
-            Object instance=this.getInstance();
-            Collect annot_table=instance.getClass().getAnnotation(Collect.class);
-            if(annot_table==null){
-                return null;
-            }
-            Collection collection=this.getConnection().collection(annot_table.src());
-            RecordList records_find=collection.find(filter);
-            collection.close();
-            return new Cursor(records_find,instance.getClass());
-        }catch(Exception ex){
-            ex.printStackTrace();
-            return null;
-        }
-    }
-    
-    public Cursor all(){
-        if(this.deleteSave() && !this.with_trashed){
-            return this.find(null);
-        }
-        this.with_trashed=false;
-        try{
-            Object instance=this.getInstance();
-            Collect annot_table=instance.getClass().getAnnotation(Collect.class);
-            if(annot_table==null){
-                return null;
-            }
-            Collection collection=this.getCollection();
-            RecordList records=collection.all();
-            collection.close();
-            return new Cursor(records,instance.getClass());
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return null;
     }
     
     public boolean delete(){

@@ -23,7 +23,7 @@ public class JSON implements DataFormat{
     }
     
     public static Gson builder(){
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setLenient().create();
     }
     
     public static String createJson(Object json){

@@ -1,6 +1,5 @@
 package database;
 
-import com.dogiloki.multitaks.database.Cursor;
 import com.dogiloki.multitaks.database.Database;
 import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.database.filter.ComparisonExpression;
@@ -22,11 +21,8 @@ import java.time.Period;
 public class Test{
     
     public Test(){
-        Cursor<Persona> per=ModelDB.all(Persona.class);
-        Persona p;
-        while((p=per.next())!=null){
-            System.out.println(p.nombre);
-        }
+        Persona p=new Persona();
+        System.out.println(p.getInstance());
     }
     
     public static void main(String args[]){
