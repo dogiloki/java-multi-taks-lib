@@ -94,7 +94,7 @@ public class ModelDB extends Record{
         if(annot_table==null){
             return null;
         }
-        return this.getConnection().collection(annot_table.src());
+        return this.getConnection().collection(annot_table.src(),this.getInstance().getClass());
     }
     
     public String getDateTime(){

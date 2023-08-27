@@ -21,8 +21,11 @@ import java.time.Period;
 public class Test{
     
     public Test(){
-        Persona p=new Persona();
-        System.out.println(p.getInstance());
+        RecordList<Persona> personas=new Persona().getCollection().all();
+        Persona p;
+        while((p=personas.next())!=null){
+            System.out.println(p.nombre);
+        }
     }
     
     public static void main(String args[]){
