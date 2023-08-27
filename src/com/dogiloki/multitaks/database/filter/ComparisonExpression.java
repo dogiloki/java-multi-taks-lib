@@ -1,7 +1,9 @@
 package com.dogiloki.multitaks.database.filter;
 
+import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.enums.CompOp;
 import com.dogiloki.multitaks.database.record.Record;
+import java.util.Objects;
 
 /**
  *
@@ -30,27 +32,28 @@ public class ComparisonExpression extends Filter{
     @Override
     public boolean logic(){
         Record record=this.getRecord();
-        if(record==null || this.value==null || record.get(this.key)==null){
+        if(record==null){
             return false;
         }
+        Object value=record.get(this.key);
         switch(this.operator){
             case EQ:{
-                return this.value.equals(record.get(this.key));
+                return Objects.equals(value,this.value);
             }
             case NE:{
-                return !this.value.equals(record.get(this.key));
+                return !Objects.equals(value,this.value);
             }
             case GT:{
-                return this.value.toString().compareTo(record.get(this.key).toString())>0;
+                return Function.compareTo(value,this.value)>0;
             }
             case LT:{
-                return this.value.toString().compareTo(record.get(this.key).toString())<0;
+                return Function.compareTo(value,this.value)<0;
             }
             case GTE:{
-                return this.value.toString().compareTo(record.get(this.key).toString())>0 && this.value.equals(record.get(this.key));
+                return Function.compareTo(value,this.value)>0 && Objects.equals(value,this.value);
             }
             case LTE:{
-                return this.value.toString().compareTo(record.get(this.key).toString())<0 && this.value.equals(record.get(this.key));
+                return Function.compareTo(value,this.value)<0 && Objects.equals(value,this.value);
             }
         }
         return true;

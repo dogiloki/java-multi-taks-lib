@@ -8,33 +8,30 @@ import com.dogiloki.multitaks.database.record.Record;
  * @author dogi_
  */
 
-public class Filter implements FilterImpl{
+public abstract class Filter implements FilterImpl{
     
     private Record record;
     
-    public Filter(){
-    
-    }
-    
+    @Override
     public boolean apply(Record record){
         this.record(record);
         return this.logic();
     }
     
+    @Override
     public void record(Record record){
         this.record=record;
     }
     
-    public boolean logic(){
-        return false;
-    }
+    @Override
+    public abstract boolean logic();
     
+    @Override
     public Record getRecord(){
         return this.record;
     }
     
-    public OpImpl getOperator(){
-        return null;
-    }
+    @Override
+    public abstract OpImpl getOperator();
     
 }

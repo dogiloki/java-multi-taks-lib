@@ -123,11 +123,9 @@ public class ModelDB extends Record{
     
     public Cursor find(Filter filter_old){
         LogicalExpression filter=new LogicalExpression(LogicalOp.AND);
+        filter.add(filter_old);
         if(this.deleteSave() && !this.with_trashed){
-            filter.add(filter_old);
             filter.add(new ComparisonExpression("delete_at",null));
-        }else{
-            filter.add(filter_old);
         }
         this.with_trashed=false;
         try{
@@ -148,7 +146,7 @@ public class ModelDB extends Record{
     
     public Cursor all(){
         if(this.deleteSave() && !this.with_trashed){
-            return this.find(new Filter());
+            return this.find(null);
         }
         this.with_trashed=false;
         try{

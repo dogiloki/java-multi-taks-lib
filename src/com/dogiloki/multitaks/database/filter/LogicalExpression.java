@@ -24,7 +24,9 @@ public class LogicalExpression extends Filter{
     }
     
     public LogicalExpression add(Filter expression){
-        this.expressions.add(expression);
+        if(expression!=null){
+            this.expressions.add(expression);
+        }
         return this;
     }
     

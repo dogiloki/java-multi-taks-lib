@@ -3,6 +3,7 @@ package com.dogiloki.multitaks.database.record;
 import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.google.gson.Gson;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
