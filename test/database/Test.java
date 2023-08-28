@@ -24,7 +24,9 @@ public class Test{
         RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","lio"));
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre);
+            p.edad=21;
+            p.save();
+            System.out.println(p);
         }
     }
     

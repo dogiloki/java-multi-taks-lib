@@ -816,7 +816,7 @@ public class Storage{
      */
     public boolean clean(){
         try{
-            if(!this.open(false) || !this.close()){
+            if(!this.open(false)){
                 return false;
             }
             this.bw.write("");
