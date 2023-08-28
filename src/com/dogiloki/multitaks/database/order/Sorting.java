@@ -10,13 +10,26 @@ import java.util.List;
 
 public abstract class Sorting<T> extends SortingAlgorithm{
     
+    public interface orderWith<T>{
+        public Object run(T item);
+    }
+    
     private List<T> items=new ArrayList<>();
+    public orderWith<T> order_with=(item)->item;
     
     public Sorting(){
         
     }
     
     public abstract List<T> sort();
+    
+    public orderWith<T> orderWith(){
+        return this.order_with;
+    }
+    
+    public void orderWith(orderWith<T> action){
+        this.order_with=action;
+    }
     
     public List<T> items(){
         return this.items;

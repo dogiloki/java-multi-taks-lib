@@ -25,4 +25,8 @@ public class Persona extends ModelDB{
         
     }
     
+    public String getNombre(){
+        return this.nombre;
+    }
+    
 }

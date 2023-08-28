@@ -17,6 +17,9 @@ import com.github.javafaker.Faker;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -27,23 +30,22 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","Cathleen"));
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J"));
         Persona p;
+        List<Persona> lista_personas=new ArrayList<>();
         while((p=personas.next())!=null){
-            System.out.println(p.edad);
+            lista_personas.add(p);
+            System.out.println(p.nombre);
         }
-        List<String> nombres=new ArrayList<>();
-        nombres.add("Julio");
-        nombres.add("Juan");
-        nombres.add("Alma");
-        nombres.add("María");
-        nombres.add("Julio");
-        nombres.add("Mario");
-        nombres.add("Martha");
-        nombres.add("Alma");
-        Sorting sort=new BubbleSort();
-        sort.items(nombres);
-        System.out.println(sort.sort());
+        System.out.println("------------------");
+        Sorting<Persona> sort=new BubbleSort();
+        sort.orderWith((item)->{
+            return item.nombre;
+        });
+        sort.items(lista_personas);
+        for(Persona p2:sort.sort()){
+            System.out.println(p2.nombre);
+        }
     }
     
     public static void main(String args[]){
