@@ -9,13 +9,8 @@ import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.database.annotations.Collect;
 import com.dogiloki.multitaks.database.filter.ComparisonExpression;
 import com.dogiloki.multitaks.database.filter.Filter;
-import com.dogiloki.multitaks.database.filter.LogicalExpression;
-import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
 import com.dogiloki.multitaks.database.record.RecordField;
-import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.annotations.Expose;
-import java.util.Arrays;
-
 /**
  *
  * @author dogi_

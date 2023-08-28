@@ -21,10 +21,10 @@ import java.time.Period;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().all();
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","lio"));
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.delete());
+            System.out.println(p.nombre);
         }
     }
     

@@ -13,7 +13,8 @@ public enum CompOp implements OpImpl{
     GT(">"),
     LT("<"),
     GTE(">="),
-    LTE("<=");
+    LTE("<="),
+    LIKE("LIKE");
     
     private String text;
     

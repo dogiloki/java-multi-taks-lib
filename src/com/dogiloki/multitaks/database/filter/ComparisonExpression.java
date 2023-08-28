@@ -55,6 +55,9 @@ public class ComparisonExpression extends Filter{
             case LTE:{
                 return Function.compareTo(value,this.value)<0 && Objects.equals(value,this.value);
             }
+            case LIKE:{
+                return (value==null || this.value==null)?false:(value.toString().contains(this.value.toString()));
+            }
         }
         return true;
     }
