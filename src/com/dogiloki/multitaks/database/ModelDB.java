@@ -11,7 +11,7 @@ import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.annotations.Expose;
-import java.lang.reflect.Method;
+
 /**
  *
  * @author dogi_

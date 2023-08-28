@@ -1,6 +1,5 @@
 package com.dogiloki.multitaks.socket.handles;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import com.dogiloki.multitaks.socket.SocketData;
