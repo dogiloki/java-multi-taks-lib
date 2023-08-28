@@ -9,14 +9,14 @@ import com.dogiloki.multitaks.database.order.enums.OrderBy;
 
 public class SortingBy{
     
-    private static OrderBy default_order_by=OrderBy.ASC;
+    public static OrderBy default_order_by=OrderBy.ASC;
     private OrderBy order_by;
     
     public SortingBy(){
         this.orderBy(SortingBy.default_order_by);
     }
     
-    protected OrderBy orderBy(){
+    public OrderBy orderBy(){
         return this.order_by;
     }
     

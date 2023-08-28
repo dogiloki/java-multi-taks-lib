@@ -8,7 +8,6 @@ import com.dogiloki.multitaks.database.filter.LogicalExpression;
 import com.dogiloki.multitaks.database.filter.enums.CompOp;
 import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
 import com.dogiloki.multitaks.database.order.Sorting;
-import com.dogiloki.multitaks.database.order.BubbleSort;
 import com.dogiloki.multitaks.database.order.SortingBy;
 import com.dogiloki.multitaks.database.order.enums.OrderBy;
 import com.dogiloki.multitaks.database.record.Record;
@@ -30,10 +29,10 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J")).orderBy(OrderBy.ASC,"nombre");
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J")).orderBy(OrderBy.ASC,"edad");
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre);
+            System.out.println(p.nombre+", edad: "+p.edad);
         }
     }
     

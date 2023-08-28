@@ -9,7 +9,7 @@ import com.dogiloki.multitaks.database.order.enums.OrderAlgorithm;
 
 public class SortingAlgorithm extends SortingBy{
     
-    private static OrderAlgorithm default_order_algorithm=OrderAlgorithm.INSERTION_SORT;
+    public static OrderAlgorithm default_order_algorithm=OrderAlgorithm.INSERTION_SORT;
     private OrderAlgorithm order_algorithm;
     
     public SortingAlgorithm(){
@@ -20,7 +20,7 @@ public class SortingAlgorithm extends SortingBy{
         return this.order_algorithm;
     }
     
-    protected SortingAlgorithm orderAlgorithm(OrderAlgorithm order_algorithm){
+    public SortingAlgorithm orderAlgorithm(OrderAlgorithm order_algorithm){
         this.order_algorithm=order_algorithm;
         return this;
     }

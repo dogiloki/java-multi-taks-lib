@@ -2,8 +2,8 @@ package com.dogiloki.multitaks.database.record;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
-import com.dogiloki.multitaks.database.order.BubbleSort;
 import com.dogiloki.multitaks.database.order.Sorting;
+import com.dogiloki.multitaks.database.order.enums.OrderAlgorithm;
 import com.dogiloki.multitaks.database.order.enums.OrderBy;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.lang.reflect.Field;
@@ -159,7 +159,7 @@ public class RecordList<T extends Record>{
         while((obj=this.next())!=null){
             items.add(obj);
         }
-        Sorting<T> sort=new BubbleSort();
+        Sorting<T> sort=new Sorting();
         sort.items(items);
         sort.orderBy(order_by);
         sort.orderWith((item)->{
