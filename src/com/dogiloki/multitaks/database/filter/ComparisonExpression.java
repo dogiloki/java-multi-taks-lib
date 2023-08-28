@@ -56,7 +56,7 @@ public class ComparisonExpression extends Filter{
                 return Function.compareTo(value,this.value)<0 && Objects.equals(value,this.value);
             }
             case LIKE:{
-                return (value==null || this.value==null)?false:(value.toString().contains(this.value.toString()));
+                return (value==null || this.value==null)?false:(value.toString().toLowerCase().contains(this.value.toString().toLowerCase()));
             }
         }
         return true;
