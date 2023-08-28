@@ -28,7 +28,7 @@ public class BubbleSort<T> extends Sorting{
                 if(this.orderBy()==OrderBy.ASC && !(Function.compareTo(this.orderWith().run(items.get(index)),this.orderWith().run(items.get(index+1)))>0)){
                     continue;
                 }else
-                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(items.get(index),items.get(index+1))<0)){
+                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(this.orderWith().run(items.get(index)),this.orderWith().run(items.get(index+1)))<0)){
                     continue;
                 }
                 aux=items.get(index);

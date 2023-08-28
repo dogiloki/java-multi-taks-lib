@@ -41,7 +41,7 @@ public class Test{
         Sorting<Persona> sort=new BubbleSort();
         sort.orderWith((item)->{
             return item.nombre;
-        });
+        }).orderBy(OrderBy.DESC);
         sort.items(lista_personas);
         for(Persona p2:sort.sort()){
             System.out.println(p2.nombre);

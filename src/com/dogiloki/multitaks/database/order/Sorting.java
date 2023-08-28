@@ -15,7 +15,7 @@ public abstract class Sorting<T> extends SortingAlgorithm{
     }
     
     private List<T> items=new ArrayList<>();
-    public orderWith<T> order_with=(item)->item;
+    private orderWith<T> order_with=(item)->item;
     
     public Sorting(){
         
@@ -27,8 +27,9 @@ public abstract class Sorting<T> extends SortingAlgorithm{
         return this.order_with;
     }
     
-    public void orderWith(orderWith<T> action){
+    public Sorting orderWith(orderWith<T> action){
         this.order_with=action;
+        return this;
     }
     
     public List<T> items(){
