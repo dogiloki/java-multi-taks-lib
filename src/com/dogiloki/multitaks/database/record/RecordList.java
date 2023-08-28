@@ -4,6 +4,10 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.util.Scanner;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.FixedValue;
 
 /**
  *
@@ -94,6 +98,11 @@ public class RecordList<T extends Record>{
                 return this.next();
             }
         }
+        
+        if(this.current()!=null && !Record.class.equals(this.current().getClass())){
+            // Métodos dinamicos pendiente
+        }
+        
         return this.current();
     }
     
