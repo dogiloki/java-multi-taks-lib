@@ -29,7 +29,7 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().all().orderBy("nombre");
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J")).limit(3).orderBy("nombre");
         Persona p;
         while((p=personas.next())!=null){
             System.out.println(p.nombre);

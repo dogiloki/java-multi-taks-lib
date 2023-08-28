@@ -3,7 +3,6 @@ package com.dogiloki.multitaks.database.record;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.database.order.Sorting;
-import com.dogiloki.multitaks.database.order.enums.OrderAlgorithm;
 import com.dogiloki.multitaks.database.order.enums.OrderBy;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.lang.reflect.Field;
@@ -29,6 +28,7 @@ public class RecordList<T extends Record>{
     private Integer limit_end=null;
     private Class<T> clazz;
     private boolean ordering=false;
+    private boolean ignore_limit=false;
     private List<T> items=new ArrayList<>();
     
     public RecordList(Scanner iterator, Filter filter, Class clazz){
@@ -85,8 +85,13 @@ public class RecordList<T extends Record>{
             if(this.count==this.items.size()){
                 return null;
             }
-            this.current=this.items.get(this.count);
             this.count++;
+            if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
+                if(!this.withinLimit()){
+                    return this.next();
+                }
+            }
+            this.current=this.items.get((this.count-1));
             return this.current();
         }
         
@@ -109,7 +114,7 @@ public class RecordList<T extends Record>{
             return this.next();
         }
         this.count++;
-        if(this.current()!=null && this.hasLimit()){
+        if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
             if(!this.withinLimit()){
                 return this.next();
             }
@@ -169,12 +174,16 @@ public class RecordList<T extends Record>{
     }
     
     private RecordList _orderBy(String key, OrderBy order_by){
+        if(this.hasLimit()){
+            this.ignore_limit=true;
+        }
         this.current(null);
         List<T> items=new ArrayList<>();
         T obj;
         while((obj=this.next())!=null){
             items.add(obj);
         }
+        this.ignore_limit=false;
         Sorting<T> sort=new Sorting();
         sort.items(items);
         sort.orderBy(order_by);
