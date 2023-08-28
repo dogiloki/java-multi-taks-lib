@@ -30,21 +30,10 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J"));
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J")).orderBy(OrderBy.ASC,"nombre");
         Persona p;
-        List<Persona> lista_personas=new ArrayList<>();
         while((p=personas.next())!=null){
-            lista_personas.add(p);
             System.out.println(p.nombre);
-        }
-        System.out.println("------------------");
-        Sorting<Persona> sort=new BubbleSort();
-        sort.orderWith((item)->{
-            return item.nombre;
-        }).orderBy(OrderBy.DESC);
-        sort.items(lista_personas);
-        for(Persona p2:sort.sort()){
-            System.out.println(p2.nombre);
         }
     }
     

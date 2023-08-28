@@ -2,7 +2,14 @@ package com.dogiloki.multitaks.database.record;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
+import com.dogiloki.multitaks.database.order.BubbleSort;
+import com.dogiloki.multitaks.database.order.Sorting;
+import com.dogiloki.multitaks.database.order.enums.OrderBy;
 import com.dogiloki.multitaks.dataformat.JSON;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -21,6 +28,8 @@ public class RecordList<T extends Record>{
     private Integer limit_index=null;
     private Integer limit_end=null;
     private Class<T> clazz;
+    private boolean ordering=false;
+    private List<T> items=new ArrayList<>();
     
     public RecordList(Scanner iterator, Filter filter, Class clazz){
         this.iterator=iterator;
@@ -71,9 +80,20 @@ public class RecordList<T extends Record>{
     }
     
     public T next(){
+        
+        if(this.isOrder()){
+            if(this.count==this.items.size()){
+                return null;
+            }
+            this.current=this.items.get(this.count);
+            this.count++;
+            return this.current();
+        }
+        
         if(!this.hasNext()){
             return null;
         }
+        
         this.line_number++;
         this.current(null);
         String json=this.iterator.nextLine();
@@ -130,6 +150,41 @@ public class RecordList<T extends Record>{
     
     public boolean withinLimit(){
         return Function.withinRange(this.count,this.limit_index,this.limit_end);
+    }
+    
+    public RecordList orderBy(OrderBy order_by, String key){
+        this.current(null);
+        List<T> items=new ArrayList<>();
+        T obj;
+        while((obj=this.next())!=null){
+            items.add(obj);
+        }
+        Sorting<T> sort=new BubbleSort();
+        sort.items(items);
+        sort.orderBy(order_by);
+        sort.orderWith((item)->{
+            try{
+                if(key.contains("()")){
+                    Method method=this.clazz.getDeclaredMethod(key);
+                    method.setAccessible(true);
+                    return method.invoke(item);
+                }
+                Field field=this.clazz.getDeclaredField(key);
+                field.setAccessible(true);
+                return field.get(item);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return null;
+        });
+        this.items=sort.sort();
+        this.count=0;
+        this.ordering=true;
+        return this;
+    }
+    
+    public boolean isOrder(){
+        return this.ordering;
     }
     
     public Scanner getIterator(){
