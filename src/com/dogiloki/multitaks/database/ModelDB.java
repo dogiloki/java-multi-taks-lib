@@ -47,7 +47,11 @@ public class ModelDB extends Record{
     public RecordList find(Filter filter_old){
         Filter filter;
         if(this.deleteSave() && !this.with_trashed){
-            filter=Filter.and(filter_old,Filter.eq("delete_at",null));
+            if(filter_old==null){
+                filter=Filter.eq("delete_at",null);
+            }else{
+                filter=Filter.and(filter_old,Filter.eq("delete_at",null));
+            }
         }else{
             filter=filter_old;
         }
@@ -125,12 +129,7 @@ public class ModelDB extends Record{
     }
     
     public boolean delete(){
-        Object instance=this.getInstance();
-        Collect annot_table=instance.getClass().getAnnotation(Collect.class);
-        if(annot_table==null){
-            return false;
-        }
-        Collection collection=this.getConnection().collection(annot_table.src());
+        Collection collection=this.getCollection();
         Record record=new Record().setId(this.getId());
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         if(this.deleteSave()){

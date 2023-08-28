@@ -102,6 +102,9 @@ public class RecordList<T extends Record>{
         this.line_number++;
         this.current(null);
         String json=this.iterator.nextLine();
+        if(json==null || json.equals("")){
+            return this.next();
+        }
         RecordField fields=JSON.builder().fromJson(json,RecordField.class);
         
         Record record=new Record(fields,this.line_number);
