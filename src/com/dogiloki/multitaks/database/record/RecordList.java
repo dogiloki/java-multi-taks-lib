@@ -152,7 +152,23 @@ public class RecordList<T extends Record>{
         return Function.withinRange(this.count,this.limit_index,this.limit_end);
     }
     
-    public RecordList orderBy(OrderBy order_by, String key){
+    public RecordList orderByAsc(String key){
+        return this._orderBy(key,OrderBy.ASC);
+    }
+    
+    public RecordList orderByDesc(String key){
+        return this._orderBy(key,OrderBy.DESC);
+    }
+    
+    public RecordList orderBy(String key){
+        return this._orderBy(key,OrderBy.ASC);
+    }
+    
+    public RecordList orderBy(String key, OrderBy order_by){
+        return this._orderBy(key,order_by);
+    }
+    
+    private RecordList _orderBy(String key, OrderBy order_by){
         this.current(null);
         List<T> items=new ArrayList<>();
         T obj;

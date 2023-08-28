@@ -29,10 +29,10 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","J")).orderBy(OrderBy.ASC,"edad");
+        RecordList<Persona> personas=new Persona().getCollection().all().orderBy("nombre");
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre+", edad: "+p.edad);
+            System.out.println(p.nombre);
         }
     }
     
