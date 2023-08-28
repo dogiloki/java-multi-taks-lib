@@ -37,8 +37,10 @@ public class Test{
         nombres.add("Juan");
         nombres.add("Alma");
         nombres.add("María");
+        nombres.add("Julio");
         nombres.add("Mario");
         nombres.add("Martha");
+        nombres.add("Alma");
         Sorting sort=new BubbleSort();
         sort.items(nombres);
         System.out.println(sort.sort());
