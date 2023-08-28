@@ -3,7 +3,6 @@ package com.dogiloki.multitaks.database.order;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.order.enums.OrderAlgorithm;
 import com.dogiloki.multitaks.database.order.enums.OrderBy;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

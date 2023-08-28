@@ -165,7 +165,7 @@ public class RecordList<T extends Record>{
         sort.orderWith((item)->{
             try{
                 if(key.contains("()")){
-                    Method method=this.clazz.getDeclaredMethod(key);
+                    Method method=this.clazz.getDeclaredMethod(key.replace("()",""));
                     method.setAccessible(true);
                     return method.invoke(item);
                 }
