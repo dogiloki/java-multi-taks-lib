@@ -190,13 +190,21 @@ public class RecordList<T extends Record>{
         sort.orderWith((item)->{
             try{
                 if(key.contains("()")){
-                    Method method=this.clazz.getDeclaredMethod(key.replace("()",""));
-                    method.setAccessible(true);
-                    return method.invoke(item);
+                    for(Method method:this.clazz.getMethods()){
+                        if(!method.getName().endsWith(key.replace("()",""))){
+                            continue;
+                        }
+                        method.setAccessible(true);
+                        return method.invoke(item);
+                    }
                 }
-                Field field=this.clazz.getDeclaredField(key);
-                field.setAccessible(true);
-                return field.get(item);
+                for(Field field:this.clazz.getFields()){
+                    if(!field.getName().equals(key)){
+                        continue;
+                    }
+                    field.setAccessible(true);
+                    return field.get(item);
+                }
             }catch(Exception ex){
                 ex.printStackTrace();
             }
