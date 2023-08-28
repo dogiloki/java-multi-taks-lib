@@ -3,7 +3,6 @@ package com.dogiloki.multitaks.database.record;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.dataformat.JSON;
-import com.google.gson.Gson;
 import java.util.Scanner;
 
 /**
@@ -53,6 +52,7 @@ public class RecordList<T extends Record>{
                 String json=JSON.builder().toJson(fields);
                 this.current=JSON.builder().fromJson(json,this.clazz);
                 this.current.setFields(fields);
+                this.current.setLineNumber(current.getLineNumber());
             }
         }
         return this.current();
@@ -77,7 +77,7 @@ public class RecordList<T extends Record>{
         this.line_number++;
         this.current(null);
         String json=this.iterator.nextLine();
-        RecordField fields=new Gson().fromJson(json,RecordField.class);
+        RecordField fields=JSON.builder().fromJson(json,RecordField.class);
         
         Record record=new Record(fields,this.line_number);
         if(this.filter==null){

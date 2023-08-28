@@ -21,12 +21,12 @@ import java.time.Period;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","lio"));
+        RecordList<Persona> personas=new Persona().getCollection().find(Filter.like("nombre","Julio"));
         Persona p;
         while((p=personas.next())!=null){
-            p.edad=21;
+            p.edad=20;
             p.save();
-            System.out.println(p);
+            System.out.println(p.getLineNumber());
         }
     }
     

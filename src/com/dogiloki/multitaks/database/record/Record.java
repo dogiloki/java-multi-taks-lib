@@ -2,7 +2,7 @@ package com.dogiloki.multitaks.database.record;
 
 import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.database.filter.Filter;
-import com.google.gson.Gson;
+import com.dogiloki.multitaks.dataformat.JSON;
 import java.util.Map;
 
 /**
@@ -69,7 +69,7 @@ public class Record{
     }
     
     public String toJson(){
-        return new Gson().toJson(this.getFields());
+        return JSON.builder().toJson(this.getFields());
     }
     
     public String getId(){

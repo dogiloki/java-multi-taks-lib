@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.database;
 
 import com.dogiloki.multitaks.database.record.Record;
-import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.dogiloki.multitaks.GlobalVar;
@@ -43,7 +42,7 @@ public class ModelDB extends Record{
         Collection collection=this.getCollection();
         Object instance=this.getInstance();
         String json=JSON.builder().toJson(instance);
-        RecordField fields=new Gson().fromJson(json,RecordField.class);
+        RecordField fields=JSON.builder().fromJson(json,RecordField.class);
         Record record=new Record();
         record.setFields(fields);
         record.setId(this.getId());

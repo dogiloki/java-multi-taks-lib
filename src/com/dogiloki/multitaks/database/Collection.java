@@ -3,7 +3,7 @@ package com.dogiloki.multitaks.database;
 import com.dogiloki.multitaks.database.record.Record;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.dogiloki.multitaks.database.filter.Filter;
-import com.google.gson.Gson;
+import com.dogiloki.multitaks.dataformat.JSON;
 import java.util.Scanner;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
@@ -39,7 +39,7 @@ public class Collection extends Storage{
         for(Record record:records){
             this.aim(this.getSrc(),DirectoryType.FILE);
             record.generateId();
-            this.append(new Gson().toJson((Map)record.getFields())+"\n");
+            this.append(JSON.builder().toJson((Map)record.getFields())+"\n");
         }
         return true;
     }
@@ -55,7 +55,7 @@ public class Collection extends Storage{
             }
             record_find.set(entry.getKey(),entry.getValue());
         }
-        return this.writeLine(new Gson().toJson(record_find.getFields()),record_find.getLineNumber());
+        return this.writeLine(record_find.toJson(),record_find.getLineNumber());
     }
     
     public boolean delete(Filter filter){

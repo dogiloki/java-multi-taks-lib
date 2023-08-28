@@ -852,12 +852,14 @@ public class Storage{
      * @param text Contenido a reescribir en el fichero
      * @return Indica si se reescribio el nuevo contenido en el fichero
      */
-    public boolean write(Object text){
+    public boolean write(Object... text){
         try{
             if(!this.open(false)){
                 return false;
             }
-            this.bw.write(((String)text));
+            for(Object t:text){
+                this.bw.write(((String)t));
+            }
             this.close();
             return true;
         }catch(IOException ex){
@@ -880,20 +882,16 @@ public class Storage{
             List<String> lines=new ArrayList<>();
             while(reader.hasNextLine()){
                 String line=reader.nextLine();
-                line=(current_number==number?Function.assign((String)text,""):line);
+                line=(current_number==number?Function.assignNotNull((String)text,""):line);
                 if(line!=null){
                     lines.add(line);
                 }
                 current_number++;
             }
             this.clean();
-            if(!this.open(true)){
-                return false;
-            }
             for(String line:lines){
-                this.bw.write(line+"\n");
+                this.append(line+"\n");
             }
-            this.close();
             return true;
         }catch(Exception ex){
             ex.printStackTrace();
