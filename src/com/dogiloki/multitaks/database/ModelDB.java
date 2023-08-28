@@ -9,7 +9,9 @@ import com.dogiloki.multitaks.database.annotations.Collect;
 import com.dogiloki.multitaks.database.filter.ComparisonExpression;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.database.record.RecordField;
+import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.annotations.Expose;
+import java.lang.reflect.Method;
 /**
  *
  * @author dogi_
@@ -36,6 +38,25 @@ public class ModelDB extends Record{
     
     public ModelDB(String src){
         this.db=new Database(src);
+    }
+    
+    public RecordList _all(){
+        return this.getCollection().all();
+    }
+    
+    public RecordList find(Filter filter_old){
+        Filter filter;
+        if(this.deleteSave() && !this.with_trashed){
+            filter=Filter.and(filter_old,Filter.eq("delete_at",null));
+        }else{
+            filter=filter_old;
+        }
+        this.with_trashed=false;
+        return this.getCollection().find(filter);
+    }
+    
+    public RecordList all(){
+        return this.find(null);
     }
     
     public boolean save(){
