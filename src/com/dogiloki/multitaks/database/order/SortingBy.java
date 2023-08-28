@@ -7,7 +7,7 @@ import com.dogiloki.multitaks.database.order.enums.OrderBy;
  * @author dogi_
  */
 
-public abstract class SortingBy{
+public class SortingBy{
     
     private static OrderBy default_order_by=OrderBy.ASC;
     private OrderBy order_by;
