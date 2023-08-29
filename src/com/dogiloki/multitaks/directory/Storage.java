@@ -795,6 +795,23 @@ public class Storage{
     }
     
     /**
+     * Fuerza la escritura física del archivo
+     * @return 
+     */
+    public boolean flush(){
+        try{
+            if(this.bw==null){
+                return true;
+            }
+            this.bw.flush();
+            return true;
+        }catch(IOException ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    /**
      * Eliminar fichero. Incuyendo si es un carpeta con subcarpetas y archivos
      * @return Indica si se eliminó correctamente
      */
