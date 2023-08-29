@@ -36,7 +36,7 @@ public class DownloadDialog extends javax.swing.JDialog implements Runnable{
             name_tmp=Arrays.copyOf(name_tmp,name_tmp.length-1);
             folder=String.join("/", name_tmp);
         }
-        Storage.exists(folder,DirectoryType.FOLDER,true);
+        new Storage(folder,DirectoryType.FOLDER).exists(true);
         this.folder=folder+"/"+name;
         this.name=name;
         this.url=url;

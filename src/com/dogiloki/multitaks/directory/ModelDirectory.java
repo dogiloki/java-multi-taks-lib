@@ -95,7 +95,7 @@ public class ModelDirectory extends Storage{
         if(this.isFolder()){
             Storage.createFolder(this.getSrc());
         }else{
-            Storage.exists(this.getSrc(),DirectoryType.FILE,true);
+            new Storage(this.getSrc(),DirectoryType.FILE).exists(true);
         }
     }
     

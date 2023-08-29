@@ -15,7 +15,7 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
 public class DirectoryList{
     
     private Path directory;
-    private DirectoryStream<Path> directory_strema;
+    private DirectoryStream<Path> directory_stream;
     private Path current_directory;
     private DirectoryType type;
     private Iterator<Path> iterator;
@@ -31,10 +31,10 @@ public class DirectoryList{
     private void run(String path, DirectoryType type){
         try{
             this.directory=Paths.get(path);
-            this.directory_strema=Files.newDirectoryStream(this.directory);
+            this.directory_stream=Files.newDirectoryStream(this.directory);
             this.current_directory=null;
             this.type=type;
-            this.iterator=this.directory_strema.iterator();
+            this.iterator=this.directory_stream.iterator();
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class DirectoryList{
     public boolean hasNext(){
         if(!this.iterator.hasNext()){
             try{
-                this.directory_strema.close();
+                this.directory_stream.close();
             }catch(Exception ex){
                 ex.printStackTrace();
             }

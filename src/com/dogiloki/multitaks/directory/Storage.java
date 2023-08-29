@@ -104,176 +104,6 @@ public class Storage{
     }
     
     /**
-     * Reescribir en un archivo
-     * @param path Ruta del fichero
-     * @param text Contenido a reecribir
-     * @return Indicar si se reescribió el archivo
-     */
-    public static boolean writeFile(String path, Object text){
-        return new Storage(path).write(text);
-    }
-    
-    /**
-     * Adicionar contenido al final del fichero
-     * @param path Ruta del fichero
-     * @param text Contenido a adicionar
-     * @return Indica si se adiciono el contenido en el archivo
-     */
-    public static boolean appendFile(String path, Object text){
-        return new Storage(path).append(text);
-    }
-    
-    /**
-     * Reescribe contenido de una línea en especifica con nuevo contenido dentro del fichero
-     * @param path Ruta del fichero
-     * @param text Contenido que se adicciona al fichero
-     * @param number Número de la línea donde se reecribira en contenido
-     * @return Indica si se reescribio el fichero
-     */
-    
-    public static boolean writeLine(String path, Object text, long number){
-        return new Storage(path).writeLine(text,number);
-    }
-    
-    /**
-     * Obtiene todo el contenido de un fichero de un fichero
-     * @param path Ruta del fichero
-     * @return Devuelve el contenido en un solo String con sus respectivos salto de línea
-     */
-    public static String readFile(String path){
-        return new Storage(path).read();
-    }
-    
-    /**
-     * Obtiene todo el contenido de un fichero en forma de iterador en lugar de leer todo fichero
-     * @param path Ruta del fichero
-     * @return Scanner con el método en forma de iterador
-     */
-    public static Scanner readIterator(String path){
-        return new Storage(path).readIterator();
-    }
-    
-    /**
-     * Obtiene una clase FileBlock para escribir y leer contenido en base a una cantidad especifica de byte[]
-     * @param path Ruta del fichero
-     * @param block_size tamaño en bytes
-     * @return Instancia de FileBlock
-     */
-    public static FileBlock fileBlock(String path, int block_size){
-        return new Storage(path).fileBlock(block_size);
-    }
-    
-    /**
-     * Obtine el tamaño en bits de un fichero ya sea carpeta o arvhivo
-     * @param path Ruta del fichero
-     * @return Devuelve el tamaño de ficheros en bits
-     */
-    public static long getSize(String path){
-        return new Storage(path).getSize();
-    }
-    
-    /**
-     * Lista todos los fichero en caso de ser carpeta
-     * @param path Ruta del fichero
-     * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
-     */
-    public static DirectoryList listDirectory(String path){
-        return new Storage(path).listDirectory();
-    }
-    
-    /**
-     * Lista todos las carpetas en caso de ser carpetas
-     * @param path Ruta del fichero
-     * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
-     */
-    public static DirectoryList listFolders(String path){
-        return new Storage(path).listFolders();
-    }
-    
-    /**
-     * Lista todos los archivos en caso de ser una carpetaç
-     * @param path Ruta del fichero
-     * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
-     */
-    public static DirectoryList listFiles(String path){
-        return new Storage(path).listFiles();
-    }
-    
-    /**
-     * Verificar si existe un directorio (carpeta o archivo)
-     * @param path Ruta del fichero
-     * @return Indica si existe el directorio
-     */
-    public static boolean exists(String path){
-        return new Storage(path).exists();
-    }
-    
-    /**
-     * Verificar si existe un directorio indicando si es carpeta o archivo y si crearlo
-     * @param path Ruta del directorio
-     * @param type Indicar si es una carpeta o archivo con el enum DirectoryType
-     * @param created Indicar si crearlo en caso de no existir
-     * @return Indica si existe el directorio y si se creo correctamente en caso de indicarlo
-     */
-    public static boolean exists(String path, DirectoryType type, boolean created){
-        return new Storage()._exists(path,type,created);
-    }
-    
-    /**
-     * Saber si es una carpeta
-     * @param path Ruta del directorio
-     * @return Indica si es una carpeta
-     */
-    public static boolean isFolder(String path){
-        return new File(path).isDirectory();
-    }
-    
-    /**
-     * Saber si es un archivo
-     * @param path Ruta del directorio
-     * @return Indica si es un archivo
-     */
-    public static boolean isFile(String path){
-        return new File(path).isFile();
-    }
-    
-    /**
-     * Obtener extensión del un archivo
-     * @param path Ruta del fichero
-     * @return Devuelve un String con el nombre de la extesión
-     */
-    public static String getExtension(String path){
-        return new Storage(path).getExtension();
-    }
-    
-    /**
-     * Obtener nombre de una archivo sin extensión
-     * @param path Ruta del fichero
-     * @return Devuelve en un String el nombre del archivo (sin extensión)
-     */
-    public static String getNameNotExtension(String path){
-        return new Storage(path).getNameNotExtension();
-    }
-    
-    /**
-     * Obtener nombre de una archivo con extensión
-     * @param path Ruta del fichero
-     * @return Devuelve en un String el nombre del archivo (con extensión)
-     */
-    public static String getName(String path){
-        return new Storage(path).getName();
-    }
-    
-    /**
-     * Obtiene la carpeta en la que esta un archivo
-     * @param path Ruta del fichero
-     * @return Devuelve en un String el nombre de la carpeta
-     */
-    public static String getFolder(String path){
-        return new Storage(path).getFolder();
-    }
-    
-    /**
      * Comprimir archivos en formato .zip
      * @param path Ruta de la carpeta a compromir
      * @param name_zip Nombre del archivo .zip (sin la extensión .zip)
@@ -300,17 +130,20 @@ public class Storage{
      */
     private static ZipOutputStream compress(String path, ZipOutputStream zos, String path_dir){
         try{
-            DirectoryList directories=Storage.listDirectory(path);
+            Storage s_path=new Storage(path);
+            DirectoryList directories=s_path.listDirectory();
             while(directories.hasNext()){
                 String f=directories.next().getFileName().toString();
                 String path_zip=path+"/"+f;
-                if(Storage.isFolder(path_zip)){
+                Storage s_zip=new Storage(path_zip);
+                if(s_zip.isFolder()){
                     zos=Storage.compress(path_zip,zos,(path_dir.equals("")?"":(path_dir+"/"))+f);
                     if(zos==null){
                         return null;
                     }
                     continue;
                 }
+                s_zip.close();
                 ZipEntry ze=new ZipEntry((path_dir.equals("")?"":(path_dir+"/"))+f);
                 zos.putNextEntry(ze);
                 FileInputStream fis=new FileInputStream(path_zip);
@@ -321,6 +154,7 @@ public class Storage{
                 }
                 fis.close();
             }
+            s_path.close();
             return zos;
         }catch(Exception ex){
             ex.printStackTrace();
@@ -528,7 +362,8 @@ public class Storage{
     public static void deleteFolder(String path) throws Exception{
         try{
             File file;
-            DirectoryList directories=Storage.listDirectory(path);
+            Storage s_path=new Storage(path);
+            DirectoryList directories=s_path.listDirectory();
             while(directories.hasNext()){
                 String directory=directories.next().getFileName().toString();
                 file=new File(path+"/"+directory);
@@ -539,6 +374,7 @@ public class Storage{
                 Storage.deleteFolder(file.getPath());
                 file.delete();
             }
+            s_path.close();
             file=new File(path);
             if(file.isFile()){
                 return;
@@ -550,24 +386,6 @@ public class Storage{
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
-    }
-    
-    /**
-     * Abrir archivo
-     * @param path Ruta del fichero
-     * @return Indica si el archivo se abrio
-     */
-    public static boolean execute(String path){
-        return new Storage(path).execute();
-    }
-    
-    /**
-     * Obtiene el MIME de un archivo
-     * @param path Ruta del archivo
-     * @return MIME del archivo
-     */
-    public static String getMine(String path){
-        return new Storage(path).getMime();
     }
     
     /**
@@ -597,7 +415,9 @@ public class Storage{
      */
     private static String _store(String path_store, String path_file){
         try{
-            String ext=Storage.getExtension(path_file);
+            Storage s_path_file=new Storage(path_file);
+            String ext=s_path_file.getExtension();
+            s_path_file.close();
             String hash=ObjectId.generate();
             String name_file=hash+"."+ext;
             String path=path_store+"/"+hash.substring(0,2)+"/"+name_file;
@@ -720,16 +540,20 @@ public class Storage{
             directory_new.mkdir();
         }
         try{
-            DirectoryList directories=Storage.listDirectory(path_old);
+            Storage s_path_old=new Storage(path_old);
+            DirectoryList directories=s_path_old.listDirectory();
             while(directories.hasNext()){
                 String directory=directories.next().getFileName().toString();
-                if(Storage.isFolder(path_old+"/"+directory)){
+                Storage s_path=new Storage(path_old+"/"+directory);
+                if(s_path.isFolder()){
                     Storage._copyDirectory(path_old+"/"+directory, path_new+"/"+directory,context);
                 }else
-                if(Storage.isFile(path_old+"/"+directory)){
+                if(s_path.isFile()){
                     Storage.copyFile(path_old+"/"+directory, path_new+"/"+directory);
                 }
+                s_path.close();
             }
+            s_path_old.close();
         }catch(Exception ex){
             throw new Exception(ex.getMessage());
         }
@@ -768,6 +592,7 @@ public class Storage{
             type=file.isDirectory()?DirectoryType.FOLDER:DirectoryType.FILE;
         }
         this.setType(type);
+        this.openOnlyFile();
     }
     
     public String getSrc(){
@@ -820,7 +645,6 @@ public class Storage{
                 return false;
             }
             this.bw.write("");
-            this.close();
             return true;
         }catch(Exception ex){
             ex.printStackTrace();
@@ -839,7 +663,6 @@ public class Storage{
                 return false;
             }
             this.bw.write(((String)text));
-            this.close();
             return true;
         }catch(IOException ex){
             ex.printStackTrace();
@@ -860,7 +683,6 @@ public class Storage{
             for(Object t:text){
                 this.bw.write(((String)t));
             }
-            this.close();
             return true;
         }catch(IOException ex){
             ex.printStackTrace();
@@ -1007,7 +829,7 @@ public class Storage{
     private long _getSize(String path, long size){
         File directory=new File(path);
         if(directory.isDirectory()){
-            DirectoryList directories=this.listDirectory(path);
+            DirectoryList directories=this.listDirectory();
             while(directories.hasNext()){
                 String path_=directories.next().getFileName().toString();
                 File direct=new File(path+"/"+path_);
@@ -1066,7 +888,7 @@ public class Storage{
      * @return Indica si existe el directorio
      */
     public boolean exists(){
-        return this._exists(this.getSrc(),this.getType(),false);
+        return this._exists(false);
     }
     
     /**
@@ -1075,7 +897,7 @@ public class Storage{
      * @return Indica si existe el directorio
      */
     public boolean exists(boolean created){
-        return this._exists(this.getSrc(),this.getType(),created);
+        return this._exists(created);
     }
     
     /**
@@ -1085,17 +907,20 @@ public class Storage{
      * @param created Indicar si crearlo en caso de no existir
      * @return Indica si existe el directorio y si se creo correctamente en caso de indicarlo
      */
-    private boolean _exists(String path, DirectoryType type, boolean created){
-        File directorio=new File(path);
-        if(!directorio.exists() && created){
-            Storage store=new Storage(path,type);
-            switch(type){
-                case FOLDER: return Storage.createFolder(path);
-                case FILE: Storage.createFolder(Storage.getFolder(path)); return store.write("");
+    private boolean _exists(boolean created){
+        this.openOnlyFile();
+        boolean exists=this.file.exists();
+        if(!exists && created){
+            switch(this.getType()){
+                case FOLDER: return Storage.createFolder(this.getSrc());
+                case FILE: {
+                    Storage.createFolder(this.getFolder());
+                    exists=this.write("");
+                    this.close();
+                }
             }
-            store.close();
         }
-        return directorio.exists();
+        return exists;
     }
     
     /**

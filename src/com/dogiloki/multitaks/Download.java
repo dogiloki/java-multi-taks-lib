@@ -27,7 +27,7 @@ public class Download extends javax.swing.JPanel implements Runnable{
     private boolean delete_if_canceled;
     
     public Download(String url, String path){
-        this.init(url,path,Storage.getName(path));
+        this.init(url,path,new Storage(path).getName());
     }
     
     public Download(String url, String path, String name){

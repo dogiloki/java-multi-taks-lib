@@ -25,13 +25,13 @@ public class Collection extends Storage{
     public Collection(String src, Class clazz){
         this.clazz=clazz;
         this.setSrc(src);
-        Storage.exists(src,DirectoryType.FILE,true);
+        new Storage(src,DirectoryType.FILE).exists(true);
         this.aim(this.getSrc(),DirectoryType.FILE);
     }
     
     public void aim(String src){
         this.setSrc(src);
-        Storage.exists(src,DirectoryType.FILE,true);
+        new Storage(src,DirectoryType.FILE).exists(true);
         this.aim(this.getSrc(),DirectoryType.FILE);
     }
     

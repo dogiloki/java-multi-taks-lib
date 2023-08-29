@@ -55,7 +55,7 @@ public class JSON implements DataFormat{
     public JSON(String dir, DirectoryType type){
         this.indice=0;
         switch(type){
-            case FILE: this.json=String.join(" ",Storage.readFile(dir.trim())); break;
+            case FILE: this.json=String.join(" ",new Storage(dir.trim()).read()); break;
         }
         this.init();
     }
