@@ -13,6 +13,9 @@ import com.dogiloki.multitaks.directory.Storage;
 public class Test{
     
     public Test(){
+        Storage s=new Storage("db/personas");
+        s.writeLine("hola",6);
+        s.flush();
         
     }
     

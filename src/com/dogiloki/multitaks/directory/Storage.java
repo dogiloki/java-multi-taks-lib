@@ -663,6 +663,7 @@ public class Storage{
                 return false;
             }
             this.bw.write(((String)text));
+            this.flush();
             return true;
         }catch(IOException ex){
             ex.printStackTrace();
@@ -702,18 +703,16 @@ public class Storage{
             Scanner reader=this.readIterator();
             int current_number=1;
             List<String> lines=new ArrayList<>();
+            String content="";
             while(reader.hasNextLine()){
                 String line=reader.nextLine();
                 line=(current_number==number?Function.assign((String)text,""):line);
                 if(line!=null){
-                    lines.add(line);
+                    content+=line+"\n";
                 }
                 current_number++;
             }
-            this.clean();
-            for(String line:lines){
-                this.append(line+"\n");
-            }
+            this.write(content);
             return true;
         }catch(Exception ex){
             ex.printStackTrace();
