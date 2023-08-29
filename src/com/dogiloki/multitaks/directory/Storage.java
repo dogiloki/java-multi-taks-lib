@@ -704,7 +704,7 @@ public class Storage{
             List<String> lines=new ArrayList<>();
             while(reader.hasNextLine()){
                 String line=reader.nextLine();
-                line=(current_number==number?Function.assignNotNull((String)text,""):line);
+                line=(current_number==number?Function.assign((String)text,""):line);
                 if(line!=null){
                     lines.add(line);
                 }

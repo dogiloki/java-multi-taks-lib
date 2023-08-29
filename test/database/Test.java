@@ -29,10 +29,15 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().withTrashed().find(Filter.like("nombre","s")).orderBy("nombre").limit(10);
+        Persona p_new=new Persona();
+        p_new.nombre="Julio";
+        p_new.apellido="Villanueva";
+        p_new.edad=20;
+        p_new.save();
+        RecordList<Persona> personas=new Persona().all();
         Persona p;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre);
+            System.out.println(p.delete());
         }
     }
     

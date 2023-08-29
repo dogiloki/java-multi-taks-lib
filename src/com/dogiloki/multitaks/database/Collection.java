@@ -39,8 +39,12 @@ public class Collection extends Storage{
         for(Record record:records){
             this.aim(this.getSrc(),DirectoryType.FILE);
             record.generateId();
-            this.append(JSON.builder().toJson((Map)record.getFields())+"\n");
+            if(!this.append(JSON.builder().toJson((Map)record.getFields())+"\n")){
+                this.flush();
+                return false;
+            }
         }
+        this.flush();
         return true;
     }
     
@@ -55,7 +59,9 @@ public class Collection extends Storage{
             }
             record_find.set(entry.getKey(),entry.getValue());
         }
-        return this.writeLine(record_find.toJson(),record_find.getLineNumber());
+        boolean done=this.writeLine(record_find.toJson(),record_find.getLineNumber());
+        this.flush();
+        return done;
     }
     
     public boolean delete(Filter filter){
@@ -63,7 +69,9 @@ public class Collection extends Storage{
         if(record_find==null){
             return false;
         }
-        return this.writeLine("",record_find.getLineNumber());
+        boolean done=this.writeLine("",record_find.getLineNumber());
+        this.flush();
+        return done;
     }
     
     public RecordList find(Filter filter){
