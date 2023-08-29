@@ -89,7 +89,7 @@ public class RecordList<T extends Record>{
                 this.count++;
                 if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
                     if(!this.withinLimit()){
-                        continue;
+                        return null;
                     }
                 }
                 this.current=this.items.get((this.count-1));
@@ -122,7 +122,7 @@ public class RecordList<T extends Record>{
             this.count++;
             if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
                 if(!this.withinLimit()){
-                    continue;
+                    return null;
                 }
             }
 
