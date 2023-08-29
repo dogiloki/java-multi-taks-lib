@@ -82,50 +82,54 @@ public class RecordList<T extends Record>{
     public T next(){
         
         if(this.isOrder()){
-            if(this.count==this.items.size()){
+            do{
+                if(this.count==this.items.size()){
+                    return null;
+                }
+                this.count++;
+                if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
+                    if(!this.withinLimit()){
+                        continue;
+                    }
+                }
+                this.current=this.items.get((this.count-1));
+            }while(this.current()==null);
+            return this.current();
+        }
+        
+        do{
+            if(!this.hasNext()){
                 return null;
+            }
+
+            this.line_number++;
+            this.current(null);
+            String json=this.iterator.nextLine();
+            if(json==null || json.equals("")){
+                continue;
+            }
+            RecordField fields=JSON.builder().fromJson(json,RecordField.class);
+
+            Record record=new Record(fields,this.line_number);
+            if(this.filter==null){
+                this.current(record);
+            }else{
+                this.current(this.filter.apply(record)?record:null);
+            }
+            if(this.current()==null){
+                continue;
             }
             this.count++;
             if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
                 if(!this.withinLimit()){
-                    return this.next();
+                    continue;
                 }
             }
-            this.current=this.items.get((this.count-1));
-            return this.current();
-        }
-        
-        if(!this.hasNext()){
-            return null;
-        }
-        
-        this.line_number++;
-        this.current(null);
-        String json=this.iterator.nextLine();
-        if(json==null || json.equals("")){
-            return this.next();
-        }
-        RecordField fields=JSON.builder().fromJson(json,RecordField.class);
-        
-        Record record=new Record(fields,this.line_number);
-        if(this.filter==null){
-            this.current(record);
-        }else{
-            this.current(this.filter.apply(record)?record:null);
-        }
-        if(this.current()==null){
-            return this.next();
-        }
-        this.count++;
-        if(this.current()!=null && this.hasLimit() && !this.ignore_limit){
-            if(!this.withinLimit()){
-                return this.next();
+
+            if(this.current()!=null && !Record.class.equals(this.current().getClass())){
+                // Métodos dinamicos pendiente
             }
-        }
-        
-        if(this.current()!=null && !Record.class.equals(this.current().getClass())){
-            // Métodos dinamicos pendiente
-        }
+        }while(this.current()==null);
         
         return this.current();
     }

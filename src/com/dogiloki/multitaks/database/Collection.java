@@ -7,6 +7,8 @@ import com.dogiloki.multitaks.dataformat.JSON;
 import java.util.Scanner;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,15 +37,24 @@ public class Collection extends Storage{
         this.aim(this.getSrc(),DirectoryType.FILE);
     }
     
-    public boolean insert(Record... records){
+    public boolean insert(Record record){
+        List<Record> records=new ArrayList<>();
+        records.add(record);
+        return this._insert(records);
+    }
+    
+    public boolean insert(List<Record> records){
+        return this._insert(records);
+    }
+    
+    public boolean _insert(List<Record> records){
+        String json="";
+        this.aim(this.getSrc(),DirectoryType.FILE);
         for(Record record:records){
-            this.aim(this.getSrc(),DirectoryType.FILE);
             record.generateId();
-            if(!this.append(JSON.builder().toJson((Map)record.getFields())+"\n")){
-                this.flush();
-                return false;
-            }
+            json+=JSON.builder().toJson((Map)record.getFields())+"\n";
         }
+        this.append(json);
         this.flush();
         return true;
     }

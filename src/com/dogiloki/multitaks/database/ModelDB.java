@@ -11,6 +11,8 @@ import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +20,27 @@ import com.google.gson.annotations.Expose;
  */
 
 public class ModelDB extends Record{
+    
+    public static boolean insert(Class clazz, List objects){
+        try{
+            ModelDB instance=(ModelDB)clazz.newInstance();
+            Collection collection=instance.getCollection();
+            List<Record> records=new ArrayList<>();
+            for(Object object:objects){
+                String json=JSON.builder().toJson(object);
+                RecordField fields=JSON.builder().fromJson(json,RecordField.class);
+                Record record=new Record();
+                record.setFields(fields);
+                record.set("created_at",instance.getDateTime());
+                record.set("update_at","");
+                records.add(record);
+            }
+            return collection.insert(records);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
     
     @Expose
     public String _id;
@@ -74,7 +97,6 @@ public class ModelDB extends Record{
         boolean status;
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         if(collection.find(filter).first()==null){
-            record.generateId();
             record.set("created_at",this.getDateTime());
             record.set("update_at","");
             status=collection.insert(record);
