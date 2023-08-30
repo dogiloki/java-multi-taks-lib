@@ -1,23 +1,26 @@
 package com.dogiloki.multitaks.datastructure.binary;
 
 import com.dogiloki.multitaks.datastructure.Nodes;
+import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
 
 /**
  *
  * @author dogi_
  */
 
-public class TreeBinary<T extends NodeBinary,N>{
+public class TreeBinary<T>{
     
-    private T root_node=null;
-    public Nodes<NodeBinary> nodes=new Nodes();
+    private NodeBinary root_node=null;
+    public Nodes<NodeBinary<T>> nodes=new Nodes();
+    public WhenEvaluate<T> when_saving=(item)->item;
+    public WhenEvaluate<T> when_evaluate=(item)->item;
     
     public TreeBinary(){
         
     }
     
-    public void add(N value){
-        T node=(T)new NodeBinary(value);
+    public void add(T value){
+        NodeBinary node=new NodeBinary(this.when_saving.run(value));
         if(this.root_node==null){
             this.root_node=node;
         }else{
@@ -29,12 +32,12 @@ public class TreeBinary<T extends NodeBinary,N>{
         this.postOrden(this.root_node);
     }
     
-    private void postOrden(T node){
+    private void postOrden(NodeBinary node){
         if(node==null){
             return;
         }
-        this.postOrden((T)node.leftNode());
-        this.postOrden((T)node.rightNode());
+        this.postOrden(node.leftNode());
+        this.postOrden(node.rightNode());
         this.nodes.add(node);
     }
     
@@ -42,26 +45,26 @@ public class TreeBinary<T extends NodeBinary,N>{
         this.preOrden(this.root_node);
     }
     
-    private void preOrden(T node){
+    private void preOrden(NodeBinary node){
         if(node==null){
             return;
         }
         this.nodes.add(node);
-        this.preOrden((T)node.leftNode());
-        this.preOrden((T)node.rightNode());
+        this.preOrden(node.leftNode());
+        this.preOrden(node.rightNode());
     }
     
     public void inOrden(){
         this.inOrden(this.root_node);
     }
     
-    private void inOrden(T node){
+    private void inOrden(NodeBinary node){
         if(node==null){
             return;
         }
-        this.inOrden((T)node.leftNode());
+        this.inOrden(node.leftNode());
         this.nodes.add(node);
-        this.inOrden((T)node.rightNode());
+        this.inOrden(node.rightNode());
     }
     
 }

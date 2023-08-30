@@ -194,7 +194,7 @@ public class RecordList<T extends Record>{
         Sorting<T> sort=new Sorting();
         sort.items(items);
         sort.orderBy(order_by);
-        sort.orderWith((item)->{
+        sort.evaluateWith((item)->{
             try{
                 if(key.contains("()")){
                     for(Method method:this.clazz.getMethods()){

@@ -41,16 +41,16 @@ public final class NodeBinary<T> extends Node<T>{
         
     }
     
-    public Node leftNode(){
-        return this.nodes.get(NodeBinary.LEFT_INDEX);
+    public NodeBinary leftNode(){
+        return (NodeBinary)this.nodes.get(NodeBinary.LEFT_INDEX);
     }
     
     public void leftNode(Node node){
         this.nodes.set(NodeBinary.LEFT_INDEX,node);
     }
     
-    public Node rightNode(){
-        return this.nodes.get(NodeBinary.RIGHT_INDEX);
+    public NodeBinary rightNode(){
+        return (NodeBinary)this.nodes.get(NodeBinary.RIGHT_INDEX);
     }
     
     public void rightNode(Node node){

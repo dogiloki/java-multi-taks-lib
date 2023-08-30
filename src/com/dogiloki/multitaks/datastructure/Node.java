@@ -1,5 +1,7 @@
 package com.dogiloki.multitaks.datastructure;
 
+import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
+
 /**
  *
  * @author dogi_

@@ -4,6 +4,7 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
+import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
 
 /**
  *
@@ -12,12 +13,8 @@ import java.util.List;
 
 public class Sorting<T> extends SortingAlgorithm{
     
-    public interface orderWith<T>{
-        public Object run(T item);
-    }
-    
     private List<T> items=new ArrayList<>();
-    private orderWith<T> order_with=(item)->item;
+    private WhenEvaluate<T> evaluate_with=(item)->item;
     
     public Sorting(){
         
@@ -39,10 +36,10 @@ public class Sorting<T> extends SortingAlgorithm{
         do{
             loop=false;
             for(int index=0; index<items.size()-1; index++){
-                if(this.orderBy()==OrderBy.ASC && !(Function.compareTo(this.orderWith().run(items.get(index)),this.orderWith().run(items.get(index+1)))>0)){
+                if(this.orderBy()==OrderBy.ASC && !(Function.compareTo(this.evaluateWith().run(items.get(index)),this.evaluateWith().run(items.get(index+1)))>0)){
                     continue;
                 }else
-                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(this.orderWith().run(items.get(index)),this.orderWith().run(items.get(index+1)))<0)){
+                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(this.evaluateWith().run(items.get(index)),this.evaluateWith().run(items.get(index+1)))<0)){
                     continue;
                 }
                 aux=items.get(index);
@@ -62,10 +59,10 @@ public class Sorting<T> extends SortingAlgorithm{
         for(int index=0; index<items.size(); index++){
             min=index;
             for(int index2=index+1; index2<items.size(); index2++){
-                if(this.orderBy()==OrderBy.ASC && (Function.compareTo(this.orderWith().run(items.get(index2)),this.orderWith().run(items.get(min)))>0)){
+                if(this.orderBy()==OrderBy.ASC && (Function.compareTo(this.evaluateWith().run(items.get(index2)),this.evaluateWith().run(items.get(min)))>0)){
                     continue;
                 }else
-                if(this.orderBy()==OrderBy.DESC && (Function.compareTo(this.orderWith().run(items.get(index2)),this.orderWith().run(items.get(min)))<0)){
+                if(this.orderBy()==OrderBy.DESC && (Function.compareTo(this.evaluateWith().run(items.get(index2)),this.evaluateWith().run(items.get(min)))<0)){
                     continue;
                 }
                 min=index2;
@@ -86,10 +83,10 @@ public class Sorting<T> extends SortingAlgorithm{
             posi=index;
             aux=items.get(index);
             while(posi>0){
-                if(this.orderBy()==OrderBy.ASC && !(Function.compareTo(this.orderWith().run(items.get(posi-1)),this.orderWith().run(aux))>0)){
+                if(this.orderBy()==OrderBy.ASC && !(Function.compareTo(this.evaluateWith().run(items.get(posi-1)),this.evaluateWith().run(aux))>0)){
                     break;
                 }else
-                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(this.orderWith().run(items.get(posi-1)),this.orderWith().run(aux))<0)){
+                if(this.orderBy()==OrderBy.DESC && !(Function.compareTo(this.evaluateWith().run(items.get(posi-1)),this.evaluateWith().run(aux))<0)){
                     break;
                 }
                 items.set(posi,items.get(posi-1));
@@ -101,12 +98,12 @@ public class Sorting<T> extends SortingAlgorithm{
         return this.items();
     }
     
-    public orderWith<T> orderWith(){
-        return this.order_with;
+    public WhenEvaluate<T> evaluateWith(){
+        return this.evaluate_with;
     }
     
-    public Sorting orderWith(orderWith<T> action){
-        this.order_with=action;
+    public Sorting evaluateWith(WhenEvaluate<T> action){
+        this.evaluate_with=action;
         return this;
     }
     
