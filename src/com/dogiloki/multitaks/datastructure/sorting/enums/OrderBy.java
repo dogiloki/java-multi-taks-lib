@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.datastructure.order.enums;
+package com.dogiloki.multitaks.datastructure.sorting.enums;
 
 /**
  *

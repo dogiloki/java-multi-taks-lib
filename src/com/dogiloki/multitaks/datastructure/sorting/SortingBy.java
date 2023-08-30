@@ -1,6 +1,6 @@
 package com.dogiloki.multitaks.datastructure.sorting;
 
-import com.dogiloki.multitaks.datastructure.order.enums.OrderBy;
+import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 
 /**
  *

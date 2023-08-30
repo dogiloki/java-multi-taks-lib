@@ -3,7 +3,7 @@ package com.dogiloki.multitaks.database.record;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.datastructure.sorting.Sorting;
-import com.dogiloki.multitaks.datastructure.order.enums.OrderBy;
+import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

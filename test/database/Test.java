@@ -10,7 +10,7 @@ import com.dogiloki.multitaks.database.filter.enums.CompOp;
 import com.dogiloki.multitaks.database.filter.enums.LogicalOp;
 import com.dogiloki.multitaks.datastructure.sorting.Sorting;
 import com.dogiloki.multitaks.datastructure.sorting.SortingBy;
-import com.dogiloki.multitaks.datastructure.order.enums.OrderBy;
+import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import com.dogiloki.multitaks.database.record.Record;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.github.javafaker.Faker;
@@ -30,20 +30,11 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        Database db=new Database("db");
-        Collection c=db.collection("personas");
-        Record r=new Record();
-        r.set("nombre","Julio2");
-        Filter f=Filter.or(
-                Filter.eq("nombre","Julio"),
-                Filter.and(
-                        Filter.like("nombre","j"),
-                        Filter.gte("edad",18),
-                        Filter.lt("edad",32)
-                ),
-                Filter.eq("edad",60)
-        );
-        c.delete();
+        RecordList<Persona> personas=new Persona().find(Filter.like("nombre","j")).orderBy("nombre");
+        Persona p;
+        while((p=personas.next())!=null){
+            System.out.println(p.nombre);
+        }
     }
     
     public static void main(String args[]){

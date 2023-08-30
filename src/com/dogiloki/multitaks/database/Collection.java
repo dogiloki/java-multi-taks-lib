@@ -107,6 +107,9 @@ public class Collection extends Storage{
     }
     
     public RecordList find(Filter filter){
+        if(filter==null){
+            return this.all();
+        }
         Scanner lines=this.readIterator();
         this.getDB().LOGGER.info("find records ("+filter.toString()+") in "+this.getName());
         return new RecordList(lines,filter,this.clazz);
