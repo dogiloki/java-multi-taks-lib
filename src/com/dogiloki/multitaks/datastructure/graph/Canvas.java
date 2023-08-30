@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.graph;
+package com.dogiloki.multitaks.datastructure.graph;
 
 import java.awt.Graphics;
 

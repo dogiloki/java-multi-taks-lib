@@ -1,7 +1,7 @@
-package com.dogiloki.multitaks.database.order;
+package com.dogiloki.multitaks.datastructure.sorting;
 
 import com.dogiloki.multitaks.Function;
-import com.dogiloki.multitaks.database.order.enums.OrderBy;
+import com.dogiloki.multitaks.datastructure.order.enums.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 

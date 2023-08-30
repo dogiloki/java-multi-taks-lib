@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.graph;
+package com.dogiloki.multitaks.datastructure;
 
 import java.util.ArrayList;
 import java.util.List;
