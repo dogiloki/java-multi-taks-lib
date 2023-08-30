@@ -13,6 +13,14 @@ import com.dogiloki.multitaks.logger.enums.LogType;
 @Directory(type=DirectoryType.FILE)
 public class Log extends ModelDirectory{
     
+    public static String format( String message){
+        return "["+Logger.getTimeCurrent()+"] "+message;
+    }
+    
+    public static String format(LogType log_type, String message){
+        return "["+Logger.getTimeCurrent()+"] "+log_type.getText()+" "+message;
+    }
+    
     public Log(String src){
         super.aim(this,src);
     }
