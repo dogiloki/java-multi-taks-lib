@@ -1056,4 +1056,8 @@ public class Storage{
         return false;
     }
     
+    public File getFile(){
+        return this.file;
+    }
+    
 }

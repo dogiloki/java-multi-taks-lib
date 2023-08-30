@@ -29,7 +29,7 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().all().orderBy("nombre").limit(1,5);
+        RecordList<Persona> personas=new Persona().all().orderBy("nombre").limit(1);
         Persona p;
         while((p=personas.next())!=null){
             System.out.println(p.nombre);
