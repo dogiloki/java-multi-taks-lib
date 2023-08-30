@@ -1,5 +1,6 @@
 package database;
 
+import com.dogiloki.multitaks.database.Collection;
 import com.dogiloki.multitaks.database.Database;
 import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.database.filter.ComparisonExpression;
@@ -29,11 +30,20 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().all().orderBy("nombre").limit(1);
-        Persona p;
-        while((p=personas.next())!=null){
-            System.out.println(p.nombre);
-        }
+        Database db=new Database("db");
+        Collection c=db.collection("personas");
+        Record r=new Record();
+        r.set("nombre","Julio2");
+        Filter f=Filter.or(
+                Filter.eq("nombre","Julio"),
+                Filter.and(
+                        Filter.like("nombre","j"),
+                        Filter.gte("edad",18),
+                        Filter.lt("edad",32)
+                ),
+                Filter.eq("edad",60)
+        );
+        c.delete();
     }
     
     public static void main(String args[]){

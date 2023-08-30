@@ -67,4 +67,9 @@ public class ComparisonExpression extends Filter{
         return this.operator;
     }
     
+    @Override
+    public String toString(){
+        return "\""+this.key+"\" "+this.operator+" \""+this.value+"\"";
+    }
+    
 }

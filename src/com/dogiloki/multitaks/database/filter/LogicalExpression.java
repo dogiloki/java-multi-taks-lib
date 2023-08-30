@@ -72,4 +72,16 @@ public class LogicalExpression extends Filter{
         return this.operator;
     }
     
+    @Override
+    public String toString(){
+        String str=" "+this.operator.toString()+"( ";
+        int index=0;
+        for(Filter expression:this.expressions){
+            index++;
+            str+=expression.toString()+(index<this.expressions.size()?", ":"");
+        }
+        str+=" ) ";
+        return str;
+    }
+    
 }
