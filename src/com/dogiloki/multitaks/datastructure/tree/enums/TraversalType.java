@@ -10,6 +10,6 @@ public enum TraversalType{
     IN_ORDER,
     PRE_ONDER,
     POST_ORDER,
-    LEVEL_ORDER;
+    IN_ORDER_REVERSE;
     
 }

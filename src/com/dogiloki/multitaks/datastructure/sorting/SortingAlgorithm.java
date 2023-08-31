@@ -9,7 +9,7 @@ import com.dogiloki.multitaks.datastructure.sorting.enums.OrderAlgorithm;
 
 public class SortingAlgorithm extends SortingBy{
     
-    public static OrderAlgorithm default_order_algorithm=OrderAlgorithm.INSERTION_SORT;
+    public static OrderAlgorithm default_order_algorithm=OrderAlgorithm.BINARY_TREE_SORT;
     private OrderAlgorithm order_algorithm;
     
     public SortingAlgorithm(){

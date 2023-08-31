@@ -9,7 +9,9 @@ public enum OrderAlgorithm{
     
     BUBBLE_SORT("Bubble Sort"),
     SELECTION_SORT("Selection Sort"),
-    INSERTION_SORT("Insertion Sort");
+    INSERTION_SORT("Insertion Sort"),
+    BINARY_TREE_SORT("Binary Tree Sort");
+    
     
     private String text;
     

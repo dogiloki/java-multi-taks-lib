@@ -70,8 +70,8 @@ public class TreeBinary<T> implements Iterator<T>{
         }
         this.nodes.add(node);
         this.on_order.run(node.getValue());
-        this.inOrden(node.leftNode());
-        this.inOrden(node.rightNode());
+        this.preOrden(node.leftNode());
+        this.preOrden(node.rightNode());
     }
     
     public TreeBinary postOrden(){
@@ -86,10 +86,28 @@ public class TreeBinary<T> implements Iterator<T>{
         if(node==null){
             return;
         }
-        this.inOrden(node.leftNode());
-        this.inOrden(node.rightNode());
+        this.postOrden(node.leftNode());
+        this.postOrden(node.rightNode());
         this.nodes.add(node);
         this.on_order.run(node.getValue());
+    }
+    
+    public TreeBinary inOrdenReverse(){
+        this.index=0;
+        this.current=this.root_node;
+        this.traversal_type=TraversalType.IN_ORDER_REVERSE;
+        this.inOrdenReverse(this.root_node);
+        return this;
+    }
+    
+    public void inOrdenReverse(NodeBinary<T> node){
+        if(node==null){
+            return;
+        }
+        this.inOrdenReverse(node.rightNode());
+        this.nodes.add(node);
+        this.on_order.run(node.getValue());
+        this.inOrdenReverse(node.leftNode());
     }
     
     @Override

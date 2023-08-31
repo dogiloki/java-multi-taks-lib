@@ -5,6 +5,7 @@ import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
+import com.dogiloki.multitaks.datastructure.tree.TreeBinary;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Sorting<T> extends SortingAlgorithm{
             case BUBBLE_SORT: return this.bubbleSort();
             case SELECTION_SORT: return this.selectionSort();
             case INSERTION_SORT: return this.insertionSort();
+            case BINARY_TREE_SORT: return this.binaryTreeSort();
         }
         return this.items();
     }
@@ -96,6 +98,25 @@ public class Sorting<T> extends SortingAlgorithm{
         }
         this.items(items);
         return this.items();
+    }
+    
+    public List<T> binaryTreeSort(){
+        List<T> items=new ArrayList<>();
+        TreeBinary<T> tree=new TreeBinary();
+        tree.on_evaluate=(item)->this.evaluateWith().run(item);
+        tree.on_order=(item)->{
+            items.add(item);
+        };
+        for(T item:this.items()){
+            tree.add(item);
+        }
+        if(this.orderBy()==OrderBy.ASC){
+            tree.inOrden();
+        }else
+        if(this.orderBy()==OrderBy.DESC){
+            tree.inOrdenReverse();
+        }
+        return items;
     }
     
     public OnEvaluate<T> evaluateWith(){
