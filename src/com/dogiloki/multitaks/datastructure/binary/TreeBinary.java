@@ -20,10 +20,12 @@ public class TreeBinary<T>{
     }
     
     public void add(T value){
-        NodeBinary node=new NodeBinary(this.when_saving.run(value));
+        NodeBinary<T> node=new NodeBinary(this.when_saving.run(value));
+        node.when_evaluate=this.when_evaluate;
         if(this.root_node==null){
             this.root_node=node;
         }else{
+            this.root_node.when_evaluate=this.when_evaluate;
             this.root_node.add(node);
         }
     }

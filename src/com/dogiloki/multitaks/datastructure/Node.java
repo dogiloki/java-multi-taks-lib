@@ -1,7 +1,5 @@
 package com.dogiloki.multitaks.datastructure;
 
-import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
-
 /**
  *
  * @author dogi_
@@ -16,8 +14,8 @@ public abstract class Node<T>{
         this.value=value;
     }
     
-    public abstract void add(Node node);
-    public abstract void remove(Node node);
+    public abstract void add(Node<T> node);
+    public abstract void remove(Node<T> node);
     
     public void setValue(T value){
         this.value=value;

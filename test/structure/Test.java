@@ -20,13 +20,13 @@ public class Test{
         TreeBinary<Persona> tree=new TreeBinary();
         RecordList<Persona> personas=new Persona().all();
         Persona p;
-        tree.when_saving=(item)->item.nombre;
+        tree.when_evaluate=(item)->item.nombre;
         while((p=personas.next())!=null){
             tree.add(p);
         }
         tree.inOrden();
-        for(Node node:tree.nodes){
-            System.out.println(node.getValue());
+        for(Node<Persona> node:tree.nodes){
+            System.out.println(node.getValue().nombre);
         }
     }
     
