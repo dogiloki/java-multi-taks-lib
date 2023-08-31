@@ -103,10 +103,10 @@ public class Sorting<T> extends SortingAlgorithm{
     public List<T> binaryTreeSort(){
         List<T> items=new ArrayList<>();
         TreeBinary<T> tree=new TreeBinary();
-        tree.on_evaluate=(item)->this.evaluateWith().run(item);
-        tree.on_order=(item)->{
+        tree.onEvaluate((item)->this.evaluateWith().run(item));
+        tree.onOrder((item)->{
             items.add(item);
-        };
+        });
         for(T item:this.items()){
             tree.add(item);
         }

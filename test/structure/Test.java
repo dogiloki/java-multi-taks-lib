@@ -20,7 +20,6 @@ public class Test{
         TreeBinary<Persona> tree=new TreeBinary();
         RecordList<Persona> personas=new Persona().all();
         Persona p;
-        tree.on_evaluate=(item)->item.nombre;
         while((p=personas.next())!=null){
             tree.add(p);
         }

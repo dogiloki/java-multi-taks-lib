@@ -5,7 +5,6 @@ import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
 import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluateNotReturn;
 import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  *
@@ -16,10 +15,10 @@ public class TreeBinary<T> implements Iterator<T>{
     
     private NodeBinary<T> root_node=null;
     private TraversalType traversal_type;
-    public Nodes<NodeBinary<T>> nodes=new Nodes();
-    public OnEvaluate<T> on_saving=(item)->item;
-    public OnEvaluate<T> on_evaluate=(item)->item;
-    public OnEvaluateNotReturn<T> on_order=(item)->{};
+    private Nodes<NodeBinary<T>> nodes=new Nodes();
+    private OnEvaluate<T> on_saving=(item)->item;
+    private OnEvaluate<T> on_evaluate=(item)->item;
+    private OnEvaluateNotReturn<T> on_order=(item)->{};
     private NodeBinary<T> current=null;
     private int index=0;
     
@@ -28,13 +27,12 @@ public class TreeBinary<T> implements Iterator<T>{
     }
     
     public void add(T value){
-        NodeBinary<T> node=new NodeBinary(this.on_saving.run(value));
-        node.on_evaluate=this.on_evaluate;
+        NodeBinary<T> node=new NodeBinary(this.onSaving().run(value));
+        node.onEvaluate(this.onEvaluate());
         if(this.root_node==null){
             this.root_node=node;
         }else{
-            this.root_node.on_evaluate=this.on_evaluate;
-            this.root_node.add(node);
+            this.root_node.onEvaluate(this.onEvaluate()).add(node);
         }
     }
     
@@ -52,7 +50,7 @@ public class TreeBinary<T> implements Iterator<T>{
         }
         this.inOrden(node.leftNode());
         this.nodes.add(node);
-        this.on_order.run(node.getValue());
+        this.onOrder().run(node.getValue());
         this.inOrden(node.rightNode());
     }
     
@@ -69,7 +67,7 @@ public class TreeBinary<T> implements Iterator<T>{
             return;
         }
         this.nodes.add(node);
-        this.on_order.run(node.getValue());
+        this.onOrder().run(node.getValue());
         this.preOrden(node.leftNode());
         this.preOrden(node.rightNode());
     }
@@ -89,7 +87,7 @@ public class TreeBinary<T> implements Iterator<T>{
         this.postOrden(node.leftNode());
         this.postOrden(node.rightNode());
         this.nodes.add(node);
-        this.on_order.run(node.getValue());
+        this.onOrder().run(node.getValue());
     }
     
     public TreeBinary inOrdenReverse(){
@@ -106,7 +104,7 @@ public class TreeBinary<T> implements Iterator<T>{
         }
         this.inOrdenReverse(node.rightNode());
         this.nodes.add(node);
-        this.on_order.run(node.getValue());
+        this.onOrder().run(node.getValue());
         this.inOrdenReverse(node.leftNode());
     }
     
@@ -120,6 +118,37 @@ public class TreeBinary<T> implements Iterator<T>{
         this.current=this.nodes.get(this.index);
         this.index++;
         return this.current.getValue();
+    }
+    
+    public Nodes<NodeBinary<T>> nodes(){
+        return this.nodes;
+    }
+    
+    public TreeBinary onSaving(OnEvaluate<T> action){
+        this.on_saving=action;
+        return this;
+    }
+    
+    public OnEvaluate onSaving(){
+        return this.on_saving;
+    }
+    
+    public TreeBinary onEvaluate(OnEvaluate<T> action){
+        this.on_evaluate=action;
+        return this;
+    }
+    
+    public OnEvaluate onEvaluate(){
+        return this.on_evaluate;
+    }
+    
+    public TreeBinary onOrder(OnEvaluateNotReturn<T> action){
+        this.on_order=action;
+        return this;
+    }
+    
+    public OnEvaluateNotReturn onOrder(){
+        return this.on_order;
     }
     
 }

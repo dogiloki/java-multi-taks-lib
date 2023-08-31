@@ -14,7 +14,7 @@ public final class NodeBinary<T> extends Node<T>{
     public static final int LEFT_INDEX=0;
     public static final int RIGHT_INDEX=1;
     
-    public OnEvaluate<T> on_evaluate=(item)->item;
+    private OnEvaluate<T> on_evaluate=(item)->item;
     
     public NodeBinary(T value){
         super(value);
@@ -24,7 +24,7 @@ public final class NodeBinary<T> extends Node<T>{
 
     @Override
     public void add(Node<T> node){
-        if(Function.compareTo(this.on_evaluate.run(node.getValue()),this.on_evaluate.run(this.getValue()))<0){
+        if(Function.compareTo(this.onEvaluate().run(node.getValue()),this.onEvaluate().run(this.getValue()))<0){
             if(this.leftNode()==null){
                 this.leftNode(node);
             }else{
@@ -58,6 +58,15 @@ public final class NodeBinary<T> extends Node<T>{
     
     public void rightNode(Node node){
         this.nodes.set(NodeBinary.RIGHT_INDEX,node);
+    }
+    
+    public NodeBinary onEvaluate(OnEvaluate<T> action){
+        this.on_evaluate=action;
+        return this;
+    }
+    
+    public OnEvaluate onEvaluate(){
+        return this.on_evaluate;
     }
     
 }

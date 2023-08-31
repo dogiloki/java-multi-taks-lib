@@ -42,8 +42,10 @@ public class Test{
         */
         RecordList<Persona> personas=new Persona().all().orderByDesc("nombre");
         Persona p;
+        int index=0;
         while((p=personas.next())!=null){
-            System.out.println(p.nombre);
+            System.out.println(index+" - "+p.nombre);
+            index++;
         }
     }
     
