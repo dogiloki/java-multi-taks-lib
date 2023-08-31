@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.datastructure.binary;
+package com.dogiloki.multitaks.datastructure.tree;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.Node;
@@ -44,7 +44,7 @@ public final class NodeBinary<T> extends Node<T>{
         
     }
     
-    public NodeBinary leftNode(){
+    public NodeBinary<T> leftNode(){
         return (NodeBinary)this.nodes.get(NodeBinary.LEFT_INDEX);
     }
     
@@ -52,7 +52,7 @@ public final class NodeBinary<T> extends Node<T>{
         this.nodes.set(NodeBinary.LEFT_INDEX,node);
     }
     
-    public NodeBinary rightNode(){
+    public NodeBinary<T> rightNode(){
         return (NodeBinary)this.nodes.get(NodeBinary.RIGHT_INDEX);
     }
     

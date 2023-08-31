@@ -30,6 +30,16 @@ import java.util.List;
 public class Test{
     
     public Test(){
+        /*
+        Faker f=new Faker();
+        for(int a=0; a<29000; a++){
+            Persona p=new Persona();
+            p.nombre=f.name().firstName();
+            p.apellido=f.name().lastName();
+            p.edad=f.number().randomDigit();
+            p.save();
+        }
+        */
         RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         while((p=personas.next())!=null){
