@@ -40,7 +40,7 @@ public class Test{
             p.save();
         }
         */
-        RecordList<Persona> personas=new Persona().all().orderByDesc("nombre");
+        RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         int index=0;
         while((p=personas.next())!=null){

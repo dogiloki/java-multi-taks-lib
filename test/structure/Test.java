@@ -7,6 +7,7 @@ import com.dogiloki.multitaks.datastructure.Node;
 import com.dogiloki.multitaks.datastructure.tree.TreeBinary;
 import com.dogiloki.multitaks.datastructure.tree.NodeBinary;
 import com.dogiloki.multitaks.datastructure.sorting.Sorting;
+import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import database.Persona;
 
 /**

@@ -36,76 +36,68 @@ public class TreeBinary<T> implements Iterator<T>{
         }
     }
     
-    public TreeBinary inOrden(){
+    public TreeBinary order(TraversalType traversal_type){
         this.index=0;
         this.current=this.root_node;
-        this.traversal_type=TraversalType.IN_ORDER;
-        this.inOrden(this.root_node);
+        this.traversal_type=traversal_type;
+        this.order(this.rootNode());
         return this;
     }
     
-    public void inOrden(NodeBinary<T> node){
+    private void order(NodeBinary<T> node){
         if(node==null){
             return;
         }
-        this.inOrden(node.leftNode());
-        this.nodes.add(node);
-        this.onOrder().run(node.getValue());
-        this.inOrden(node.rightNode());
+        switch(this.traversal_type){
+            case IN_ORDER:{
+                this.order(node.leftNode());
+                this.nodes().add(node);
+                this.onOrder().run(node.getValue());
+                this.order(node.rightNode());
+                break;
+            }
+            case PRE_ONDER:{
+                this.nodes().add(node);
+                this.onOrder().run(node.getValue());
+                this.order(node.leftNode());
+                this.order(node.rightNode());
+                break;
+            }
+            case POST_ORDER:{
+                this.order(node.leftNode());
+                this.order(node.rightNode());
+                this.nodes().add(node);
+                this.onOrder().run(node.getValue());
+                break;
+            }
+            case IN_ORDER_REVERSE:{
+                this.order(node.rightNode());
+                this.nodes().add(node);
+                this.onOrder().run(node.getValue());
+                this.order(node.leftNode());
+                break;
+            }
+        }
+    }
+    
+    public TreeBinary inOrden(){
+        this.order(TraversalType.IN_ORDER);
+        return this;
     }
     
     public TreeBinary preOrden(){
-        this.index=0;
-        this.current=this.root_node;
-        this.traversal_type=TraversalType.PRE_ONDER;
-        this.preOrden(this.root_node);
+        this.order(TraversalType.PRE_ONDER);
         return this;
-    }
-    
-    public void preOrden(NodeBinary<T> node){
-        if(node==null){
-            return;
-        }
-        this.nodes.add(node);
-        this.onOrder().run(node.getValue());
-        this.preOrden(node.leftNode());
-        this.preOrden(node.rightNode());
     }
     
     public TreeBinary postOrden(){
-        this.index=0;
-        this.current=this.root_node;
-        this.traversal_type=TraversalType.POST_ORDER;
-        this.postOrden(this.root_node);
+        this.order(TraversalType.POST_ORDER);
         return this;
-    }
-    
-    public void postOrden(NodeBinary<T> node){
-        if(node==null){
-            return;
-        }
-        this.postOrden(node.leftNode());
-        this.postOrden(node.rightNode());
-        this.nodes.add(node);
-        this.onOrder().run(node.getValue());
     }
     
     public TreeBinary inOrdenReverse(){
-        this.index=0;
-        this.current=this.root_node;
-        this.traversal_type=TraversalType.IN_ORDER_REVERSE;
-        this.inOrdenReverse(this.root_node);
+        this.order(TraversalType.IN_ORDER_REVERSE);
         return this;
-    }
-    
-    public void inOrdenReverse(NodeBinary<T> node){
-        if(node==null){
-            return;
-        }
-        this.inOrdenReverse(node.rightNode());
-        this.nodes.add(node);
-        this.onOrder().run(node.getValue());
-        this.inOrdenReverse(node.leftNode());
     }
     
     @Override
@@ -118,6 +110,10 @@ public class TreeBinary<T> implements Iterator<T>{
         this.current=this.nodes.get(this.index);
         this.index++;
         return this.current.getValue();
+    }
+    
+    public NodeBinary<T> rootNode(){
+        return this.root_node;
     }
     
     public Nodes<NodeBinary<T>> nodes(){
