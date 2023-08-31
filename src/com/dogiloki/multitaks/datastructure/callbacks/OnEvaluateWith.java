@@ -5,7 +5,8 @@ package com.dogiloki.multitaks.datastructure.callbacks;
  * @author dogi_
  */
 
-public interface WhenEvaluate<T>{
+public interface OnEvaluateWith<T,N>{
     
-    public Object run(T item);
+    public N run(T item);
+    
 }

@@ -2,7 +2,7 @@ package com.dogiloki.multitaks.datastructure.binary;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.Node;
-import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
+import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
 
 /**
  *
@@ -14,7 +14,7 @@ public final class NodeBinary<T> extends Node<T>{
     public static final int LEFT_INDEX=0;
     public static final int RIGHT_INDEX=1;
     
-    public WhenEvaluate<T> when_evaluate=(item)->item;
+    public OnEvaluate<T> on_evaluate=(item)->item;
     
     public NodeBinary(T value){
         super(value);
@@ -24,7 +24,7 @@ public final class NodeBinary<T> extends Node<T>{
 
     @Override
     public void add(Node<T> node){
-        if(Function.compareTo(this.when_evaluate.run(node.getValue()),this.when_evaluate.run(this.getValue()))<0){
+        if(Function.compareTo(this.on_evaluate.run(node.getValue()),this.on_evaluate.run(this.getValue()))<0){
             if(this.leftNode()==null){
                 this.leftNode(node);
             }else{

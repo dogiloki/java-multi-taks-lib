@@ -4,7 +4,7 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
-import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
+import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
 
 /**
  *
@@ -14,7 +14,7 @@ import com.dogiloki.multitaks.datastructure.callbacks.WhenEvaluate;
 public class Sorting<T> extends SortingAlgorithm{
     
     private List<T> items=new ArrayList<>();
-    private WhenEvaluate<T> evaluate_with=(item)->item;
+    private OnEvaluate<T> evaluate_with=(item)->item;
     
     public Sorting(){
         
@@ -98,11 +98,11 @@ public class Sorting<T> extends SortingAlgorithm{
         return this.items();
     }
     
-    public WhenEvaluate<T> evaluateWith(){
+    public OnEvaluate<T> evaluateWith(){
         return this.evaluate_with;
     }
     
-    public Sorting evaluateWith(WhenEvaluate<T> action){
+    public Sorting evaluateWith(OnEvaluate<T> action){
         this.evaluate_with=action;
         return this;
     }

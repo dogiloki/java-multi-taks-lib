@@ -20,14 +20,14 @@ public class Test{
         TreeBinary<Persona> tree=new TreeBinary();
         RecordList<Persona> personas=new Persona().all();
         Persona p;
-        tree.when_evaluate=(item)->item.nombre;
+        tree.on_evaluate=(item)->item.nombre;
+        tree.on_orden=(per)->{
+            System.out.println(per.nombre);
+        };
         while((p=personas.next())!=null){
             tree.add(p);
         }
         tree.inOrden();
-        for(Node<Persona> node:tree.nodes){
-            System.out.println(node.getValue().nombre);
-        }
     }
     
     public static void main(String args[]){

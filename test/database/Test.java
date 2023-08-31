@@ -30,7 +30,7 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        RecordList<Persona> personas=new Persona().find(Filter.like("nombre","j")).orderBy("nombre");
+        RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         while((p=personas.next())!=null){
             System.out.println(p.nombre);
