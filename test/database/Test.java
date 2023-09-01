@@ -32,7 +32,7 @@ public class Test{
     public Test(){
         /*
         Faker f=new Faker();
-        for(int a=0; a<29000; a++){
+        for(int a=0; a<3000; a++){
             Persona p=new Persona();
             p.nombre=f.name().firstName();
             p.apellido=f.name().lastName();

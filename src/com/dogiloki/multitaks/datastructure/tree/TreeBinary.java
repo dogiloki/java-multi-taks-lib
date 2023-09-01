@@ -38,6 +38,7 @@ public class TreeBinary<T> implements Iterator<T>{
     
     public TreeBinary order(TraversalType traversal_type){
         this.index=0;
+        this.nodes().clear();
         this.current=this.root_node;
         this.traversal_type=traversal_type;
         this.order(this.rootNode());
@@ -102,12 +103,12 @@ public class TreeBinary<T> implements Iterator<T>{
     
     @Override
     public boolean hasNext(){
-        return this.index<this.nodes.size();
+        return this.index<this.nodes().size();
     }
     
     @Override
     public T next(){
-        this.current=this.nodes.get(this.index);
+        this.current=this.nodes().get(this.index);
         this.index++;
         return this.current.getValue();
     }
