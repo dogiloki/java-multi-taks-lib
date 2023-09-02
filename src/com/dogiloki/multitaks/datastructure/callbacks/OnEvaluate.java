@@ -7,6 +7,6 @@ package com.dogiloki.multitaks.datastructure.callbacks;
 
 public interface OnEvaluate<T>{
     
-    public Object run(T item);
+    public Object run(T items);
     
 }

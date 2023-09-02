@@ -88,10 +88,10 @@ public class Function<T>{
      */
     public static int compareTo(Object v1, Object v2){
         if(v1==null && v2!=null){
-            return 1;
+            return -1;
         }
         if(v1!=null && v2==null){
-            return -1;
+            return 1;
         }
         if(v1==null || v2==null){
             return 0;

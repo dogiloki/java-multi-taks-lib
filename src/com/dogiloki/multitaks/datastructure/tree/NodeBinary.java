@@ -38,11 +38,6 @@ public final class NodeBinary<T> extends Node<T>{
             }
         }
     }
-
-    @Override
-    public void remove(Node node){
-        
-    }
     
     public NodeBinary<T> leftNode(){
         return (NodeBinary)this.nodes.get(NodeBinary.LEFT_INDEX);

@@ -13,6 +13,7 @@ import com.dogiloki.multitaks.datastructure.sorting.SortingBy;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import com.dogiloki.multitaks.database.record.Record;
 import com.dogiloki.multitaks.database.record.RecordList;
+import com.dogiloki.multitaks.directory.Storage;
 import com.github.javafaker.Faker;
 import java.time.LocalDate;
 import java.time.Period;
@@ -30,7 +31,8 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        /*
+        Runtime runtime=Runtime.getRuntime();
+        long initial_memory=runtime.totalMemory()-runtime.freeMemory();
         Faker f=new Faker();
         for(int a=0; a<3000; a++){
             Persona p=new Persona();
@@ -39,7 +41,7 @@ public class Test{
             p.edad=f.number().randomDigit();
             p.save();
         }
-        */
+        /*
         RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         int index=0;
@@ -47,6 +49,10 @@ public class Test{
             System.out.println(index+" - "+p.nombre);
             index++;
         }
+        */
+        long final_memory=runtime.totalMemory()-runtime.freeMemory();
+        long used_memory=final_memory-initial_memory;
+        System.out.println("Memoria usada: "+Storage.convertSize(used_memory));
     }
     
     public static void main(String args[]){
