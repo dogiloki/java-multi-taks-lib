@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.datastructure.graph;
 
 import com.dogiloki.multitaks.datastructure.Node;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
 
 /**
  *
@@ -10,7 +9,7 @@ import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
 
 public class Edge<T>{
     
-    private OnEvaluate<Edge<T>> weight=(edge)->null;
+    private OnWeight<T> weight=(edge)->null;
     private boolean directed=true;
     private Node<T> source;
     private Node<T> destination;
@@ -21,11 +20,11 @@ public class Edge<T>{
         this.destination=destination;
     }
     
-    public void onWeight(OnEvaluate<Edge<T>> weight){
+    public void onWeight(OnWeight<T> weight){
         this.weight=weight;
     }
     
-    public Object weight(){
+    public Number weight(){
         return this.weight.run(this);
     }
     

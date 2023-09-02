@@ -7,10 +7,10 @@ import java.util.ArrayList;
  * @author dogi_
  */
 
-public class Edges extends ArrayList<Edge>{
+public class Edges<T> extends ArrayList<Edge<T>>{
     
     public Edges(){
-    
+        
     }
     
 }

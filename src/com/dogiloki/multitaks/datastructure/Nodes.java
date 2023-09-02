@@ -1,13 +1,13 @@
 package com.dogiloki.multitaks.datastructure;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *
  * @author dogi_
  */
 
-public class Nodes<T> extends ArrayList<T>{
+public class Nodes<T> extends Stack<T>{
     
     public Nodes(){
         

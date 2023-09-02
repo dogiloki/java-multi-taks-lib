@@ -2,8 +2,6 @@ package com.dogiloki.multitaks.datastructure.graph;
 
 import com.dogiloki.multitaks.datastructure.Node;
 import com.dogiloki.multitaks.datastructure.Nodes;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
-import java.util.List;
 
 /**
  *
@@ -13,7 +11,7 @@ import java.util.List;
 public class Graph<T>{
     
     private Nodes<Node<T>> vertices=new Nodes();
-    private Edges edges=new Edges();
+    private Edges<T> edges=new Edges();
     
     public Graph(){
         
@@ -24,35 +22,34 @@ public class Graph<T>{
         this.vertices().add(node);
     }
     
-    public void unidirectionalEdge(T val1, T val2, OnEvaluate<Edge<T>> weight, boolean directed){
+    public void unidirectionalEdge(T val1, T val2, OnWeight<T> weight, boolean directed){
         Edge<T> edge=new Edge(new Node(val1),new Node(val2));
         edge.onWeight(weight);
         edge.directed(directed);
         this.edges.add(edge);
     }
     
-    public void bidirectionalEdge(T val1, T val2, OnEvaluate<Edge<T>> weight, boolean directed){
+    public void bidirectionalEdge(T val1, T val2, OnWeight<T> weight, boolean directed){
         this.unidirectionalEdge(val1,val2,weight,directed);
         this.unidirectionalEdge(val2,val1,weight,directed);
     }
     
-    public ListNeigbors<T> neighbors(T value){
+    public ListAdjacency<T> adjacents(T value){
         Node<T> node=new Node(value);
-        ListNeigbors<T> neighbors=new ListNeigbors();
+        ListAdjacency<T> adjacents=new ListAdjacency();
         for(Edge<T> edge:this.edges()){
-            System.out.println(edge.source().getValue()+" - "+edge.destination().getValue());
-            if(edge.hasNode(node)){
-                neighbors.add(edge.opposite(node).getValue());
+            if(edge.source().equals(node)){
+                adjacents.add(edge.opposite(node));
             }
         }
-        return neighbors;
+        return adjacents;
     }
     
-    public Nodes vertices(){
+    public Nodes<Node<T>> vertices(){
         return this.vertices;
     }
     
-    public Edges edges(){
+    public Edges<T> edges(){
         return this.edges;
     }
     
