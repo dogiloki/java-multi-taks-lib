@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.datastructure.graph;
 
+import com.dogiloki.multitaks.datastructure.graph.callbacks.OnWeight;
 import com.dogiloki.multitaks.datastructure.Node;
 
 /**

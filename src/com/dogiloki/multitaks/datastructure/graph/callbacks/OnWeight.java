@@ -1,6 +1,7 @@
-package com.dogiloki.multitaks.datastructure.graph;
+package com.dogiloki.multitaks.datastructure.graph.callbacks;
 
 import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluateWith;
+import com.dogiloki.multitaks.datastructure.graph.Edge;
 
 /**
  *
