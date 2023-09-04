@@ -1,33 +1,32 @@
 package com.dogiloki.multitaks.datastructure.graph;
 
+import com.dogiloki.multitaks.datastructure.graph.dijkstra.TableWeight;
+import com.dogiloki.multitaks.datastructure.AbstractNode;
 import com.dogiloki.multitaks.datastructure.graph.callbacks.OnWeight;
-import com.dogiloki.multitaks.datastructure.Node;
-import com.dogiloki.multitaks.datastructure.Nodes;
 
 /**
  *
  * @author dogi_
  */
 
-public class Graph<T>{
+public class Graph<T> extends AbstractNode<NodeGraph,T>{
     
-    private Nodes<Node<T>> vertices=new Nodes();
+    private NodesGraph<T> vertices=new NodesGraph();
     private Edges<T> edges=new Edges();
     
     public Graph(){
-        
+        super(NodeGraph.class);
     }
     
     public void add(T value){
-        Node node=new Node(value);
-        this.vertices().add(node);
+        this.vertices().add(this.newNode(value));
     }
     
     public void unidirectionalEdge(T val1, T val2, OnWeight<T> weight, boolean directed){
-        Edge<T> edge=new Edge(new Node(val1),new Node(val2));
+        Edge<T> edge=new Edge(this.newNode(val1),this.newNode(val2));
         edge.onWeight(weight);
         edge.directed(directed);
-        this.edges.add(edge);
+        this.edges().add(edge);
     }
     
     public void bidirectionalEdge(T val1, T val2, OnWeight<T> weight, boolean directed){
@@ -36,17 +35,27 @@ public class Graph<T>{
     }
     
     public ListAdjacency<T> adjacents(T value){
-        Node<T> node=new Node(value);
+        return this._adjacents(value,null);
+    }
+    
+    private ListAdjacency<T> _adjacents(T value, NodesGraph<T> exception_nodes){
+        NodeGraph<T> node=this.newNode(value);
         ListAdjacency<T> adjacents=new ListAdjacency();
-        for(Edge<T> edge:this.edges()){
-            if(edge.source().equals(node)){
-                adjacents.add(edge.opposite(node));
+        edge_loop:for(Edge<T> edge:this.edges()){
+            if(edge.source().equals(node) && edge.directed()){
+                NodeGraph<T> opposite_node=edge.opposite(node);
+                for(NodeGraph<T> exception_node:exception_nodes){
+                    if(opposite_node.equals(exception_node)){
+                        continue edge_loop;
+                    }
+                }
+                adjacents.add(opposite_node);
             }
         }
         return adjacents;
     }
     
-    public Nodes<Node<T>> vertices(){
+    public NodesGraph<T> vertices(){
         return this.vertices;
     }
     

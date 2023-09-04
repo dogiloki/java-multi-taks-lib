@@ -26,8 +26,7 @@ public class Test{
         g.add("Sofia");
         g.add("Edgar");
         g.add("1");
-        g.bidirectionalEdge("Julio","Martha",(edge)->edge.source().getValue().length(),true);
-        System.out.println(g.edges().get(0).weight().doubleValue());
+        g.bidirectionalEdge("Julio","Martha",(edge)->10,true);
         /*
         Runtime runtime=Runtime.getRuntime();
         long initial_memory=runtime.totalMemory()-runtime.freeMemory();

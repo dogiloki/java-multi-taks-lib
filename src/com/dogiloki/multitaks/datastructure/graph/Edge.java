@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.datastructure.graph;
 
 import com.dogiloki.multitaks.datastructure.graph.callbacks.OnWeight;
-import com.dogiloki.multitaks.datastructure.Node;
 
 /**
  *
@@ -12,11 +11,11 @@ public class Edge<T>{
     
     private OnWeight<T> weight=(edge)->null;
     private boolean directed=true;
-    private Node<T> source;
-    private Node<T> destination;
+    private NodeGraph<T> source;
+    private NodeGraph<T> destination;
     
     
-    public Edge(Node source, Node destination){
+    public Edge(NodeGraph source, NodeGraph destination){
         this.source=source;
         this.destination=destination;
     }
@@ -29,19 +28,19 @@ public class Edge<T>{
         return this.weight.run(this);
     }
     
-    public boolean hasNode(Node<T> node){
+    public boolean hasNode(NodeGraph<T> node){
         return this.source().equals(node) || this.destination().equals(node);
     }
     
-    public Node<T> opposite(Node<T> node){
+    public NodeGraph<T> opposite(NodeGraph<T> node){
         return this.source().equals(node)?this.destination():this.source();
     }
     
-    public Node<T> source(){
+    public NodeGraph<T> source(){
         return this.source;
     }
     
-    public Node<T> destination(){
+    public NodeGraph<T> destination(){
         return this.destination;
     }
     
