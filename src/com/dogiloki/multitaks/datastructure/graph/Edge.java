@@ -9,7 +9,7 @@ import com.dogiloki.multitaks.datastructure.graph.callbacks.OnWeight;
 
 public class Edge<T>{
     
-    private OnWeight<T> weight=(edge)->null;
+    private OnWeight<T> weight=null;
     private boolean directed=true;
     private NodeGraph<T> source;
     private NodeGraph<T> destination;

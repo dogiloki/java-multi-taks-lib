@@ -20,14 +20,6 @@ import database.Persona;
 public class Test{
     
     public Test(){
-        Graph<String> g=new Graph();
-        g.add("Julio");
-        g.add("Martha");
-        g.add("Sofia");
-        g.add("Edgar");
-        g.add("1");
-        g.bothWaysEdge("Julio","Martha",(edge)->10,true);
-        System.out.println(g.adjacents("Julio").pop().weight());
         /*
         Runtime runtime=Runtime.getRuntime();
         long initial_memory=runtime.totalMemory()-runtime.freeMemory();
