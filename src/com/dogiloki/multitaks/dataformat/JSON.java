@@ -26,8 +26,8 @@ public class JSON implements DataFormat{
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeSpecialFloatingPointValues().setLenient().create();
     }
     
-    public static String createJson(Object json){
-        return new Gson().toJson(json);
+    public static Gson builderDefault(){
+        return new Gson();
     }
     
     private String json;

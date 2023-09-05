@@ -17,11 +17,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import com.dogiloki.multitaks.Function;
-import com.dogiloki.multitaks.directory.annotations.Execute;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
-import com.dogiloki.multitaks.directory.interfaces.DataFormat;
+import com.dogiloki.multitaks.dataformat.JSON;
+import java.lang.reflect.Type;
 
 /**
  *
@@ -29,46 +29,31 @@ import com.dogiloki.multitaks.directory.interfaces.DataFormat;
  */
 public class ModelDirectory extends Storage{
     
-    public static Object aim(String src, Class clazz){
-        ModelDirectory model=new ModelDirectory(src,clazz);
-        model.setText();
-        return model.getInstance();
-    }
-    private Class<?> child_class;
+    private ListFields fields=new ListFields();
     private Object _instance;
-    /**
-     * String clave para formato de texto
-     * String valor del atributo de la clase
-    */
-    private Map<String,Object> fields=new HashMap<>();
-    /**
-     * String clave para formato de texto
-     * Field variable de la clase
-    */
-    private Map<String,Field> attributes=new HashMap<>();
-
+    
     public ModelDirectory(){
-        
+        this._aim(null,null);
     }
     
-    public ModelDirectory(String src, Class clazz){
-        try{
-            this._aim(clazz.newInstance(),src);
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+    public ModelDirectory(Object instance){
+        this._aim(instance,null);
     }
     
     public ModelDirectory(String src){
         this._aim(null,src);
     }
     
-    public void aim(String src){
-        this._aim(null,src);
+    public ModelDirectory(Object instance, String src){
+        this._aim(instance,src);
     }
     
     public void aim(Object instance){
         this._aim(instance,null);
+    }
+    
+    public void aim(String src){
+        this._aim(null,src);
     }
     
     public void aim(Object instance, String src){
@@ -77,19 +62,19 @@ public class ModelDirectory extends Storage{
     
     private void _aim(Object instance, String src){
         this.setInstance(instance);
-        this.child_class=this.getInstance().getClass();
         this.setSrc(src);
-        Directory annot_directory=this.child_class.getAnnotation(Directory.class);
+        Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
             this.setType(annot_directory.type());
+            this.setSrc(annot_directory.src());
         }
         this.create();
-        super.aim(src,this.getType());
+        super.aim(this.getSrc(),this.getType());
     }
     
     private void create(){
-        this.get();
-        if(this.getType()==null || this.getSrc()==null){
+        this.loadFields();
+        if(this.getType()==null ||this.getSrc()==null){
             return;
         }
         if(this.isFolder()){
@@ -103,157 +88,48 @@ public class ModelDirectory extends Storage{
         return Function.assign(this._instance,this);
     }
     
-    private void setInstance(Object instance){
+    public void setInstance(Object instance){
         this._instance=instance;
     }
     
-    private void setInstance(Class clazz){
+    public ListFields loadFields(){
         try{
-            this._instance=clazz.newInstance();
+            Object instance=this.getInstance();
+            Directory annot_directory=instance.getClass().getAnnotation(Directory.class);
+            if(annot_directory instanceof Directory){
+                this.setType(annot_directory.type());
+                this.setSrc(annot_directory.src());
+                if(this.isFolder()){
+                    return this.fields;
+                }
+            }
+            for(Field field:instance.getClass().getFields()){
+                Key annot_key=field.getAnnotation(Key.class);
+                if(annot_key instanceof Key){
+                    Object value=field.get(instance);
+                    this.fields.put(annot_key.value(),Function.assignNotNull(value,""));
+                }
+            }
         }catch(Exception ex){
             ex.printStackTrace();
         }
-    }
-    
-    public Map<String,Object> getFields(){
         return this.fields;
     }
     
-    public void setFields(Map<String,Object> fields){
-        this.fields=fields;
-    }
-    
-    private void get(){
-        try{
-            Directory annot_directory=this.child_class.getAnnotation(Directory.class);
-            if(annot_directory instanceof Directory){
-                this.setType(annot_directory.type());
-                if(this.isFolder()){
-                    return;
-                }
-            }
-            for(Field field:this.child_class.getFields()){
-                Key annot_key=field.getAnnotation(Key.class);
-                if(annot_key instanceof Key){
-                    Object value=field.get(this.getInstance());
-                    this.fields.put(annot_key.value(),Function.assignNotNull(value,""));
-                    this.attributes.put(annot_key.value(),field);
-                }
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-    }
-    
-    public Object setText(String text){
-        return this._setText(text);
-    }
-    public Object setText(){
-        return this._setText(null);
-    }
-    private Object _setText(String _text){
-        String text=_text==null?this.read():_text;
-        if(text==null || text.equals("")){
-            return this.getInstance();
-        }
-        DataFormat data;
-        switch(this.getType()){
-            case JSON:{
-                this.setInstance(new Gson().fromJson(text,this.child_class));
-                return this.getInstance();
-            }
-            case ENV: data=new ENV(text); break;
-            default: data=null; break;
-        }
-        if(data==null){
-            return this.getInstance();
-        }
-        for(Map.Entry<String,Field> entry:this.attributes.entrySet()){
-            String key=entry.getKey();
-            Field field=entry.getValue();
-            try{
-                Object value=data.getValue(key);
-                Key annot_key=field.getAnnotation(Key.class);
-                if(value==null){
-                    continue;
-                }
-                field.set(this.getInstance(),value);
-                /*if(annot_key.type()==FieldType.CLASS){
-                    Class<?> type_class=field.getType();
-                    ModelDirectory model=new ModelDirectory();
-                    model.aim(type_class.getConstructor().newInstance());
-                    value=model.setText(value.toString());
-                    field.set(this.instance,value);
-                    continue;
-                }else
-                if(annot_key.type()==FieldType.ENUM){
-                    Class<Enum> type_class=(Class<Enum>)field.getType();
-                    field.set(this.instance,Enum.valueOf(type_class,value.toString().replaceAll("\"","")));
-                    continue;
-                }else
-                if(annot_key.type()==FieldType.LIST){
-                    List<Object> values=new ArrayList<>();
-                    List<Object> items;
-                    if(this.type==DirectoryType.JSON){
-                        items=new Gson().fromJson(value.toString(),new TypeToken<List<JsonElement>>(){}.getType());
-                    }else{
-                        items=(List)value;
-                    }
-                    if(items!=null){
-                        for(Object item:items){
-                            Class<?> type_class=Class.forName(((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName());
-                            ModelDirectory model=new ModelDirectory();
-                            model.aim(type_class.getConstructor().newInstance());
-                            Object instance=model.setText(item.toString());
-                            values.add(instance);
-                        }
-                        value=values;
-                    }else{
-                        value=new ArrayList<>();
-                    }
-                    field.set(this.instance,value);
-                    continue;
-                }
-                String class_name=field.getType().getName();
-                if(field.getType().isPrimitive()){
-                    if(int.class.equals(field.getType())){
-                        class_name+="eger";
-                    }
-                    class_name="java.lang."+class_name.substring(0,1).toUpperCase()+class_name.substring(1);
-                }
-                Class<?> class_type=Class.forName(class_name);
-                Constructor<?> constructor=class_type.getDeclaredConstructor(field.getType());
-                if(this.type==DirectoryType.JSON){
-                    field.set(this.instance,constructor.newInstance(new Gson().fromJson((JsonPrimitive)value,class_type)));
-                }else{
-                    field.set(this.instance,constructor.newInstance(value));
-                }*/
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
-        // Métodos
-        for(Method method:this.getInstance().getClass().getMethods()){
-            Execute annot_execute=method.getAnnotation(Execute.class);
-            if(annot_execute==null){
-                continue;
-            }
-            try{
-                method.invoke(this.getInstance());
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
+    public Object builder(){
+        Object instance=this.getInstance();
+        instance=JSON.builderDefault().fromJson(this.read(),this.getInstance().getClass());
+        this.setInstance(instance);
         return this.getInstance();
     }
     
-    public Object getText(){
+    public String text(){
         if(this.getType()==null){
             return null;
         }
-        this.get();
+        this.loadFields();
         switch(this.getType()){
-            case JSON: return new Gson().toJson(this.fields);
+            case JSON: return JSON.builderDefault().toJson(this.fields);
             case ENV: return new ENV(this.fields).toString()+"\n";
             case XML:{
                 try{
@@ -288,7 +164,7 @@ public class ModelDirectory extends Storage{
     
     public boolean save(){
         if(this.getType()!=null && this.getSrc()!=null && this.isFile()){
-            return this.write(this.getText());
+            return this.write(this.text());
         }
         return false;
     }

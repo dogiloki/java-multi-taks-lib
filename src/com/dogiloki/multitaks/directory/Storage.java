@@ -684,6 +684,7 @@ public class Storage{
             for(Object t:text){
                 this.bw.write(((String)t));
             }
+            this.flush();
             return true;
         }catch(IOException ex){
             ex.printStackTrace();

@@ -18,5 +18,6 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
 public @interface Directory{
     
     DirectoryType type();
+    String src() default("");
     
 }

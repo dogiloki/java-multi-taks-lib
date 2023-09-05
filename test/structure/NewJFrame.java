@@ -55,7 +55,7 @@ public class NewJFrame extends javax.swing.JFrame{
         g.bothWaysEdge("L","P",6);
         g.bothWaysEdge("M","N",2);
         g.bothWaysEdge("N","P",12);
-        DijkstraAlgorithm<String> d=new DijkstraAlgorithm(g);
+        DijkstraAlgorithm<String> d=g.dijkstra();
         d.shortest("C","I").values().forEach((node)->{
             System.out.println(node);
         });
