@@ -54,8 +54,8 @@ public class NewJFrame extends javax.swing.JFrame{
         g.bothWaysEdge("L","P",6);
         g.bothWaysEdge("M","N",2);
         g.bothWaysEdge("N","P",12);
-        g.dijkstra().shortest("A","P").forEach((node)->{
-            System.out.println(node.getValue());
+        g.dijkstra().shortest("A","P").values().forEach((value)->{
+            System.out.println(value);
         });
     }
     

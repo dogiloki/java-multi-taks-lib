@@ -10,7 +10,7 @@ import com.dogiloki.multitaks.Function;
 public class Node<T>{
 
     private T value;
-    protected Nodes<Node<T>> nodes=new Nodes();
+    protected Nodes<Node<T>,T> nodes=new Nodes();
     
     public Node(T value){
         this.value=value;

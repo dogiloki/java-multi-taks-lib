@@ -15,7 +15,7 @@ public class TreeBinary<T> implements Iterator<T>{
     
     private NodeBinary<T> root_node=null;
     private TraversalType traversal_type;
-    private Nodes<NodeBinary<T>> nodes=new Nodes();
+    private Nodes<NodeBinary<T>,T> nodes=new Nodes();
     private OnEvaluate<T> on_saving=(item)->item;
     private OnEvaluate<T> on_evaluate=(item)->item;
     private OnEvaluateNotReturn<T> on_order=(item)->{};
@@ -117,7 +117,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this.root_node;
     }
     
-    public Nodes<NodeBinary<T>> nodes(){
+    public Nodes<NodeBinary<T>,T> nodes(){
         return this.nodes;
     }
     
