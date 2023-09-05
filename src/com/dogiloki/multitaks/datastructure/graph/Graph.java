@@ -4,6 +4,7 @@ import com.dogiloki.multitaks.datastructure.AbstractNode;
 import com.dogiloki.multitaks.datastructure.graph.callbacks.OnWeight;
 import com.dogiloki.multitaks.datastructure.graph.dijkstra.DijkstraAlgorithm;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**

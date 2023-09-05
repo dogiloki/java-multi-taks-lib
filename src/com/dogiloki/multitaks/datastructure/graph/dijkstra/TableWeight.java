@@ -25,7 +25,15 @@ public class TableWeight<T> extends DefaultTableModel{
         this.addColumn("Temporary weight");
     }
     
-    public int getIndexVertice(NodeGraph<T> vertex){
+    public void removeRows(){
+        for(int a=0; a<this.getRowCount(); a++){
+            this.removeRow(0);
+        }
+        this.vertex_index.clear();
+        this.index=0;
+    }
+    
+    public int getIndexVertex(NodeGraph<T> vertex){
         return this.vertex_index.get(vertex);
     }
     
@@ -35,7 +43,7 @@ public class TableWeight<T> extends DefaultTableModel{
         this.index++;
     }
     
-    public NodeGraph<T> vertice(int row){
+    public NodeGraph<T> vertex(int row){
         return (NodeGraph<T>)this.getValueAt(row,COLUMN_VERTICE);
     }
     
@@ -47,7 +55,7 @@ public class TableWeight<T> extends DefaultTableModel{
         return (double)this.getValueAt(row,COLUMN_TEMP_WEIGHT);
     }
     
-    public void vertice(int row, NodeGraph<T> vertex){
+    public void vertex(int row, NodeGraph<T> vertex){
         this.vertex_index.put(vertex,row);
         this.setValueAt(vertex,row,COLUMN_VERTICE);
     }

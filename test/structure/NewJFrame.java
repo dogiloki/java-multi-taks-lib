@@ -57,8 +57,12 @@ public class NewJFrame extends javax.swing.JFrame{
         g.bothWaysEdge("N","P",12);
         DijkstraAlgorithm<String> d=new DijkstraAlgorithm(g);
         d.shortest("A","P").values().forEach((node)->{
-            System.out.println(node);
+            //System.out.println(node);
         });
+        for(int a=0; a<d.table().getRowCount(); a++){
+            System.out.println(d.table().vertex(a).getValue()+" - "+d.table().finalWeight(a));
+        }
+        this.table.setModel(d.table());
     }
     
     @SuppressWarnings("unchecked")
