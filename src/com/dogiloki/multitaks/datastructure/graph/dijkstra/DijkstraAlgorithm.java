@@ -5,9 +5,6 @@ import com.dogiloki.multitaks.datastructure.graph.Graph;
 import com.dogiloki.multitaks.datastructure.graph.ListAdjacency;
 import com.dogiloki.multitaks.datastructure.graph.NodeGraph;
 import com.dogiloki.multitaks.datastructure.graph.NodesGraph;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -25,12 +22,17 @@ public class DijkstraAlgorithm<T>{
     }
     
     private void generateTable(NodeGraph<T> vertex, NodeGraph<T> end_vertex, NodesGraph<T> exception_nodes){
-        ListAdjacency<T> adjacents=this.graph().adjacents(vertex.getValue(),exception_nodes);
-        if(adjacents.isEmpty()){
-            exception_nodes.add(vertex);
+        if(vertex.equals(end_vertex)){
             return;
         }
+        ListAdjacency<T> adjacents=this.graph().adjacents(vertex.getValue(),exception_nodes);
         int row_vertex=this.table().getIndexVertex(vertex);
+        if(adjacents.isEmpty()){
+            if(this.table().finalWeight(row_vertex)<=0){
+                this.table().finalWeight(row_vertex,this.table().tempWeight(row_vertex));
+            }
+            exception_nodes.add(vertex);
+        }
         adjacents.forEach((edge)->{
             NodeGraph<T> adjacent=edge.destination();
             int row_adjacent=this.table().getIndexVertex(adjacent);
@@ -41,18 +43,18 @@ public class DijkstraAlgorithm<T>{
             }
             adjacent.weight(this.table().tempWeight(row_adjacent));
         });
-        NodeGraph<T> node_minor=this.minorWeight(this.graph().vertices(),exception_nodes);
+        NodeGraph<T> node_minor=this.minorWeight(this.graph().vertices(),exception_nodes,vertex);
         int row_node_minor=this.table().getIndexVertex(node_minor);
         this.table().finalWeight(row_node_minor,this.table().tempWeight(row_node_minor));
         exception_nodes.add(vertex);
         this.generateTable(node_minor,end_vertex,exception_nodes);
     }
     
-    private NodeGraph<T> minorWeight(NodesGraph<T> vertices, NodesGraph<T> exception_nodes){
+    private NodeGraph<T> minorWeight(NodesGraph<T> vertices, NodesGraph<T> exception_nodes, NodeGraph<T> exep_node){
         NodeGraph<T> node=null;
         vertices_loop:for(NodeGraph<T> vertex:vertices){
             for(NodeGraph<T> exception_node:exception_nodes){
-                if(vertex.equals(exception_node)){
+                if(vertex.equals(exception_node) || vertex.equals(exep_node)){
                     continue vertices_loop;
                 }
             }
@@ -72,9 +74,11 @@ public class DijkstraAlgorithm<T>{
     private NodesGraph<T> generateShortest(NodeGraph<T> vertex, NodeGraph<T> final_vertex, NodesGraph<T> exception_nodes, NodesGraph<T> nodes){
         ListAdjacency<T> adjacents=this.graph().adjacents(vertex.getValue(),exception_nodes);
         int row_vertex=this.table().getIndexVertex(vertex);
+        /*
         if(this.table().finalWeight(row_vertex)<=0){
             this.table().finalWeight(row_vertex,this.table().tempWeight(row_vertex));
         }
+        */
         if(adjacents.isEmpty()){
             return nodes;
         }
