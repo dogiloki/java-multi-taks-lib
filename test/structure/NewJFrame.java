@@ -1,6 +1,7 @@
 package structure;
 
 import com.dogiloki.multitaks.datastructure.graph.Graph;
+import com.dogiloki.multitaks.datastructure.graph.dijkstra.DijkstraAlgorithm;
 
 /**
  *
@@ -54,8 +55,9 @@ public class NewJFrame extends javax.swing.JFrame{
         g.bothWaysEdge("L","P",6);
         g.bothWaysEdge("M","N",2);
         g.bothWaysEdge("N","P",12);
-        g.dijkstra().shortest("A","P").values().forEach((value)->{
-            System.out.println(value);
+        DijkstraAlgorithm<String> d=new DijkstraAlgorithm(g);
+        d.shortest("A","P").values().forEach((node)->{
+            System.out.println(node);
         });
     }
     
