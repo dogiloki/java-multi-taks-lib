@@ -4,7 +4,7 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
+import com.dogiloki.multitaks.callbacks.OnEvaluate;
 import com.dogiloki.multitaks.datastructure.tree.TreeBinary;
 
 /**

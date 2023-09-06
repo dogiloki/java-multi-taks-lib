@@ -2,7 +2,7 @@ package com.dogiloki.multitaks.datastructure.tree;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.Node;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
+import com.dogiloki.multitaks.callbacks.OnEvaluate;
 
 /**
  *

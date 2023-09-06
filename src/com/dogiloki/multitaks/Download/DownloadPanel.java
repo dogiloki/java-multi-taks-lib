@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks;
+package com.dogiloki.multitaks.Download;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -14,7 +14,7 @@ import com.dogiloki.multitaks.directory.Storage;
  * @author dogi_
  */
 
-public class Download extends javax.swing.JPanel implements Runnable{
+public class DownloadPanel extends javax.swing.JPanel implements Runnable{
     
     private String path;
     private String name;
@@ -26,11 +26,11 @@ public class Download extends javax.swing.JPanel implements Runnable{
     private boolean pause;
     private boolean delete_if_canceled;
     
-    public Download(String url, String path){
+    public DownloadPanel(String url, String path){
         this.init(url,path,new Storage(path).getName());
     }
     
-    public Download(String url, String path, String name){
+    public DownloadPanel(String url, String path, String name){
         this.init(url,path+"/"+name,name);
     }
     
@@ -44,8 +44,8 @@ public class Download extends javax.swing.JPanel implements Runnable{
         this.abort();
     }
     
-    public void deleteIfCanceled(boolean op){
-        this.delete_if_canceled=op;
+    public boolean deleteIfCanceled(boolean op){
+        return this.delete_if_canceled=op;
     }
     
     public boolean deleteIfCanceled(){

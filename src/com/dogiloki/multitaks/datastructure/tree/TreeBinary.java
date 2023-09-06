@@ -1,8 +1,8 @@
 package com.dogiloki.multitaks.datastructure.tree;
 
 import com.dogiloki.multitaks.datastructure.Nodes;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluate;
-import com.dogiloki.multitaks.datastructure.callbacks.OnEvaluateNotReturn;
+import com.dogiloki.multitaks.callbacks.OnEvaluate;
+import com.dogiloki.multitaks.callbacks.OnEvaluateNotReturn;
 import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import java.util.Iterator;
 

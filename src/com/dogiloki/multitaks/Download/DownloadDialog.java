@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks;
+package com.dogiloki.multitaks.Download;
 
 import java.io.BufferedInputStream;
 import java.io.File;

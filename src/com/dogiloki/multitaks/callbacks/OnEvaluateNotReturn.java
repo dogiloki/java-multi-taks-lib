@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.datastructure.callbacks;
+package com.dogiloki.multitaks.callbacks;
 
 /**
  *

@@ -5,7 +5,6 @@ import com.dogiloki.multitaks.database.filter.Filter;
 import com.dogiloki.multitaks.datastructure.sorting.Sorting;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import com.dogiloki.multitaks.dataformat.JSON;
-import com.dogiloki.multitaks.datastructure.sorting.enums.OrderAlgorithm;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
