@@ -5,8 +5,8 @@ package com.dogiloki.multitaks.callbacks;
  * @author dogi_
  */
 
-public interface OnEvaluateWithResult<T,N>{
+public interface OnCallback<T>{
     
-    public N run(T item);
+    public Object run(T items);
     
 }

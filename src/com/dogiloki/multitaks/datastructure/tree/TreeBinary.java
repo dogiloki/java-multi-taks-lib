@@ -1,10 +1,10 @@
 package com.dogiloki.multitaks.datastructure.tree;
 
 import com.dogiloki.multitaks.datastructure.Nodes;
-import com.dogiloki.multitaks.callbacks.OnEvaluate;
-import com.dogiloki.multitaks.callbacks.OnEvaluateNotReturn;
 import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import java.util.Iterator;
+import com.dogiloki.multitaks.callbacks.OnCallback;
+import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
 
 /**
  *
@@ -16,9 +16,9 @@ public class TreeBinary<T> implements Iterator<T>{
     private NodeBinary<T> root_node=null;
     private TraversalType traversal_type;
     private Nodes<NodeBinary<T>,T> nodes=new Nodes();
-    private OnEvaluate<T> on_saving=(item)->item;
-    private OnEvaluate<T> on_evaluate=(item)->item;
-    private OnEvaluateNotReturn<T> on_order=(item)->{};
+    private OnCallback<T> on_saving=(item)->item;
+    private OnCallback<T> on_evaluate=(item)->item;
+    private OnCallbackNotReturn<T> on_order=(item)->{};
     private NodeBinary<T> current=null;
     private int index=0;
     
@@ -121,30 +121,30 @@ public class TreeBinary<T> implements Iterator<T>{
         return this.nodes;
     }
     
-    public TreeBinary onSaving(OnEvaluate<T> action){
+    public TreeBinary onSaving(OnCallback<T> action){
         this.on_saving=action;
         return this;
     }
     
-    public OnEvaluate onSaving(){
+    public OnCallback onSaving(){
         return this.on_saving;
     }
     
-    public TreeBinary onEvaluate(OnEvaluate<T> action){
+    public TreeBinary onEvaluate(OnCallback<T> action){
         this.on_evaluate=action;
         return this;
     }
     
-    public OnEvaluate onEvaluate(){
+    public OnCallback onEvaluate(){
         return this.on_evaluate;
     }
     
-    public TreeBinary onOrder(OnEvaluateNotReturn<T> action){
+    public TreeBinary onOrder(OnCallbackNotReturn<T> action){
         this.on_order=action;
         return this;
     }
     
-    public OnEvaluateNotReturn onOrder(){
+    public OnCallbackNotReturn onOrder(){
         return this.on_order;
     }
     

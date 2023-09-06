@@ -2,7 +2,7 @@ package com.dogiloki.multitaks.datastructure.tree;
 
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.datastructure.Node;
-import com.dogiloki.multitaks.callbacks.OnEvaluate;
+import com.dogiloki.multitaks.callbacks.OnCallback;
 
 /**
  *
@@ -14,7 +14,7 @@ public final class NodeBinary<T> extends Node<T>{
     public static final int LEFT_INDEX=0;
     public static final int RIGHT_INDEX=1;
     
-    private OnEvaluate<T> on_evaluate=(item)->item;
+    private OnCallback<T> on_evaluate=(item)->item;
     
     public NodeBinary(T value){
         super(value);
@@ -55,12 +55,12 @@ public final class NodeBinary<T> extends Node<T>{
         this.nodes.set(NodeBinary.RIGHT_INDEX,node);
     }
     
-    public NodeBinary onEvaluate(OnEvaluate<T> action){
+    public NodeBinary onEvaluate(OnCallback<T> action){
         this.on_evaluate=action;
         return this;
     }
     
-    public OnEvaluate onEvaluate(){
+    public OnCallback onEvaluate(){
         return this.on_evaluate;
     }
     

@@ -51,6 +51,14 @@ public class FileBlock{
         this.out.write(b);
     }
     
+    public void write(int b)throws IOException{
+        if(this.out==null){
+            this.out=new FileOutputStream(this.getSrc());
+        }
+        //this.out.write(b,0,b.length);
+        this.out.write(b);
+    }
+    
     public void close() throws IOException{
         if(this.in!=null){
             this.in.close();
