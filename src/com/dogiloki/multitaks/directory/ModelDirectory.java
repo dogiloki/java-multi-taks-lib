@@ -1,14 +1,11 @@
 package com.dogiloki.multitaks.directory;
 
-import com.google.gson.Gson;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.annotations.Key;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
-import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -21,7 +18,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
-import java.lang.reflect.Type;
 
 /**
  *
