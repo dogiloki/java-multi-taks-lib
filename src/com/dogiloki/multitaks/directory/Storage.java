@@ -588,7 +588,7 @@ public class Storage{
     public void aim(String src, DirectoryType type){
         this.setSrc(src);
         File file;
-        if(type==null && (file=new File(src)).exists()){
+        if(type==null && src!=null && (file=new File(src)).exists()){
             type=file.isDirectory()?DirectoryType.FOLDER:DirectoryType.FILE;
         }
         this.setType(type);
