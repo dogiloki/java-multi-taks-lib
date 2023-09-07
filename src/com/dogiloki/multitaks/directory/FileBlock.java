@@ -1,9 +1,12 @@
 package com.dogiloki.multitaks.directory;
 
+import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  *
@@ -20,10 +23,11 @@ public class FileBlock{
     private int index=0;
     private byte[] element;
     
-    public FileBlock(String src, int block_size) throws FileNotFoundException{
+    public FileBlock(String src, int block_size){
         this.src=src;
         this.block_size=block_size;
         this.buffer=new byte[this.block_size];
+        new Storage(src,DirectoryType.FILE).exists(true);
     }
     
     public byte[] read()throws IOException{
@@ -33,7 +37,6 @@ public class FileBlock{
         int bit;
         bit=this.in.read(this.buffer);
         if(bit==-1){
-            this.close();
             return null;
         }
         this.index++;
@@ -43,20 +46,29 @@ public class FileBlock{
         return this.element;
     }
     
+    public byte[] readAll()throws IOException{
+        return Files.readAllBytes(Paths.get(this.getSrc()));
+    }
+    
     public void write(byte[] b)throws IOException{
         if(this.out==null){
-            this.out=new FileOutputStream(this.getSrc());
+            this.out=new FileOutputStream(this.getSrc(),true);
         }
-        //this.out.write(b,0,b.length);
         this.out.write(b);
     }
     
     public void write(int b)throws IOException{
         if(this.out==null){
-            this.out=new FileOutputStream(this.getSrc());
+            this.out=new FileOutputStream(this.getSrc(),true);
         }
-        //this.out.write(b,0,b.length);
         this.out.write(b);
+    }
+    
+    public void write(byte[] buffer, int b1, int b2)throws IOException{
+        if(this.out==null){
+            this.out=new FileOutputStream(this.getSrc(),true);
+        }
+        this.out.write(buffer,b1,b2);
     }
     
     public void close() throws IOException{

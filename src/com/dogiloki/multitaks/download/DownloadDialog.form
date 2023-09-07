@@ -29,8 +29,8 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="progreso" pref="488" max="32767" attributes="0"/>
-                  <Component id="progreso_texto" max="32767" attributes="0"/>
+                  <Component id="progress" pref="488" max="32767" attributes="0"/>
+                  <Component id="text" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -40,18 +40,18 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="progreso_texto" pref="22" max="32767" attributes="0"/>
+              <Component id="text" pref="22" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="progreso" min="-2" pref="30" max="-2" attributes="0"/>
+              <Component id="progress" min="-2" pref="30" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JProgressBar" name="progreso">
+    <Component class="javax.swing.JProgressBar" name="progress">
     </Component>
-    <Component class="javax.swing.JLabel" name="progreso_texto">
+    <Component class="javax.swing.JLabel" name="text">
     </Component>
   </SubComponents>
 </Form>

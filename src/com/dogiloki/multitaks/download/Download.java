@@ -1,8 +1,9 @@
-package com.dogiloki.multitaks.Download;
+package com.dogiloki.multitaks.download;
 
 import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
 import com.dogiloki.multitaks.directory.FileBlock;
 import com.dogiloki.multitaks.directory.ModelDirectory;
+import com.dogiloki.multitaks.download.enums.DownloadStatus;
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -15,16 +16,15 @@ import java.text.MessageFormat;
 
 public class Download extends ModelDirectory implements Runnable{
     
-    private String url;
-    private FileBlock file_block;
+    private final String url;
+    private final FileBlock file_block;
     private BufferedInputStream in;
-    private Thread thread=new Thread(this);
+    private final Thread thread=new Thread(this);
     private boolean pause=false;
     private boolean canceled=false;
     private boolean delete_if_canceled=false;
-    private DownloadMetrics metrics=new DownloadMetrics();
-    private OnCallbackNotReturn<DownloadMetrics> on_connecting=(item)->{};
-    private OnCallbackNotReturn<DownloadMetrics> on_progress=(item)->{};
+    private final DownloadMetrics metrics=new DownloadMetrics();
+    private OnCallbackNotReturn<DownloadMetrics> on_metrics=(item)->{};
     
     public Download(String url, String path){
         super(path);
@@ -33,16 +33,16 @@ public class Download extends ModelDirectory implements Runnable{
         this.metrics.file=this.getFile();
     }
     
-    public void onConnecting(OnCallbackNotReturn<DownloadMetrics> action){
-        this.on_connecting=action;
-    }
-    
-    public void onProgress(OnCallbackNotReturn<DownloadMetrics> action){
-        this.on_progress=action;
+    public void onMetrics(OnCallbackNotReturn<DownloadMetrics> action){
+        this.on_metrics=action;
     }
     
     public boolean deleteIfCanceled(){
         return this.delete_if_canceled;
+    }
+    
+    public boolean deleteIfCanceled(boolean b){
+        return this.delete_if_canceled=b;
     }
     
     public Download start(){
@@ -51,7 +51,8 @@ public class Download extends ModelDirectory implements Runnable{
     }
     
     public void pause(){
-        this.metrics.status="[ Paused ] "+this.metrics.status;
+        this.metrics.status=DownloadStatus.PAUSED;
+        this.metrics.message="[ Paused ] "+this.metrics.message;
         this.pause=true;
     }
     
@@ -60,7 +61,8 @@ public class Download extends ModelDirectory implements Runnable{
     }
     
     public void canceled(){
-        this.metrics.status="[ Cancelled ] "+this.metrics.status;
+        this.metrics.status=DownloadStatus.CANCELLED;
+        this.metrics.message="[ Cancelled ] "+this.metrics.message;
         this.canceled=false;
     }
 
@@ -68,8 +70,9 @@ public class Download extends ModelDirectory implements Runnable{
     public void run(){
         try{
             
-            this.metrics.status=MessageFormat.format(DownloadMetrics.TEXT_CONNECTING,this.url);
-            this.on_connecting.run(this.metrics);
+            this.metrics.message=MessageFormat.format(DownloadMetrics.TEXT_CONNECTING,this.url);
+            this.metrics.status=DownloadStatus.CONNECTING;
+            this.on_metrics.run(this.metrics);
             
             URLConnection connection=new URL(this.url).openConnection();
             connection.connect();
@@ -77,8 +80,11 @@ public class Download extends ModelDirectory implements Runnable{
             this.in=new BufferedInputStream(connection.getInputStream());
             this.metrics.totalSize(connection.getContentLength());
             int b=0;
+            byte[] buffer=new byte[this.file_block.getBlockSize()];
+            System.out.println(this.file_block.readAll().length);
+            this.in.skip(this.file_block.readAll().length);
             
-            while(b!=-1){
+            while(true){
                 if(this.pause){
                     continue;
                 }
@@ -92,15 +98,21 @@ public class Download extends ModelDirectory implements Runnable{
                     }
                     break;
                 }
-                b=this.in.read();
-                this.file_block.write(b);
-                this.metrics.status=MessageFormat.format(DownloadMetrics.TEXT_PROGRESS,this.metrics.totalSize().toString(),this.metrics.currentSize());
-                this.on_progress.run(this.metrics);
+                this.metrics.status=DownloadStatus.DOWNLOADING;
+                b=this.in.read(buffer);
+                if(b==-1){
+                    break;
+                }
+                this.file_block.write(buffer,0,b);
+                this.metrics.message=MessageFormat.format(DownloadMetrics.TEXT_DOWNLOADING,this.metrics.totalSize().toString(),this.metrics.currentSize(),this.metrics.percent());
+                this.on_metrics.run(this.metrics);
             }
             
             this.in.close();
             this.file_block.close();
             this.close();
+            this.metrics.status=DownloadStatus.FINALIZED;
+            this.metrics.message="[ Finalized ] "+this.metrics.message;
             
         }catch(Exception ex){
             ex.printStackTrace();
