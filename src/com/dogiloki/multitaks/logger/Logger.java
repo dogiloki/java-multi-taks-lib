@@ -18,7 +18,7 @@ import com.dogiloki.multitaks.logger.enums.LogType;
 @Directory(type=DirectoryType.FOLDER)
 public class Logger extends ModelDirectory implements LogImpl{
     
-    private static String day_format="dd-MM-yyyy";
+    private static String day_format="yyyy-MM-dd";
     private static String time_format="HH:mm:ss";
     public static String getDayCurrent(){
         return new SimpleDateFormat(Logger.day_format).format(new Date());
