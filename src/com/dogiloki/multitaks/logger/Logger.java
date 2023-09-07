@@ -45,7 +45,7 @@ public class Logger extends ModelDirectory implements LogImpl{
                 GlobalVar.set("loguer",src);
             }
         }
-        super.aim(this,src);
+        super.aim(src);
         this.log=new Log(this.getSrc()+"/"+Logger.getDayCurrent()+".txt");
     }
     

@@ -22,7 +22,7 @@ public class Log extends ModelDirectory{
     }
     
     public Log(String src){
-        super.aim(this,src);
+        super.aim(src);
     }
     
     public void add(String message){

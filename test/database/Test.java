@@ -33,15 +33,16 @@ public class Test{
     public Test(){
         Runtime runtime=Runtime.getRuntime();
         long initial_memory=runtime.totalMemory()-runtime.freeMemory();
+        /*
         Faker f=new Faker();
-        for(int a=0; a<3000; a++){
+        for(int a=0; a<1; a++){
             Persona p=new Persona();
             p.nombre=f.name().firstName();
             p.apellido=f.name().lastName();
             p.edad=f.number().randomDigit();
             p.save();
         }
-        /*
+        */
         RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         int index=0;
@@ -49,7 +50,6 @@ public class Test{
             System.out.println(index+" - "+p.nombre);
             index++;
         }
-        */
         long final_memory=runtime.totalMemory()-runtime.freeMemory();
         long used_memory=final_memory-initial_memory;
         System.out.println("Memoria usada: "+Storage.convertSize(used_memory));

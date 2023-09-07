@@ -62,7 +62,9 @@ public class ModelDirectory extends Storage{
         Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
             this.setType(annot_directory.type());
-            this.setSrc(annot_directory.src());
+            if(!annot_directory.src().isEmpty()){
+                this.setSrc(annot_directory.src());
+            }
         }
         this.create();
         super.aim(this.getSrc(),this.getType());
@@ -81,7 +83,7 @@ public class ModelDirectory extends Storage{
     }
     
     public Object getInstance(){
-        return Function.assign(this._instance,this);
+        return Function.assignNotNull(this._instance,this);
     }
     
     public void setInstance(Object instance){
@@ -94,7 +96,6 @@ public class ModelDirectory extends Storage{
             Directory annot_directory=instance.getClass().getAnnotation(Directory.class);
             if(annot_directory instanceof Directory){
                 this.setType(annot_directory.type());
-                this.setSrc(annot_directory.src());
                 if(this.isFolder()){
                     return this.fields;
                 }

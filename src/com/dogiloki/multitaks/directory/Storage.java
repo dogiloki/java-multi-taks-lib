@@ -632,7 +632,9 @@ public class Storage{
     }
     
     private void openOnlyFile(){
-        this.file=new File(this.getSrc());
+        if(this.getSrc()!=null){
+            this.file=new File(this.getSrc());
+        }
     }
     
     /**
