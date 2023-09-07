@@ -4,7 +4,6 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.Map;
 import com.dogiloki.multitaks.directory.annotations.Directory;
-import com.dogiloki.multitaks.directory.annotations.Key;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +17,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
+import com.dogiloki.multitaks.directory.annotations.Execute;
+import com.google.gson.annotations.Expose;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -101,10 +103,10 @@ public class ModelDirectory extends Storage{
                 }
             }
             for(Field field:instance.getClass().getFields()){
-                Key annot_key=field.getAnnotation(Key.class);
-                if(annot_key instanceof Key){
+                Expose annot_key=field.getAnnotation(Expose.class);
+                if(annot_key instanceof Expose){
                     Object value=field.get(instance);
-                    this.fields.put(annot_key.value(),Function.assignNotNull(value,""));
+                    this.fields.put(field.getName(),Function.assignNotNull(value,""));
                 }
             }
         }catch(Exception ex){
@@ -115,7 +117,18 @@ public class ModelDirectory extends Storage{
     
     public Object builder(){
         Object instance=this.getInstance();
-        instance=JSON.builderDefault().fromJson(this.read(),this.getInstance().getClass());
+        instance=JSON.builder().fromJson(this.read(),instance.getClass());
+        for(Method method:instance.getClass().getMethods()){
+            Execute annot_execute=method.getAnnotation(Execute.class);
+            if(annot_execute==null){
+                continue;
+            }
+            try{
+                method.invoke(instance);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
         this.setInstance(instance);
         return this.getInstance();
     }
@@ -126,7 +139,7 @@ public class ModelDirectory extends Storage{
         }
         this.loadFields();
         switch(this.getType()){
-            case JSON: return JSON.builderDefault().toJson(this.fields);
+            case JSON: return JSON.builder().toJson(this.fields);
             case ENV: return new ENV(this.fields).toString()+"\n";
             case XML:{
                 try{

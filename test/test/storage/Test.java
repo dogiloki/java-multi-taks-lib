@@ -14,10 +14,10 @@ import com.dogiloki.multitaks.directory.Storage;
 public class Test{
     
     public Test(){
-        Persona p=(Persona)new Persona().builder();
+        ModelDirectory di=new ModelDirectory();
+        Persona p=new Persona();
         Direccion d=new Direccion();
         Comentario c=new Comentario();
-        /*
         c.message="Hola que tal";
         d.calle="Morelos";
         d.cp=55846;
@@ -27,8 +27,8 @@ public class Test{
         p.comentarios.add(c);
         p.comentarios.add(c);
         p.comentarios.add(c);
-        p.save();
-        */
+        di.aim(p,"persona.txt");
+        di.save();
         System.out.println(p.nombre);
     }
     

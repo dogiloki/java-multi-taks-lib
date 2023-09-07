@@ -1,6 +1,6 @@
 package test.storage;
 
-import com.dogiloki.multitaks.directory.annotations.Key;
+import com.google.gson.annotations.Expose;
 
 /**
  *
@@ -9,9 +9,9 @@ import com.dogiloki.multitaks.directory.annotations.Key;
 
 public class Direccion{
     
-    @Key("calle")
+    @Expose
     public String calle;
-    @Key("cp")
+    @Expose
     public int cp;
     
     public Direccion(){

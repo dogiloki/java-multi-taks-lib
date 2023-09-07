@@ -1,6 +1,6 @@
 package test.storage;
 
-import com.dogiloki.multitaks.directory.annotations.Key;
+import com.google.gson.annotations.Expose;
 import java.time.LocalDate;
 
 /**
@@ -10,9 +10,9 @@ import java.time.LocalDate;
 
 public class Comentario{
     
-    @Key("message")
+    @Expose
     public String message;
-    @Key("date_register")
+    @Expose
     public LocalDate date_register=LocalDate.now();
     
     public Comentario(){

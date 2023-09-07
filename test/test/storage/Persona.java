@@ -2,8 +2,8 @@ package test.storage;
 
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.annotations.Directory;
-import com.dogiloki.multitaks.directory.annotations.Key;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +12,16 @@ import java.util.List;
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.JSON,src="persona.txt")
+@Directory(type=DirectoryType.JSON)
 public class Persona extends ModelDirectory{
     
-    @Key("nombre")
+    @Expose
     public String nombre;
-    @Key("edad")
+    @Expose
     public int edad;
-    @Key("direccion")
+    @Expose
     public Direccion direccion;
-    @Key("comentarios")
+    @Expose
     public List<Comentario> comentarios=new ArrayList<>();
     
     public Persona(){
