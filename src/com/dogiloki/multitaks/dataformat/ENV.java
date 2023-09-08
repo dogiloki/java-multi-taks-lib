@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.dataformat;
 
-import java.util.Map;
-import java.util.HashMap;
+import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.directory.interfaces.DataFormat;
 
 /**
@@ -11,15 +10,18 @@ import com.dogiloki.multitaks.directory.interfaces.DataFormat;
 
 public class ENV implements DataFormat{
     
-    public Map<String,Object> datas=new HashMap<>();
+    public ListFields<String> datas=new ListFields();
+    private String str;
     
     public ENV(String text){
         this.format(text.split("\n"));
     }
+    
     public ENV(String... args){
         this.format(args);
     }
-    public ENV(Map<String,Object> datas){
+    
+    public ENV(ListFields datas){
         this.datas=datas;
     }
     
@@ -39,6 +41,10 @@ public class ENV implements DataFormat{
         }
     }
     
+    public ListFields<String> datas(){
+        return this.datas;
+    }
+    
     @Override
     public Object getValue(String key){
         return this.datas.get(key);
@@ -46,11 +52,10 @@ public class ENV implements DataFormat{
     
     @Override
     public String toString(){
-        String text="";
-        for(Map.Entry<String,Object> entry:this.datas.entrySet()){
-            text+=entry.getKey()+"="+entry.getValue()+"\n";
-        }
-        return text.substring(0,text.length()-1);
+        this.datas.forEach((key,value)->{
+            this.str+=key+"="+value+"\n";
+        });
+        return this.str.substring(0,this.str.length()-1);
     }
     
 }

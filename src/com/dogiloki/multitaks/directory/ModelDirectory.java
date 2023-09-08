@@ -27,7 +27,8 @@ import java.lang.reflect.Method;
  */
 public class ModelDirectory extends Storage{
     
-    private ListFields fields=new ListFields();
+    private ListFields<String> fields=new ListFields();
+    private ListFields<Field> arributes=new ListFields();
     private Object _instance;
     
     public ModelDirectory(){
@@ -105,8 +106,10 @@ public class ModelDirectory extends Storage{
             for(Field field:instance.getClass().getFields()){
                 Expose annot_key=field.getAnnotation(Expose.class);
                 if(annot_key instanceof Expose){
-                    Object value=field.get(instance);
-                    this.fields.put(field.getName(),Function.assignNotNull(value,""));
+                    field.setAccessible(true);
+                    Object value=Function.assignNotNull(field.get(instance),"");
+                    this.fields.put(field.getName(),value);
+                    this.arributes.put(field,value);
                 }
             }
         }catch(Exception ex){
@@ -116,24 +119,36 @@ public class ModelDirectory extends Storage{
     }
     
     public Object builder(){
+        String data=this.read();
         Object instance=this.getInstance();
-        instance=JSON.builder().fromJson(this.read(),instance.getClass());
-        for(Method method:instance.getClass().getMethods()){
-            Execute annot_execute=method.getAnnotation(Execute.class);
-            if(annot_execute==null){
-                continue;
+        switch(this.getType()){
+            case JSON:{
+                instance=JSON.builder().fromJson(data,instance.getClass());
+                for(Method method:instance.getClass().getMethods()){
+                    Execute annot_execute=method.getAnnotation(Execute.class);
+                    if(annot_execute==null){
+                        continue;
+                    }
+                    try{
+                        method.invoke(instance);
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+                }
+                break;
             }
-            try{
-                method.invoke(instance);
-            }catch(Exception ex){
-                ex.printStackTrace();
+            case ENV:{
+                ENV env=new ENV(data);
+                instance=JSON.builder().fromJson(JSON.builder().toJson(env.datas()),instance.getClass());
+                break;
             }
         }
         this.setInstance(instance);
         return this.getInstance();
     }
     
-    public String text(){
+    @Override
+    public String toString(){
         if(this.getType()==null){
             return null;
         }
@@ -174,7 +189,7 @@ public class ModelDirectory extends Storage{
     
     public boolean save(){
         if(this.getType()!=null && this.getSrc()!=null && this.isFile()){
-            return this.write(this.text());
+            return this.write(this.toString());
         }
         return false;
     }

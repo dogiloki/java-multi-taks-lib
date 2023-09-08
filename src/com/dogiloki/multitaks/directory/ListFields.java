@@ -7,7 +7,7 @@ import java.util.HashMap;
  * @author dogi_
  */
 
-public class ListFields extends HashMap<String,Object>{
+public class ListFields<T> extends HashMap<T,Object>{
     
     public ListFields(){
         

@@ -90,7 +90,7 @@ public class JSON implements DataFormat{
         return this.object.get(key);
     }
     
-    public Object getValue(int key){
+    public Object get(int key){
         return this.array.get(key);
     }
     
