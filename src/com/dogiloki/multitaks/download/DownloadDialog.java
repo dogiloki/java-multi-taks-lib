@@ -1,16 +1,5 @@
 package com.dogiloki.multitaks.download;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import com.dogiloki.multitaks.directory.Storage;
-import com.dogiloki.multitaks.directory.enums.DirectoryType;
-
 /**
  *
  * @author dogi_
