@@ -6,9 +6,9 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.dataformat.XML;
-import com.dogiloki.multitaks.directory.annotations.Execute;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 import java.lang.reflect.Method;
+import com.dogiloki.multitaks.directory.annotations.RunAfter;
 
 /**
  *
@@ -96,7 +96,7 @@ public class ModelDirectory extends Storage{
             return null;
         }
         for(Method method:instance.getClass().getMethods()){
-            Execute annot_execute=method.getAnnotation(Execute.class);
+            RunAfter annot_execute=method.getAnnotation(RunAfter.class);
             if(annot_execute==null){
                 continue;
             }
