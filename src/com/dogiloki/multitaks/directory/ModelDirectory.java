@@ -16,7 +16,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
+import com.dogiloki.multitaks.dataformat.XML;
 import com.dogiloki.multitaks.directory.annotations.Execute;
+import com.dogiloki.multitaks.directory.interfaces.DataFormat;
 import java.lang.reflect.Method;
 
 /**
@@ -89,18 +91,20 @@ public class ModelDirectory extends Storage{
     }
     
     public <T extends Object> T builder(){
-        String data=this.read();
+        String text=this.read();
+        DataFormat data=null;
         Object instance=this.getInstance();
         switch(this.getType()){
-            case JSON:{
-                instance=JSON.builder().fromJson(data,instance.getClass());
-                break;
-            }
-            case ENV:{
-                ENV env=new ENV(data);
-                instance=env.from(instance.getClass());
-                break;
-            }
+            case JSON: data=new JSON(text); break;
+            case ENV: data=new ENV(text); break;
+            case XML: data=new XML(text); break;
+        }
+        if(data==null){
+            return null;
+        }
+        instance=data.from(instance.getClass());
+        if(instance==null){
+            return null;
         }
         for(Method method:instance.getClass().getMethods()){
             Execute annot_execute=method.getAnnotation(Execute.class);
@@ -122,11 +126,12 @@ public class ModelDirectory extends Storage{
         if(this.getType()==null){
             return null;
         }
+        String text;
+        DataFormat data=null;
         Object instance=this.getInstance();
-        String str;
         switch(this.getType()){
-            case JSON: str=JSON.builder().toJson(instance); break;
-            case ENV: str=new ENV(instance).toString()+"\n"; break;
+            case JSON: data=new JSON(instance); break;
+            case ENV: data=new ENV(instance); break;
             case XML:{
                 try{
                     String xml="";
@@ -156,9 +161,12 @@ public class ModelDirectory extends Storage{
                     return "";
                 }
             }
-            default: str=null; break;
         }
-        return str;
+        if(data==null){
+            return "";
+        }
+        text=data.toString();
+        return text;
     }
     
     public boolean save(){

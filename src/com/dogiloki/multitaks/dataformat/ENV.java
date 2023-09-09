@@ -12,22 +12,20 @@ import java.util.Map;
 public class ENV extends DataFormat{
     
     public ENV(String text){
-        this.format(text.split("\n"));
-    }
-    
-    public ENV(String... args){
-        this.format(args);
+        super(text);
     }
     
     public ENV(Object instace){
         super(instace);
     }
     
-    private void format(String[] text){
-        if(text.length<=0){
-            return;
+    @Override
+    protected ListFields format(String text){
+        ListFields fields=new ListFields();
+        if(text.isEmpty()){
+            return fields;
         }
-        for(String line:text){
+        for(String line:text.split("\n")){
             if(line.isEmpty()){
                 continue;
             }
@@ -41,9 +39,9 @@ public class ENV extends DataFormat{
             int end_value=line.length();
             String key=line.substring(index_key,end_key);
             Object value=line.substring(index_value,end_value);
-            this.fields.put(key,value);
+            fields.put(key,value);
         }
-        this.json=JSON.builder().toJson(this.fields);
+        return fields;
     }
     
     @Override

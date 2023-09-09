@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.dogiloki.multitaks.StorageOld;
+import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.directory.interfaces.DataFormat;
@@ -40,68 +41,27 @@ public class JSON extends DataFormat{
         return new Gson();
     }
     
-    private String json;
-    private JsonParser parser;
-    private JsonArray array;
-    private JsonElement element;
-    private JsonObject object;
-    private int index;
-    private boolean is_array;
-    
-     public JSON(String json){
-        this.index=0;
-        this.json=json==null || json.trim().equals("")?null:json.trim();
-        this.init();
+    public JSON(String text){
+        super(text);
     }
     
-    public JSON(String dir, Class _class, DirectoryType type){
-        this.index=0;
-        switch(type){
-            case FILE: this.json=String.join(" ",StorageOld.readFile(_class,dir.trim())); break;
-        }
-        this.init();
-    }
-    
-    public JSON(String dir, DirectoryType type){
-        this.index=0;
-        switch(type){
-            case FILE: this.json=String.join(" ",new Storage(dir.trim()).read()); break;
-        }
-        this.init();
-    }
-    
-    private void init(){
-        if(this.json==null){
-            this.object=new JsonObject();
-            return;
-        }
-        this.parser=new JsonParser();
-        this.json=(this.json==null || this.json.equals(""))?"[]":this.json;
-        this.is_array=this.json.substring(0,1).equals("[") && this.json.substring(this.json.length()-1,this.json.length()).equals("]");
-        if(this.is_array){
-            this.array=this.parser.parse(this.json).getAsJsonArray();
-            //this.element=this.array.get(this.indice);
-            //this.object=this.element.getAsJsonObject();
-        }else{
-            this.object=this.parser.parse(this.json).getAsJsonObject();
-        }
-    }
-    
-    public boolean isArray(){
-        return this.is_array;
-    }
-    
-    public JSON toJson(String key){
-        return new JSON(this.getValue(key).toString());
+    public JSON(Object instace){
+        super(instace);
     }
     
     @Override
-    public Object getValue(String key){
-        return this.object.get(key);
+    protected ListFields format(String text){
+        ListFields fields=new ListFields();
+        if(text.isEmpty()){
+            return fields;
+        }
+        fields=JSON.builder().fromJson(text,ListFields.class);
+        return fields;
     }
     
-    public Object get(int key){
-        return this.array.get(key);
+    @Override
+    public String toString(){
+        return this.json;
     }
     
 }

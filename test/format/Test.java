@@ -11,8 +11,8 @@ public class Test{
     
     public Test(){
         Config c=new Config().builder();
-        Folder f=new Folder();
         /*
+        Folder f=new Folder();
         f.name="Hola";
         f.path="dsa/gfd/sa";
         c.folder=f;

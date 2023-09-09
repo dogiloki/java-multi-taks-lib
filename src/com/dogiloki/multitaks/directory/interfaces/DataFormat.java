@@ -14,8 +14,9 @@ public abstract class DataFormat{
     protected String json="";
     protected Object instace;
     
-    public DataFormat(){
-        
+    public DataFormat(String text){
+        this.fields=this.format(text);
+        this.json=JSON.builder().toJson(this.fields);
     }
     
     public DataFormat(Object instance){
@@ -23,6 +24,8 @@ public abstract class DataFormat{
         this.json=JSON.builder().toJson(instance);
         this.fields=JSON.builder().fromJson(this.json,ListFields.class);
     }
+    
+    protected abstract ListFields<String> format(String text);
     
     public <T extends Object> T from(Class clazz){
         this.instace=JSON.builder().fromJson(this.json,clazz);
