@@ -7,7 +7,7 @@ import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.dataformat.XML;
 import com.dogiloki.multitaks.directory.annotations.Execute;
-import com.dogiloki.multitaks.directory.interfaces.DataFormat;
+import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 import java.lang.reflect.Method;
 
 /**

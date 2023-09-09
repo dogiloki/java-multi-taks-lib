@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.directory.interfaces;
+package com.dogiloki.multitaks.dataformat.contracts;
 
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.directory.ListFields;

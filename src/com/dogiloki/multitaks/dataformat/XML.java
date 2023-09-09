@@ -1,7 +1,7 @@
 package com.dogiloki.multitaks.dataformat;
 
 import com.dogiloki.multitaks.directory.ListFields;
-import com.dogiloki.multitaks.directory.interfaces.DataFormat;
+import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 
 /**
  *
