@@ -29,7 +29,7 @@ public class Download extends ModelDirectory implements Runnable{
     public Download(String url, String path){
         super(path);
         this.url=url;
-        this.file_block=this.fileBlock(1024);
+        this.file_block=this.fileBlock(1024).append(true);
         this.metrics.file=this.getFile();
     }
     
@@ -81,7 +81,6 @@ public class Download extends ModelDirectory implements Runnable{
             this.metrics.totalSize(connection.getContentLength());
             int b=0;
             byte[] buffer=new byte[this.file_block.getBlockSize()];
-            System.out.println(this.file_block.readAll().length);
             this.in.skip(this.file_block.readAll().length);
             
             while(true){

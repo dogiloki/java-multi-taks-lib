@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 /**
  *
@@ -22,6 +21,7 @@ public class FileBlock{
     private FileOutputStream out;
     private int index=0;
     private byte[] element;
+    private boolean append=false;
     
     public FileBlock(String src, int block_size){
         this.src=src;
@@ -52,21 +52,21 @@ public class FileBlock{
     
     public void write(byte[] b)throws IOException{
         if(this.out==null){
-            this.out=new FileOutputStream(this.getSrc(),true);
+            this.out=new FileOutputStream(this.getSrc(),this.append());
         }
         this.out.write(b);
     }
     
     public void write(int b)throws IOException{
         if(this.out==null){
-            this.out=new FileOutputStream(this.getSrc(),true);
+            this.out=new FileOutputStream(this.getSrc(),this.append());
         }
         this.out.write(b);
     }
     
     public void write(byte[] buffer, int b1, int b2)throws IOException{
         if(this.out==null){
-            this.out=new FileOutputStream(this.getSrc(),true);
+            this.out=new FileOutputStream(this.getSrc(),this.append());
         }
         this.out.write(buffer,b1,b2);
     }
@@ -78,6 +78,15 @@ public class FileBlock{
         if(this.out!=null){
             this.out.close();
         }
+    }
+    
+    public boolean append(){
+        return this.append;
+    }
+    
+    public FileBlock append(boolean append){
+        this.append=append;
+        return this;
     }
     
     // Getters
