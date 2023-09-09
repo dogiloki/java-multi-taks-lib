@@ -10,11 +10,11 @@ import com.google.gson.annotations.Expose;
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.XML,src="config.xml")
+@Directory(type=DirectoryType.ENV,src="config.xml")
 public class Config extends ModelDirectory{
     
-    @Expose
-    public String folder;
+    //@Expose
+    public Folder folder;
     @Expose
     public double flotante;
     @Expose

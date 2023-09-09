@@ -10,9 +10,12 @@ import com.dogiloki.multitaks.dataformat.JSON;
 public class Test{
     
     public Test(){
-        Config c=(Config)new Config().builder();
+        Config c=new Config().builder();
+        Folder f=new Folder();
         /*
-        c.folder="Hola que tal";
+        f.name="Hola";
+        f.path="dsa/gfd/sa";
+        c.folder=f;
         c.flotante=1.70;
         c.peso=21;
         c.save();

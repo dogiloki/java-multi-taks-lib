@@ -10,20 +10,30 @@ import com.dogiloki.multitaks.StorageOld;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.directory.interfaces.DataFormat;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
+import java.lang.reflect.Type;
 
 /**
  *
  * @author dogi_
  */
 
-public class JSON implements DataFormat{
+public class JSON extends DataFormat{
     
     public static Gson gson(){
         return new Gson();
     }
     
     public static Gson builder(){
-        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().serializeNulls().serializeSpecialFloatingPointValues().setLenient().create();
+        return new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls()
+                .serializeSpecialFloatingPointValues()
+                .setLenient()
+                .create();
     }
     
     public static Gson builderDefault(){
@@ -35,17 +45,17 @@ public class JSON implements DataFormat{
     private JsonArray array;
     private JsonElement element;
     private JsonObject object;
-    private int indice;
+    private int index;
     private boolean is_array;
     
      public JSON(String json){
-        this.indice=0;
+        this.index=0;
         this.json=json==null || json.trim().equals("")?null:json.trim();
         this.init();
     }
     
     public JSON(String dir, Class _class, DirectoryType type){
-        this.indice=0;
+        this.index=0;
         switch(type){
             case FILE: this.json=String.join(" ",StorageOld.readFile(_class,dir.trim())); break;
         }
@@ -53,7 +63,7 @@ public class JSON implements DataFormat{
     }
     
     public JSON(String dir, DirectoryType type){
-        this.indice=0;
+        this.index=0;
         switch(type){
             case FILE: this.json=String.join(" ",new Storage(dir.trim()).read()); break;
         }

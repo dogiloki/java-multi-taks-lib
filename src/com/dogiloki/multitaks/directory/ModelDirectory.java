@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.directory;
 
 import java.io.StringWriter;
-import java.lang.reflect.Field;
 import java.util.Map;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
@@ -18,7 +17,6 @@ import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.directory.annotations.Execute;
-import com.google.gson.annotations.Expose;
 import java.lang.reflect.Method;
 
 /**
@@ -27,8 +25,6 @@ import java.lang.reflect.Method;
  */
 public class ModelDirectory extends Storage{
     
-    private ListFields<String> fields=new ListFields();
-    private ListFields<Field> arributes=new ListFields();
     private Object _instance;
     
     public ModelDirectory(){
@@ -74,7 +70,6 @@ public class ModelDirectory extends Storage{
     }
     
     private void create(){
-        this.loadFields();
         if(this.getType()==null ||this.getSrc()==null){
             return;
         }
@@ -93,58 +88,33 @@ public class ModelDirectory extends Storage{
         this._instance=instance;
     }
     
-    public ListFields loadFields(){
-        try{
-            Object instance=this.getInstance();
-            Directory annot_directory=instance.getClass().getAnnotation(Directory.class);
-            if(annot_directory instanceof Directory){
-                this.setType(annot_directory.type());
-                if(this.isFolder()){
-                    return this.fields;
-                }
-            }
-            for(Field field:instance.getClass().getFields()){
-                Expose annot_key=field.getAnnotation(Expose.class);
-                if(annot_key instanceof Expose){
-                    field.setAccessible(true);
-                    Object value=Function.assignNotNull(field.get(instance),"");
-                    this.fields.put(field.getName(),value);
-                    this.arributes.put(field,value);
-                }
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return this.fields;
-    }
-    
-    public Object builder(){
+    public <T extends Object> T builder(){
         String data=this.read();
         Object instance=this.getInstance();
         switch(this.getType()){
             case JSON:{
                 instance=JSON.builder().fromJson(data,instance.getClass());
-                for(Method method:instance.getClass().getMethods()){
-                    Execute annot_execute=method.getAnnotation(Execute.class);
-                    if(annot_execute==null){
-                        continue;
-                    }
-                    try{
-                        method.invoke(instance);
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                    }
-                }
                 break;
             }
             case ENV:{
                 ENV env=new ENV(data);
-                instance=JSON.builder().fromJson(JSON.builder().toJson(env.datas()),instance.getClass());
+                instance=env.from(instance.getClass());
                 break;
             }
         }
+        for(Method method:instance.getClass().getMethods()){
+            Execute annot_execute=method.getAnnotation(Execute.class);
+            if(annot_execute==null){
+                continue;
+            }
+            try{
+                method.invoke(instance);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
         this.setInstance(instance);
-        return this.getInstance();
+        return (T)this.getInstance();
     }
     
     @Override
@@ -152,21 +122,23 @@ public class ModelDirectory extends Storage{
         if(this.getType()==null){
             return null;
         }
-        this.loadFields();
+        Object instance=this.getInstance();
+        String str;
         switch(this.getType()){
-            case JSON: return JSON.builder().toJson(this.fields);
-            case ENV: return new ENV(this.fields).toString()+"\n";
+            case JSON: str=JSON.builder().toJson(instance); break;
+            case ENV: str=new ENV(instance).toString()+"\n"; break;
             case XML:{
                 try{
                     String xml="";
-                    for(Map.Entry<String,Object> entry:this.fields.entrySet()){
-                        String key=entry.getKey();
+                    /*
+                    for(Map.Entry entry:fields.entrySet()){
+                        String key=entry.getKey().toString();
                         Object value=entry.getValue();
                         DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
                         DocumentBuilder builder=factory.newDocumentBuilder();
                         Document document=builder.newDocument();
                         Element root_element=document.createElement(key);
-                        root_element.appendChild(document.createTextNode(String.valueOf(value)));
+                        root_element.appendChild(document.createTextNode(value.toString()));
                         document.appendChild(root_element);
                         TransformerFactory transformer_factory=TransformerFactory.newInstance();
                         Transformer transformer=transformer_factory.newTransformer();
@@ -177,14 +149,16 @@ public class ModelDirectory extends Storage{
                         transformer.transform(source,result);
                         xml+=writer.toString()+"\n";
                     }
+                    */
                     return xml.substring(0,xml.length()-1);
                 }catch(Exception ex){
                     ex.printStackTrace();
                     return "";
                 }
             }
-            default: return null;
+            default: str=null; break;
         }
+        return str;
     }
     
     public boolean save(){
