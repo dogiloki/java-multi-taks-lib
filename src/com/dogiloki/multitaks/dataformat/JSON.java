@@ -2,20 +2,8 @@ package com.dogiloki.multitaks.dataformat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.dogiloki.multitaks.StorageOld;
 import com.dogiloki.multitaks.directory.ListFields;
-import com.dogiloki.multitaks.directory.Storage;
-import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.directory.interfaces.DataFormat;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-import java.lang.reflect.Type;
 
 /**
  *
@@ -62,6 +50,10 @@ public class JSON extends DataFormat{
     @Override
     public String toString(){
         return this.json;
+    }
+    
+    public JSON toJson(String key){
+            return new JSON(this.getValue(key));
     }
     
 }

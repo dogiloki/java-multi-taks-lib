@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.JSON,src="config.xml")
+@Directory(type=DirectoryType.JSON,src="config.json")
 public class Config extends ModelDirectory{
     
     @Expose

@@ -1,19 +1,8 @@
 package com.dogiloki.multitaks.directory;
 
-import java.io.StringWriter;
-import java.util.Map;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import com.dogiloki.multitaks.Function;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import com.dogiloki.multitaks.dataformat.ENV;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.dataformat.XML;

@@ -10,17 +10,8 @@ import com.dogiloki.multitaks.dataformat.JSON;
 public class Test{
     
     public Test(){
-        Config c=new Config().builder();
-        /*
-        Folder f=new Folder();
-        f.name="Hola";
-        f.path="dsa/gfd/sa";
-        c.folder=f;
-        c.flotante=1.70;
-        c.peso=21;
-        c.save();
-        */
-        System.out.println(c.toString());
+        JSON j=new JSON("{\"folder\":{\"path\":\"dsa/gfd/sa\",\"name\":\"Hola\"},\"flotante\":1.7,\"peso\":21}");
+        System.out.println(j.toJson("folder").getValue("path"));
     }
     
     public static void main(String args[]){
