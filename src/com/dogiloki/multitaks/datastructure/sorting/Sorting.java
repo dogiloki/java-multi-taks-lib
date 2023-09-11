@@ -41,18 +41,21 @@ public class Sorting<T> extends SortingAlgorithm{
         executor.shutdown();
         try{
             executor.awaitTermination(Long.MAX_VALUE,TimeUnit.NANOSECONDS);
-            TreeBinary<List<T>> tree=new TreeBinary();
+            TreeBinary<T> tree=new TreeBinary();
             tree.onEvaluate((item)->{
-                return this.evaluateWith().run(item.get(0));
+                return this.evaluateWith().run(item);
             });
-            if(this.use_threads<=1){
+            if(this.use_threads>1){
+                /*
                 for(List<T> item:this.items){
-                    tree.add(item);
+                    tree.addAll(item);
                 }
-                Iterator<List<T>> i=this.orderBy()==OrderBy.ASC?tree.inOrden().nodes().values().iterator():tree.inOrdenReverse().nodes().values().iterator();
+                Iterator<T> i=this.orderBy()==OrderBy.ASC?tree.inOrden().nodes().values().iterator():tree.inOrdenReverse().nodes().values().iterator();
                 while(i.hasNext()){
-                    list.addAll(i.next());
+                    list.add(i.next());
                 }
+                */
+                throw new Exception("YOU CANNOT USE MORE THAN 1 THREAD");
             }else{
                 list=items.get(0);
             }

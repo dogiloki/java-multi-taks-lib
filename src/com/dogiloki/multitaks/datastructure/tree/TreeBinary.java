@@ -5,6 +5,7 @@ import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import java.util.Iterator;
 import com.dogiloki.multitaks.callbacks.OnCallback;
 import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
+import java.util.List;
 
 /**
  *
@@ -33,6 +34,12 @@ public class TreeBinary<T> implements Iterator<T>{
             this.root_node=node;
         }else{
             this.root_node.onEvaluate(this.onEvaluate()).add(node);
+        }
+    }
+    
+    public void addAll(List<T> values){
+        for(T value:values){
+            this.add(value);
         }
     }
     

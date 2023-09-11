@@ -45,7 +45,7 @@ public class Test{
             p.save();
         }
         */
-        Sorting.default_order_algorithm=OrderAlgorithm.INSERTION_SORT;
+        //Sorting.default_order_algorithm=OrderAlgorithm.INSERTION_SORT;
         RecordList<Persona> personas=new Persona().all().orderBy("nombre");
         Persona p;
         int index=0;
