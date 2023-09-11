@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.dogiloki.multitaks.datastructure.tree.TreeBinary;
 import com.dogiloki.multitaks.callbacks.OnCallback;
+import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -14,7 +18,8 @@ import com.dogiloki.multitaks.callbacks.OnCallback;
 
 public class Sorting<T> extends SortingAlgorithm{
     
-    private List<T> items=new ArrayList<>();
+    private int use_threads=1;
+    private List<List<T>> items=new ArrayList<>();
     private OnCallback<T> evaluate_with=(item)->item;
     
     public Sorting(){
@@ -22,17 +27,72 @@ public class Sorting<T> extends SortingAlgorithm{
     }
     
     public List<T> sort(){
-        switch(this.orderAlgorithm()){
-            case BUBBLE_SORT: return this.bubbleSort();
-            case SELECTION_SORT: return this.selectionSort();
-            case INSERTION_SORT: return this.insertionSort();
-            case BINARY_TREE_SORT: return this.binaryTreeSort();
+        List<T> list=new ArrayList<>();
+        ExecutorService executor=Executors.newFixedThreadPool(this.use_threads);
+        for(int index=0; index<this.use_threads; index++){
+            final int current_index=index;
+            executor.execute(new Runnable(){
+                @Override
+                public void run(){
+                    items.set(current_index,sortAlgorithm(items.get(current_index)));
+                }
+            });
         }
-        return this.items();
+        executor.shutdown();
+        try{
+            executor.awaitTermination(Long.MAX_VALUE,TimeUnit.NANOSECONDS);
+            TreeBinary<List<T>> tree=new TreeBinary();
+            tree.onEvaluate((item)->{
+                return this.evaluateWith().run(item.get(0));
+            });
+            if(this.use_threads<=1){
+                for(List<T> item:this.items){
+                    tree.add(item);
+                }
+                Iterator<List<T>> i=this.orderBy()==OrderBy.ASC?tree.inOrden().nodes().values().iterator():tree.inOrdenReverse().nodes().values().iterator();
+                while(i.hasNext()){
+                    list.addAll(i.next());
+                }
+            }else{
+                list=items.get(0);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return list;
     }
     
-    public List<T> bubbleSort(){
-        List<T> items=this.items();
+    private List<T> sortAlgorithm(List<T> items){
+        switch(this.orderAlgorithm()){
+            case BUBBLE_SORT: return this.bubbleSort(items);
+            case SELECTION_SORT: return this.selectionSort(items);
+            case INSERTION_SORT: return this.insertionSort(items);
+            case BINARY_TREE_SORT: return this.binaryTreeSort(items);
+        }
+        return null;
+    }
+    
+    public T minor(List<T> items){
+        T done=items.get(0);
+        for(T item:items){
+            if(Function.compareTo(this.evaluateWith().run(item),this.evaluateWith().run(done))<0){
+                done=item;
+            }
+        }
+        return done;
+    }
+    
+    public T major(List<T> items){
+        T done=items.get(0);
+        for(T item:items){
+            if(Function.compareTo(this.evaluateWith().run(item),this.evaluateWith().run(done))>0){
+                done=item;
+            }
+        }
+        return done;
+    }
+    
+    public List<T> bubbleSort(List<T> items){
         T aux;
         boolean loop;
         do{
@@ -50,12 +110,10 @@ public class Sorting<T> extends SortingAlgorithm{
                 loop=true;
             }
         }while(loop);
-        this.items(items);
-        return this.items();
+        return items;
     }
     
-    public List<T> selectionSort(){
-        List<T> items=this.items();
+    public List<T> selectionSort(List<T> items){
         T aux;
         int min;
         for(int index=0; index<items.size(); index++){
@@ -73,12 +131,10 @@ public class Sorting<T> extends SortingAlgorithm{
             items.set(index,items.get(min));
             items.set(min,aux);
         }
-        this.items(items);
-        return this.items();
+        return items;
     }
     
-    public List<T> insertionSort(){
-        List<T> items=this.items();
+    public List<T> insertionSort(List<T> items){
         T aux;
         int posi;
         for(int index=0; index<items.size(); index++){
@@ -96,18 +152,17 @@ public class Sorting<T> extends SortingAlgorithm{
             }
             items.set(posi,aux);
         }
-        this.items(items);
-        return this.items();
+        return items;
     }
     
-    public List<T> binaryTreeSort(){
-        List<T> items=new ArrayList<>();
+    public List<T> binaryTreeSort(List<T> items){
+        List<T> tree_items=new ArrayList<>();
         TreeBinary<T> tree=new TreeBinary();
         tree.onEvaluate((item)->this.evaluateWith().run(item));
         tree.onOrder((item)->{
-            items.add(item);
+            tree_items.add(item);
         });
-        for(T item:this.items()){
+        for(T item:items){
             tree.add(item);
         }
         if(this.orderBy()==OrderBy.ASC){
@@ -116,7 +171,7 @@ public class Sorting<T> extends SortingAlgorithm{
         if(this.orderBy()==OrderBy.DESC){
             tree.inOrdenReverse();
         }
-        return items;
+        return tree_items;
     }
     
     public OnCallback<T> evaluateWith(){
@@ -128,12 +183,17 @@ public class Sorting<T> extends SortingAlgorithm{
         return this;
     }
     
-    public List<T> items(){
-        return this.items;
-    }
-    
     public Sorting items(List<T> items){
-        this.items=items;
+        int len=Math.floorDiv(items.size(),this.use_threads);
+        int index=0;
+        for(int a=0; a<this.use_threads; a++){
+            int end=index+len;
+            if(a==this.use_threads-1){
+                end=items.size();
+            }
+            this.items.add(items.subList(index,end));
+            index=end;
+        }
         return this;
     }
     
