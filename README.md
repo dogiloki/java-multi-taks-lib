@@ -7,3 +7,6 @@ Esta librería cuenta con:
   - Evento para monitorea cambios en un directorio
   - Entre otras funciones como, Convertir bytes en KB, MB, GB y TB, Asignar el primer valor diferente a nulo, dentro de un array, Obtener ip y host del dispositivo
   - Pequeño sistema de almacenamiento basado en modelo de documentos con contenido JSON
+
+## Documentación
+https://wolftri.gitbook.io/java-multitaks-lib/
