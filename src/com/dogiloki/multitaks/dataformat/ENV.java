@@ -22,7 +22,7 @@ public class ENV extends DataFormat{
     @Override
     protected ListFields format(String text){
         ListFields fields=new ListFields();
-        if(text.isEmpty()){
+        if(text==null || text.isEmpty()){
             return fields;
         }
         for(String line:text.split("\n")){

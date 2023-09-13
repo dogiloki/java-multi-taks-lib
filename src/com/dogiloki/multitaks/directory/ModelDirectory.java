@@ -34,19 +34,19 @@ public class ModelDirectory extends Storage{
         this._aim(instance,src);
     }
     
-    public void aim(Object instance){
-        this._aim(instance,null);
+    public ModelDirectory aim(Object instance){
+        return this._aim(instance,null);
     }
     
-    public void aim(String src){
-        this._aim(null,src);
+    public ModelDirectory aim(String src){
+        return this._aim(null,src);
     }
     
-    public void aim(Object instance, String src){
-        this._aim(instance,src);
+    public ModelDirectory aim(Object instance, String src){
+        return this._aim(instance,src);
     }
     
-    private void _aim(Object instance, String src){
+    private ModelDirectory _aim(Object instance, String src){
         this.setInstance(instance);
         this.setSrc(src);
         Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
@@ -58,6 +58,7 @@ public class ModelDirectory extends Storage{
         }
         this.create();
         super.aim(this.getSrc(),this.getType());
+        return this;
     }
     
     private void create(){

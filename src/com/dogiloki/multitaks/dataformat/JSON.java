@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 
 /**
  *
@@ -18,6 +20,7 @@ public class JSON extends DataFormat{
     
     public static Gson builder(){
         return new GsonBuilder()
+                .excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT)
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
                 .serializeSpecialFloatingPointValues()

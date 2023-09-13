@@ -1,5 +1,6 @@
 package database;
 
+import com.dogiloki.multitaks.Configuration;
 import com.dogiloki.multitaks.database.Collection;
 import com.dogiloki.multitaks.database.Database;
 import com.dogiloki.multitaks.database.ModelDB;
@@ -14,6 +15,7 @@ import com.dogiloki.multitaks.datastructure.sorting.enums.OrderBy;
 import com.dogiloki.multitaks.database.record.Record;
 import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
+import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderAlgorithm;
 import com.dogiloki.multitaks.directory.Storage;
 import com.github.javafaker.Faker;
@@ -33,12 +35,8 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        Database db=new Database("db");
-        // Crear un registro con datos
-        Record record=new Record();
-        RecordField fields_persona=record.getFields();
-        // Convertir los datos en un JSON
-        String json=record.toString();
+        Configuration config=new Configuration().aim("config.env").builder();
+        System.out.println(Configuration.FOLDER);
     }
     
     public static void main(String args[]){
