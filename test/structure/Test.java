@@ -20,7 +20,6 @@ import database.Persona;
 public class Test{
     
     public Test(){
-        /*
         Runtime runtime=Runtime.getRuntime();
         long initial_memory=runtime.totalMemory()-runtime.freeMemory();
         TreeBinary<Persona> tree=new TreeBinary();
@@ -37,7 +36,6 @@ public class Test{
         long final_memory=runtime.totalMemory()-runtime.freeMemory();
         long used_memory=final_memory-initial_memory;
         System.out.println("Memoria usada: "+Storage.convertSize(used_memory));
-        */
     }
     
     public static void main(String args[]){

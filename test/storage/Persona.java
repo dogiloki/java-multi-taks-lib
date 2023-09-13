@@ -1,4 +1,4 @@
-package test.storage;
+package storage;
 
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.annotations.Directory;

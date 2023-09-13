@@ -21,7 +21,7 @@ public class Database extends ModelDirectory{
         this.LOGGER=new Logger(src+"/"+Database.FOLDER_LOGS);
         this.LOGGER.info("using database "+src);
         src+="/"+Database.FOLDER_COLLECTIONS;
-        super.aim(this,src);
+        super.aim(src);
     }
     
     public Collection collection(String name, Class clazz){

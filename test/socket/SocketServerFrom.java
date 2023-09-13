@@ -1,78 +1,48 @@
-package test.socket;
+package socket;
 
-import java.io.FileNotFoundException;
-import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import com.dogiloki.multitaks.code.Code;
-import com.dogiloki.multitaks.directory.FileBlock;
-import com.dogiloki.multitaks.directory.Storage;
-import com.dogiloki.multitaks.socket.SocketClient;
+import com.dogiloki.multitaks.socket.SocketServer;
 
 /**
  *
  * @author dogi_
  */
 
-public class SocektClientFrom extends javax.swing.JFrame {
-
-    private SocketClient client;
+public class SocketServerFrom extends javax.swing.JFrame{
     
-    public SocektClientFrom() {
+    public SocketServer server;
+
+    public SocketServerFrom(){
         initComponents();
-        this.client=new SocketClient();
+        this.server=new SocketServer();
     }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel5 = new javax.swing.JLabel();
         box_port = new javax.swing.JTextField();
-        btn_conect = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        box_ip = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        box_channel = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        box_message = new javax.swing.JTextField();
-        btn_send = new javax.swing.JButton();
+        btn_create = new javax.swing.JButton();
         box_channel_on = new javax.swing.JTextField();
         btn_on = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         box_messages = new javax.swing.JTextArea();
+        box_channel = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        box_message = new javax.swing.JTextField();
+        btn_send = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel5.setText("Port");
-
         box_port.setText("1234");
 
-        btn_conect.setText("Conectarse");
-        btn_conect.addActionListener(new java.awt.event.ActionListener() {
+        btn_create.setText("Crear");
+        btn_create.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_conectActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("IP");
-
-        box_ip.setText("192.168.1.73");
-
-        jLabel3.setText("Canal");
-
-        box_channel.setText("test");
-
-        jLabel2.setText("Mensaje");
-
-        box_message.setText("Hola desde cliente");
-
-        btn_send.setText("Enviar");
-        btn_send.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_sendActionPerformed(evt);
+                btn_createActionPerformed(evt);
             }
         });
 
@@ -85,11 +55,28 @@ public class SocektClientFrom extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Canal");
+
         box_messages.setColumns(20);
         box_messages.setRows(5);
         jScrollPane1.setViewportView(box_messages);
 
+        box_channel.setText("test");
+
+        jLabel2.setText("Mensaje");
+
         jLabel6.setText("Canal");
+
+        box_message.setText("Hola desde servidor");
+
+        btn_send.setText("Enviar");
+        btn_send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_sendActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Port");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,19 +86,9 @@ public class SocektClientFrom extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel5)
-                        .addGap(172, 172, 172))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(box_ip, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(box_port, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_conect))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(box_channel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(box_message)
+                        .addComponent(box_message, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_send))
                     .addComponent(jScrollPane1)
@@ -119,14 +96,18 @@ public class SocektClientFrom extends javax.swing.JFrame {
                         .addComponent(box_channel_on)
                         .addGap(1, 1, 1)
                         .addComponent(btn_on))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(box_port)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_create))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(102, 102, 102)
                                 .addComponent(jLabel2))
-                            .addComponent(jLabel6))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -134,14 +115,11 @@ public class SocektClientFrom extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(box_ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(box_port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_conect))
+                    .addComponent(btn_create))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -166,24 +144,28 @@ public class SocektClientFrom extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_conectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_conectActionPerformed
+    private void btn_createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_createActionPerformed
         try{
-            if(this.client.isStart()){
-                this.client.close();
+            if(this.server.isStart()){
+                this.server.close();
                 return;
             }
-            this.client.start(this.box_ip.getText(),Integer.parseInt(this.box_port.getText()));
-            this.client.on("welcome",(message)->{
-                this.box_messages.setText(this.box_messages.getText()+message+"\n");
-            });
+            this.server.start(Integer.parseInt(this.box_port.getText()));
+            this.server.onConnect=(socket)->{
+                try{
+                    socket.emit("welcome","Bienvenido al servidor");
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            };
         }catch(Exception ex){
-            JOptionPane.showMessageDialog(null,ex,"Error2",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btn_conectActionPerformed
+    }//GEN-LAST:event_btn_createActionPerformed
 
     private void btn_sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendActionPerformed
         try{
-            this.client.emit(this.box_channel.getText(),this.box_message.getText());
+            this.server.emit(this.box_channel.getText(),this.box_message.getText());
         }catch(Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
@@ -191,7 +173,7 @@ public class SocektClientFrom extends javax.swing.JFrame {
 
     private void btn_onActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_onActionPerformed
         try{
-            this.client.on(this.box_channel_on.getText(),(message)->{
+            this.server.on(this.box_channel_on.getText(),(message)->{
                 this.box_messages.setText(this.box_messages.getText()+message+"\n");
             });
         }catch(Exception ex){
@@ -202,7 +184,7 @@ public class SocektClientFrom extends javax.swing.JFrame {
     public static void main(String args[]){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SocektClientFrom().setVisible(true);
+                new SocketServerFrom().setVisible(true);
             }
         });
     }
@@ -210,16 +192,14 @@ public class SocektClientFrom extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField box_channel;
     private javax.swing.JTextField box_channel_on;
-    private javax.swing.JTextField box_ip;
     private javax.swing.JTextField box_message;
     private javax.swing.JTextArea box_messages;
     private javax.swing.JTextField box_port;
-    private javax.swing.JButton btn_conect;
+    private javax.swing.JButton btn_create;
     private javax.swing.JButton btn_on;
     private javax.swing.JButton btn_send;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;

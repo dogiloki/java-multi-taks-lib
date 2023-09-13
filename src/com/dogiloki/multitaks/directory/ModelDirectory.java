@@ -95,16 +95,19 @@ public class ModelDirectory extends Storage{
         if(instance==null){
             return null;
         }
-        for(Method method:instance.getClass().getMethods()){
-            RunAfter annot_execute=method.getAnnotation(RunAfter.class);
-            if(annot_execute==null){
-                continue;
+        try{
+            if(instance instanceof ModelDirectory){
+                instance.getClass().getMethod("aim",String.class).invoke(instance,this.getSrc());
             }
-            try{
+            for(Method method:instance.getClass().getMethods()){
+                RunAfter annot_execute=method.getAnnotation(RunAfter.class);
+                if(annot_execute==null){
+                    continue;
+                }
                 method.invoke(instance);
-            }catch(Exception ex){
-                ex.printStackTrace();
             }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
         this.setInstance(instance);
         return (T)this.getInstance();

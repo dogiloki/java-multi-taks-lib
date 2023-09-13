@@ -1,4 +1,4 @@
-package test.storage;
+package storage;
 
 import com.google.gson.annotations.Expose;
 

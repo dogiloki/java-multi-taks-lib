@@ -1,4 +1,4 @@
-package test.storage;
+package storage;
 
 import java.util.Base64;
 import com.dogiloki.multitaks.code.Code;

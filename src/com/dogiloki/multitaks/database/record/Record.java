@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Record{
     
-    public interface getField{
+    public interface CallRecordField{
         public void execute(String key, Object value);
     }
     
@@ -25,8 +25,8 @@ public class Record{
     }
     
     
-    public Record(long number){
-        this.setLineNumber(number);
+    public Record(long line_number){
+        this.setLineNumber(line_number);
     }
     
     public Record(RecordField fields){
@@ -38,34 +38,17 @@ public class Record{
         this.setLineNumber(number);
     }
     
-    public boolean filter(Filter f){
-        f.record(this);
-        return f.logic();
+    public boolean filter(Filter filter){
+        filter.record(this);
+        return filter.logic();
     }
     
-    public void setLineNumber(long number){
-        this.line_number=number;
-    }
-    
-    public long getLineNumber(){
-        return this.line_number;
-    }
-    
-    public RecordField getFields(){
-        return this.fields;
-    }
-    
-    public void getFields(getField action){
+    public void getFields(CallRecordField action){
         int index=0;
         for(Map.Entry<String,Object> entry:this.fields.entrySet()){
             action.execute(entry.getKey(),entry.getValue());
             index++;
         }
-    }
-    
-    public Record setFields(RecordField fields){
-        this.fields=fields;
-        return this;
     }
     
     public String toJson(){
@@ -74,15 +57,6 @@ public class Record{
     
     public String getId(){
         return (String)this.fields.get(this.field_id);
-    }
-    
-    public String fieldId(){
-        return this.field_id;
-    }
-    
-    public String fieldId(String field_id){
-        this.field_id=field_id;
-        return this.fieldId();
     }
     
     public Record setId(Object value){
@@ -107,6 +81,31 @@ public class Record{
     public Record remove(String key){
         this.fields.remove(key);
         return this;
+    }
+    
+    // Setters
+    public Record setLineNumber(long line_number){
+        this.line_number=line_number;
+        return this;
+    }
+    public Record setFields(RecordField fields){
+        this.fields=fields;
+        return this;
+    }
+    public Record fieldId(String field_id){
+        this.field_id=field_id;
+        return this;
+    }
+    
+    // Getters
+    public long getLineNumber(){
+        return this.line_number;
+    }
+    public RecordField getFields(){
+        return this.fields;
+    }
+    public String fieldId(){
+        return this.field_id;
     }
     
 }
