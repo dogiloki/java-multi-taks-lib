@@ -12,17 +12,18 @@ public class ConfigFile{
     
     private static Map<Class,Object> instance=new HashMap<>();
     
-    public static void load(Class clazz){
-        ConfigFile._load(clazz,null);
+    public static <T extends Object> T load(Class clazz){
+        return ConfigFile._load(clazz,null);
     }
     
-    public static void load(Class clazz, String src){
-        ConfigFile._load(clazz,src);
+    public static <T extends Object> T load(Class clazz, String src){
+        return ConfigFile._load(clazz,src);
     }
     
-    private static void _load(Class clazz, String src){
+    private static <T extends Object> T _load(Class clazz, String src){
+        T model=null;
         try{
-            Object model=new ModelDirectory().aim(clazz.newInstance(),src).builder();
+            model=new ModelDirectory().aim(clazz.newInstance(),src).builder();
             ModelDirectory model_directory=new ModelDirectory().aim(model,src);
             model_directory.save();
             model_directory.close();
@@ -30,6 +31,7 @@ public class ConfigFile{
         }catch(Exception ex){
             ex.printStackTrace();
         }
+        return model;
     }
     
 }
