@@ -88,6 +88,7 @@ public class ModelDirectory extends Storage{
             case JSON: data=new JSON(text); break;
             case ENV: data=new ENV(text); break;
             case XML: data=new XML(text); break;
+            default: data=null;
         }
         if(data==null){
             return null;

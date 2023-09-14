@@ -1,6 +1,5 @@
-package com.dogiloki.multitaks;
+package com.dogiloki.multitaks.database;
 
-import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.google.gson.annotations.Expose;
@@ -11,11 +10,11 @@ import com.google.gson.annotations.Expose;
  */
 
 @Directory(type=DirectoryType.ENV)
-public class Configuration extends ModelDirectory{
+public class DatabaseConfig{
     
     @Expose
-    public static String FOLDER;
+    public static String FOLDER_COLLECTIONS="data";
     @Expose
-    public String hola;
+    public static String FOLDER_LOGS="logs";
     
 }

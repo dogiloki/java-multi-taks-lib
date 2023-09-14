@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.database;
 
+import com.dogiloki.multitaks.directory.ConfigFile;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
@@ -12,15 +13,13 @@ import com.dogiloki.multitaks.logger.Logger;
 
 @Directory(type=DirectoryType.FOLDER)
 public class Database extends ModelDirectory{
-    
-    public final static String FOLDER_COLLECTIONS="data";
-    public final static String FOLDER_LOGS="logs";
     public final Logger LOGGER;
     
     public Database(String src){
-        this.LOGGER=new Logger(src+"/"+Database.FOLDER_LOGS);
+        ConfigFile.load(DatabaseConfig.class,src+"/config.env");
+        this.LOGGER=new Logger(src+"/"+DatabaseConfig.FOLDER_LOGS);
         this.LOGGER.info("using database "+src);
-        src+="/"+Database.FOLDER_COLLECTIONS;
+        src+="/"+DatabaseConfig.FOLDER_COLLECTIONS;
         super.aim(src);
     }
     

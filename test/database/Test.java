@@ -1,6 +1,6 @@
 package database;
 
-import com.dogiloki.multitaks.Configuration;
+import com.dogiloki.multitaks.database.DatabaseConfig;
 import com.dogiloki.multitaks.database.Collection;
 import com.dogiloki.multitaks.database.Database;
 import com.dogiloki.multitaks.database.ModelDB;
@@ -17,6 +17,7 @@ import com.dogiloki.multitaks.database.record.RecordField;
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderAlgorithm;
+import com.dogiloki.multitaks.directory.ConfigFile;
 import com.dogiloki.multitaks.directory.Storage;
 import com.github.javafaker.Faker;
 import java.time.LocalDate;
@@ -35,8 +36,7 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        Configuration config=new Configuration().aim("config.env").builder();
-        System.out.println(Configuration.FOLDER);
+        
     }
     
     public static void main(String args[]){
