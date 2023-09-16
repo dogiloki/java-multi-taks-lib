@@ -32,11 +32,6 @@ public class Collection extends Storage{
         this.aim(this.getSrc(),DirectoryType.FILE);
     }
     
-    public Collection db(Database db){
-        this.db=db;
-        return this;
-    }
-    
     public Collection aim(String src){
         this.setSrc(src);
         new Storage(src,DirectoryType.FILE).exists(true);
@@ -133,10 +128,6 @@ public class Collection extends Storage{
         return new RecordList(lines,this.clazz);
     }
     
-    public Database getDB(){
-        return this.db;
-    }
-    
     @Override
     public boolean delete(){
         boolean done=super.delete();
@@ -146,6 +137,17 @@ public class Collection extends Storage{
             this.getDB().LOGGER.info("could not deleted "+this.getName()+" collection");
         }
         return done;
+    }
+    
+    // Setters
+    public Collection db(Database db){
+        this.db=db;
+        return this;
+    }
+    
+    // Getters
+    public Database getDB(){
+        return this.db;
     }
     
 }
