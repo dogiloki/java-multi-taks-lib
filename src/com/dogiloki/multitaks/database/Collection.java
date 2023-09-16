@@ -25,11 +25,6 @@ public class Collection extends Storage{
         
     }
     
-    public Collection db(Database db){
-        this.db=db;
-        return this;
-    }
-    
     public Collection(String src, Class clazz){
         this.clazz=clazz;
         this.setSrc(src);
@@ -37,10 +32,16 @@ public class Collection extends Storage{
         this.aim(this.getSrc(),DirectoryType.FILE);
     }
     
-    public void aim(String src){
+    public Collection db(Database db){
+        this.db=db;
+        return this;
+    }
+    
+    public Collection aim(String src){
         this.setSrc(src);
         new Storage(src,DirectoryType.FILE).exists(true);
         this.aim(this.getSrc(),DirectoryType.FILE);
+        return this;
     }
     
     public boolean insert(Record record){
@@ -53,7 +54,7 @@ public class Collection extends Storage{
         return this._insert(records);
     }
     
-    public boolean _insert(List<Record> records){
+    private boolean _insert(List<Record> records){
         String json="";
         this.aim(this.getSrc(),DirectoryType.FILE);
         int index=0;
@@ -69,40 +70,51 @@ public class Collection extends Storage{
     }
     
     public boolean update(Filter filter, Record record){
-        Record record_find=(Record)this.find(filter).first();
-        if(record_find==null || record==null){
+        RecordList<Record> records_find=this.find(filter);
+        Record record_find;
+        boolean matching=false;
+        boolean done=false;
+        while((record_find=records_find.next())==null){
+            matching=true;
+            for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
+                if(entry.getKey().equals(record_find.fieldId())){
+                    continue;
+                }
+                record_find.set(entry.getKey(),entry.getValue());
+            }
+            done=this.writeLine(record_find.toJson(),record_find.getLineNumber());
+            if(done){
+                this.getDB().LOGGER.info("updated ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
+            }else{
+                this.getDB().LOGGER.info("could not update ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
+            }
+            this.flush();
+        }
+        if(!matching){
             this.getDB().LOGGER.info("no records matching ("+filter.toString()+") in "+this.getName());
             return false;
         }
-        for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
-            if(entry.getKey().equals(record_find.fieldId())){
-                continue;
-            }
-            record_find.set(entry.getKey(),entry.getValue());
-        }
-        boolean done=this.writeLine(record_find.toJson(),record_find.getLineNumber());
-        if(done){
-            this.getDB().LOGGER.info("updated ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
-        }else{
-            this.getDB().LOGGER.info("could not update ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
-        }
-        this.flush();
         return done;
     }
     
     public boolean delete(Filter filter){
-        Record record_find=(Record)this.find(filter).first();
-        if(record_find==null){
+        RecordList<Record> records_find=this.find(filter);
+        Record record_find;
+        boolean matching=false;
+        boolean done=false;
+        while((record_find=records_find.next())==null){
+            done=this.writeLine("",record_find.getLineNumber());
+            if(done){
+                this.getDB().LOGGER.info("deleted ("+filter.toString()+") in "+this.getName());
+            }else{
+                this.getDB().LOGGER.info("could not deleted ("+filter.toString()+") in "+this.getName());
+            }
+            this.flush();
+        }
+        if(!matching){
             this.getDB().LOGGER.info("no records matching ("+filter.toString()+") in "+this.getName());
             return false;
         }
-        boolean done=this.writeLine("",record_find.getLineNumber());
-        if(done){
-            this.getDB().LOGGER.info("deleted ("+filter.toString()+") in "+this.getName());
-        }else{
-            this.getDB().LOGGER.info("could not deleted ("+filter.toString()+") in "+this.getName());
-        }
-        this.flush();
         return done;
     }
     

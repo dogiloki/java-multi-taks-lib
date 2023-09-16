@@ -43,12 +43,13 @@ public class Record{
         return filter.logic();
     }
     
-    public void getFields(CallRecordField action){
+    public RecordField getFields(CallRecordField action){
         int index=0;
         for(Map.Entry<String,Object> entry:this.fields.entrySet()){
             action.execute(entry.getKey(),entry.getValue());
             index++;
         }
+        return this.fields;
     }
     
     public String toJson(){
