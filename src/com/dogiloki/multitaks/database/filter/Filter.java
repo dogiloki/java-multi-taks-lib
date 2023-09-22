@@ -56,16 +56,18 @@ public abstract class Filter{
     
     public abstract boolean logic();
     
-    public abstract OpImpl getOperator();
-    
     public boolean apply(Record record){
         this.record(record);
         return this.logic();
     }
     
+    // Getters
+    
     public void record(Record record){
         this.record=record;
     }
+    
+    public abstract OpImpl getOperator();
     
     public Record getRecord(){
         return this.record;
