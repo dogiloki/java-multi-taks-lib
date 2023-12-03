@@ -25,9 +25,4 @@ public class Persona extends ModelDB{
         
     }
     
-    @Override
-    public boolean deleteSave(){
-        return false;
-    }
-    
 }

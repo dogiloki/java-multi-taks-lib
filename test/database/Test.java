@@ -36,12 +36,13 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        Database db=new Database("db");
-        Collection collection_personas=db.collection("personas");
-        Record record_new=new Record();
-        record_new.set("nombre","Martha");
-        Filter filter_delete=Filter.like("nombre","j");
-        collection_personas.delete(filter_delete);
+        List<Persona> personas=new ArrayList<>();
+        Persona persona=new Persona();
+        persona.nombre="Julio";
+        persona.apellido="Vilalnueva";
+        persona.edad=21;
+        personas.add(persona);
+        ModelDB.insert(Persona.class,personas);
     }
     
     public static void main(String args[]){

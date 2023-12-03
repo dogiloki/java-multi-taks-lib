@@ -32,7 +32,7 @@ public class ModelDB extends Record{
                 Record record=new Record();
                 record.setFields(fields);
                 record.set("created_at",instance.getDateTime());
-                record.set("update_at","");
+                record.set("updated_at",null);
                 records.add(record);
             }
             return collection.insert(records);
@@ -47,12 +47,12 @@ public class ModelDB extends Record{
     @Expose
     public String created_at;
     @Expose
-    public String update_at;
+    public String updated_at;
     @Expose
-    public String delete_at;
+    public String deleted_at;
     
-    private String date_format="dd-MM-yyyy HH:mm:ss";
-    private boolean with_trashed;
+    protected String date_format="dd-MM-yyyy HH:mm:ss";
+    protected boolean with_trashed=false;
     private Database db=null;
     
     public ModelDB(){
@@ -63,23 +63,19 @@ public class ModelDB extends Record{
         this.db=new Database(src);
     }
     
-    public RecordList _all(){
-        return this.getCollection().all();
-    }
-    
-    public RecordList find(Filter filter_old){
-        Filter filter;
-        if(this.deleteSave() && !this.with_trashed){
-            if(filter_old==null){
-                filter=Filter.eq("delete_at",null);
+    public RecordList find(Filter filter){
+        Filter filter_new;
+        if(this.softDelete() && !this.with_trashed){
+            if(filter==null){
+                filter_new=Filter.eq("deleted_at",null);
             }else{
-                filter=Filter.and(filter_old,Filter.eq("delete_at",null));
+                filter_new=Filter.and(filter,Filter.eq("delete_at",null));
             }
         }else{
-            filter=filter_old;
+            filter_new=filter;
         }
         this.with_trashed=false;
-        return this.getCollection().find(filter);
+        return this.getCollection().find(filter_new);
     }
     
     public RecordList all(){
@@ -98,17 +94,17 @@ public class ModelDB extends Record{
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         if(collection.find(filter).first()==null){
             record.set("created_at",this.getDateTime());
-            record.set("update_at","");
+            record.set("updated_at",null);
             status=collection.insert(record);
         }else{
-            record.set("update_at",this.getDateTime());
+            record.set("updated_at",this.getDateTime());
             status=collection.update(filter,record);
         }
         this.setFields(record.getFields());
         return status;
     }
     
-    protected boolean deleteSave(){
+    protected boolean softDelete(){
         return false;
     }
     
@@ -145,7 +141,7 @@ public class ModelDB extends Record{
         Collection collection=this.getCollection();
         Record record=new Record();
         record.setId(this.getId());
-        record.set("delete_at",null);
+        record.set("deleted_at",null);
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
         return collection.update(filter,record);
     }
@@ -154,8 +150,8 @@ public class ModelDB extends Record{
         Collection collection=this.getCollection();
         Record record=new Record().setId(this.getId());
         Filter filter=new ComparisonExpression(record.fieldId(),record.getId());
-        if(this.deleteSave()){
-            record.set("delete_at",this.getDateTime());
+        if(this.softDelete()){
+            record.set("deleted_at",this.getDateTime());
             return collection.update(filter,record);
         }else{
             return collection.delete(filter);

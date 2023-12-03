@@ -61,16 +61,17 @@ public abstract class Filter{
         return this.logic();
     }
     
-    // Getters
-    
-    public void record(Record record){
+    // Setters
+    public Filter record(Record record){
         this.record=record;
+        return this;
     }
     
-    public abstract OpImpl getOperator();
-    
+    // Getters
     public Record getRecord(){
         return this.record;
     }
+    
+    public abstract OpImpl getOperator();
     
 }
