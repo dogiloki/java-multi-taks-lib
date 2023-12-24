@@ -1,5 +1,6 @@
 package database;
 
+import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.database.DatabaseConfig;
 import com.dogiloki.multitaks.database.Collection;
 import com.dogiloki.multitaks.database.Database;
@@ -36,6 +37,7 @@ import java.util.List;
 public class Test{
     
     public Test(){
+        GlobalVar.group("db").set("name","hola");
         List<Persona> personas=new ArrayList<>();
         Persona persona=new Persona();
         persona.nombre="Julio";

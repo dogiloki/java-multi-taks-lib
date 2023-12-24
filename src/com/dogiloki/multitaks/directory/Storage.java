@@ -35,6 +35,8 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
 
 public class Storage{
     
+    public static String ROOT_PATH=null;
+    
     /**
      * Convertir bits en byte, MB, GB, TB
      * @param bytes Número en bits
@@ -338,12 +340,12 @@ public class Storage{
     
     /**
      * Elimina un archivo
-     * @param ruta Ruta del fichero
+     * @param path Ruta del fichero
      * @return Indica si se eliminó en archivo (si no existe devuelve false)
      */
-    public static boolean deleteFile(String ruta){
+    public static boolean deleteFile(String path){
         try{
-            File file=new File(ruta);
+            File file=new File(path);
             if(!file.exists()){
                 return false;
             }
@@ -572,6 +574,7 @@ public class Storage{
     private File file=null;
     private BufferedWriter bw=null;
     private BufferedReader br=null;
+    private String _root_path=Storage.ROOT_PATH;
     
     public Storage(){
         
@@ -586,6 +589,9 @@ public class Storage{
     }
     
     public void aim(String src, DirectoryType type){
+        if(this.getRootPath()!=null){
+            src=this.getRootPath()+"/"+src;
+        }
         this.setSrc(src);
         File file;
         if(type==null && src!=null && (file=new File(src)).exists()){
@@ -601,6 +607,14 @@ public class Storage{
     
     public void setSrc(String src){
         this._src=src;
+    }
+    
+    public String getRootPath(){
+        return this._root_path;
+    }
+    
+    public void setRootPath(String root_path){
+        this._root_path=root_path;
     }
     
     public DirectoryType getType(){

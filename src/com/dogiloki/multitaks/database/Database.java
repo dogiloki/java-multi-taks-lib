@@ -13,6 +13,7 @@ import com.dogiloki.multitaks.logger.Logger;
 
 @Directory(type=DirectoryType.FOLDER)
 public class Database extends ModelDirectory{
+    
     public final Logger LOGGER;
     
     public Database(String src){
