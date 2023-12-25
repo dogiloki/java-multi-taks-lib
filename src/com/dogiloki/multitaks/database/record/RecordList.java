@@ -231,4 +231,17 @@ public class RecordList<T extends Record>{
         return this.iterator;
     }
     
+    public String toJson(){
+        return JSON.builder().toJson(this);
+    }
+    
+    public List<T> toList(){
+        List<T> items=new ArrayList<>();
+        T obj;
+        while((obj=this.next())!=null){
+            items.add(obj);
+        }
+        return items;
+    }
+    
 }
