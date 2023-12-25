@@ -232,7 +232,7 @@ public class RecordList<T extends Record>{
     }
     
     public String toJson(){
-        return JSON.builder().toJson(this);
+        return JSON.builder().toJson(this.toList());
     }
     
     public List<T> toList(){
