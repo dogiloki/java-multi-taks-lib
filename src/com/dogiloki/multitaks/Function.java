@@ -171,6 +171,9 @@ public class Function<T>{
     }
     
     public static <T> T random(List<T> items){
+        if(items.isEmpty()){
+            return null;
+        }
         return items.get(new Random().nextInt(items.size()));
     }
     

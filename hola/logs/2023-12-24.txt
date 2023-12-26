@@ -1,3 +1,0 @@
-[16:02:22] [INFO] using database hola
-[16:02:22] [INFO] using collection personas class database.Persona
-[16:02:22] [INFO] inserted 1 record in personas
