@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.Icon;
@@ -166,6 +168,10 @@ public class Function<T>{
             
         }
         return null;
+    }
+    
+    public static <T> T random(List<T> items){
+        return items.get(new Random().nextInt(items.size()));
     }
     
 }
