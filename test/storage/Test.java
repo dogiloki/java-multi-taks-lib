@@ -1,5 +1,6 @@
 package storage;
 
+import com.dogiloki.multitaks.Checksum;
 import java.util.Base64;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.FileBlock;
@@ -14,6 +15,7 @@ import com.dogiloki.multitaks.directory.Storage;
 public class Test{
     
     public Test(){
+        /*
         ModelDirectory di=new ModelDirectory();
         Persona p=new Persona();
         Direccion d=new Direccion();
@@ -30,6 +32,9 @@ public class Test{
         di.aim(p,"persona.txt");
         di.save();
         System.out.println(p.nombre);
+        */
+        String text=Storage.aim("E:\\Escritorio\\hola.txt").Hashing();
+        System.out.println(text);
     }
     
     public static void main(String args[]){

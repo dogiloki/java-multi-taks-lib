@@ -26,7 +26,10 @@ import javax.swing.JOptionPane;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.ObjectId;
+import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
 
 /**
  *
@@ -36,6 +39,15 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
 public class Storage{
     
     public static String ROOT_PATH=null;
+    
+    /**
+     * Genera una instancia de la clase Storage apuntando a un directorio
+     * @param path Ruta del directorio
+     * @return 
+     */
+    public static Storage aim(String src){
+        return new Storage(src);
+    }
     
     /**
      * Convertir bits en byte, MB, GB, TB
@@ -432,7 +444,7 @@ public class Storage{
     }
     
     /**
-     * Obtener el fichero alamacenado por el método Storage.store()
+     * Obtener el fichero almacenado por el método Storage.store()
      * @param name_file Nombre hash del archivo
      * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
      */
@@ -441,7 +453,7 @@ public class Storage{
     }
     
     /**
-     * Obtener el fichero alamacenado por el método Storage.store()
+     * Obtener el fichero almacenado por el método Storage.store()
      * @param path_store Ruta actual de la carpeta donde se almacenó
      * @param name_file Nombre hash del archivo
      * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
@@ -451,7 +463,7 @@ public class Storage{
     }
     
     /**
-     * Obtener el fichero alamacenado por el método Storage.store()
+     * Obtener el fichero almacenado por el método Storage.store()
      * @param path_store Ruta actual de la carpeta donde se almacenó
      * @param name_file Nombre hash del archivo
      * @return Devuelve un File del archivo encontrado o null en caso de no encontrarlo
@@ -607,6 +619,10 @@ public class Storage{
     
     public void setSrc(String src){
         this._src=src;
+    }
+    
+    public File getFile(){
+        return this.file;
     }
     
     public String getRootPath(){
@@ -1073,8 +1089,16 @@ public class Storage{
         return false;
     }
     
-    public File getFile(){
-        return this.file;
+    public String Hashing(){
+        try{
+            byte[] file_bytes=Files.readAllBytes(Paths.get(this.getSrc()));
+            MessageDigest digest=MessageDigest.getInstance("SHA-256");
+            byte[] hash_bytes=digest.digest(file_bytes);
+            return Code.bytesToHex(hash_bytes);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
     
 }

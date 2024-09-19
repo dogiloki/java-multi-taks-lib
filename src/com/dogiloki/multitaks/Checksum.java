@@ -19,6 +19,7 @@ public class Checksum{
             byte data[]=Files.readAllBytes(path);
             Adler32 adler=new Adler32();
             adler.update(data);
+            System.out.println(adler);
             long adler_check=adler.getValue();
             return String.valueOf(adler_check);
         }catch(IOException ex){
