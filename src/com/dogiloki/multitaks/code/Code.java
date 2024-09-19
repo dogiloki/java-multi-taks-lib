@@ -70,4 +70,12 @@ public class Code{
         return b;
     }
     
+    public static String bytesToHex(byte[] bytes){
+        StringBuilder str=new StringBuilder();
+        for(byte b: bytes){
+            str.append(String.format("%02x",b));
+        }
+        return str.toString();
+    }
+    
 }
