@@ -45,7 +45,7 @@ public class Storage{
      * @param path Ruta del directorio
      * @return 
      */
-    public static Storage aim(String src){
+    public static Storage instance(String src){
         return new Storage(src);
     }
     
