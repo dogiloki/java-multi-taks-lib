@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.directory;
 
+import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,8 +15,13 @@ import java.nio.file.Paths;
 
 public class FileBlock{
     
+    public interface OnByteBlock extends OnCallbackNotReturn<byte[]>{
+        
+    }
+    
     private String src;
     private int block_size;
+    private int bit;
     private byte[] buffer;
     private FileInputStream in;
     private FileOutputStream out;
@@ -34,20 +40,26 @@ public class FileBlock{
         if(this.in==null){
             this.in=new FileInputStream(this.getSrc());
         }
-        int bit;
-        bit=this.in.read(this.buffer);
-        if(bit==-1){
+        this.bit=this.in.read(this.buffer);
+        if(this.bit==-1){
             return null;
         }
         this.index++;
-        byte[] process=new byte[bit];
-        System.arraycopy(this.buffer,0,process,0,bit);
+        byte[] process=new byte[this.bit];
+        System.arraycopy(this.buffer,0,process,0,this.bit);
         this.element=process;
         return this.element;
     }
     
     public byte[] readAll()throws IOException{
         return Files.readAllBytes(Paths.get(this.getSrc()));
+    }
+    
+    public void readBlocks(OnByteBlock action) throws IOException{
+        byte[] b=new byte[this.getSizeBlock()];
+        while((b=this.read())!=null){
+            action.run(b);
+        }
     }
     
     public void write(byte[] b)throws IOException{
@@ -102,11 +114,11 @@ public class FileBlock{
     public byte[] getBuffer(){
         return this.buffer;
     }
-    public int getFileBlock(){
-        return this.block_size;
-    }
     public int getIndex(){
         return this.index;
+    }
+    public int getBit(){
+        return this.bit;
     }
     
 }

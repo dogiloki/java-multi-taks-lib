@@ -33,7 +33,7 @@ public class Test{
         di.save();
         System.out.println(p.nombre);
         */
-        String text=Storage.instance("E:\\Escritorio\\hola.txt").Hashing();
+        String text=Storage.instance("E:\\Escritorio\\fotos\\20171006_115719.jpg").hashing();
         System.out.println(text);
     }
     

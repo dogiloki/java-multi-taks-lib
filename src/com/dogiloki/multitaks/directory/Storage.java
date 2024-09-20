@@ -1089,12 +1089,15 @@ public class Storage{
         return false;
     }
     
-    public String Hashing(){
+    public String hashing(){
         try{
-            byte[] file_bytes=Files.readAllBytes(Paths.get(this.getSrc()));
+            FileBlock file_block=new FileBlock(this.getSrc(),65536);
             MessageDigest digest=MessageDigest.getInstance("SHA-256");
-            byte[] hash_bytes=digest.digest(file_bytes);
-            return Code.bytesToHex(hash_bytes);
+            file_block.readBlocks((byte[] block)->{
+                digest.update(file_block.getBuffer(),0,file_block.getBit());
+            });
+            byte[] hash=digest.digest();
+            return Code.bytesToHex(hash);
         }catch(Exception ex){
             ex.printStackTrace();
         }
