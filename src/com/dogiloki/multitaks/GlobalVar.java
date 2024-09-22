@@ -23,10 +23,12 @@ public class GlobalVar{
         if(GlobalVar.instance==null){
             GlobalVar.instance=new GlobalVar();
             // Configuraciones por defecto para uso de librería más eficiente
-            // Nombre de la carpeta en que usará database.ModelDB
+            // Nombre de la carpeta en que se usará database.ModelDB
             GlobalVar.group("db").set("name","db");
-            // Nombre de la carpeta en que usará Storage.store() y Storage.get()
+            // Nombre de la carpeta en que se usará Storage.store() y Storage.get()
             GlobalVar.group("storage").set("store","store");
+            // Nombre de la carpeta en que se usará server.ServerWeb
+            GlobalVar.group("server").set("name","server");
         }
         return GlobalVar.instance;
     }

@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.socket.handles;
+package com.dogiloki.multitaks.server.socket.handles;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
-package com.dogiloki.multitaks.socket;
+package com.dogiloki.multitaks.server.socket;
 
-import com.dogiloki.multitaks.socket.handles.SocketHandle;
-import com.dogiloki.multitaks.socket.handles.ClientHandle;
+import com.dogiloki.multitaks.server.socket.handles.SocketHandle;
+import com.dogiloki.multitaks.server.socket.handles.ClientHandle;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.dogiloki.multitaks.socket.contracts.SocketServerImpl;
+import com.dogiloki.multitaks.server.socket.contracts.SocketServerImpl;
 
 /**
  *

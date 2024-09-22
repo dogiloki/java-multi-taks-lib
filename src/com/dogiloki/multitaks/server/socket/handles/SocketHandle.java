@@ -1,8 +1,8 @@
-package com.dogiloki.multitaks.socket.handles;
+package com.dogiloki.multitaks.server.socket.handles;
 
 import java.io.PrintWriter;
 import java.net.Socket;
-import com.dogiloki.multitaks.socket.SocketData;
+import com.dogiloki.multitaks.server.socket.SocketData;
 
 /**
  *

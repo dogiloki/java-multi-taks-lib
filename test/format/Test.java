@@ -12,6 +12,8 @@ public class Test{
     public Test(){
         JSON j=new JSON("{\"folder\":{\"path\":\"dsa/gfd/sa\",\"name\":\"Hola\"},\"flotante\":1.7,\"peso\":21}");
         System.out.println(j.toJson("folder").getValue("path"));
+        //Config conf=new Config().builder();
+        //System.out.println(conf.toString());
     }
     
     public static void main(String args[]){

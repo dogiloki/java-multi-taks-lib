@@ -1,12 +1,12 @@
-package com.dogiloki.multitaks.socket.handles;
+package com.dogiloki.multitaks.server.socket.handles;
 
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import com.dogiloki.multitaks.socket.SocketData;
-import com.dogiloki.multitaks.socket.SocketServer;
+import com.dogiloki.multitaks.server.socket.SocketData;
+import com.dogiloki.multitaks.server.socket.SocketServer;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.socket.contracts;
+package com.dogiloki.multitaks.server.socket.contracts;
 
 import java.nio.channels.SocketChannel;
 import java.util.List;

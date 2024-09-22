@@ -1,4 +1,4 @@
-package com.dogiloki.multitaks.socket;
+package com.dogiloki.multitaks.server.socket;
 
 import com.google.gson.Gson;
 
