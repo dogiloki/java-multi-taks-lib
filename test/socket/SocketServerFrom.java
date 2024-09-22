@@ -1,7 +1,7 @@
 package socket;
 
 import javax.swing.JOptionPane;
-import com.dogiloki.multitaks.socket.SocketServer;
+import com.dogiloki.multitaks.server.socket.SocketServer;
 
 /**
  *

@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.FileBlock;
 import com.dogiloki.multitaks.directory.Storage;
-import com.dogiloki.multitaks.socket.SocketClient;
+import com.dogiloki.multitaks.server.socket.SocketClient;
 
 /**
  *
