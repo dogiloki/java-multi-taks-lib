@@ -4,15 +4,13 @@ import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.google.gson.annotations.Expose;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author _dogi
  */
 
-@Directory(type=DirectoryType.JSON,src="server/httpd.env")
+@Directory(type=DirectoryType.JSON)
 public class HttpConfig extends ModelDirectory{
     
     @Expose
@@ -20,8 +18,6 @@ public class HttpConfig extends ModelDirectory{
     
     @Expose
     public int listen_port=8000;
-    
-    public List<Directory> directories=new ArrayList<>();
     
     public HttpConfig(){
         
