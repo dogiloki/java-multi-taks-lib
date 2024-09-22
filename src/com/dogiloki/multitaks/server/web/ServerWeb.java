@@ -2,9 +2,7 @@ package com.dogiloki.multitaks.server.web;
 
 import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.directory.ConfigFile;
-import com.dogiloki.multitaks.directory.DirectoryList;
 import com.dogiloki.multitaks.directory.Storage;
-import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.server.web.httpd.HttpConfig;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,7 +10,6 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
 
 /**
  *
