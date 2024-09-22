@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class ListFields<T> extends HashMap<T,Object>{
     
-    public ListFields<T> put(T key, Object value){
+    public ListFields<T> append(T key, Object value){
         super.put(key,value);
         return this;
     }
