@@ -105,7 +105,6 @@ public class RecordList<T extends Record>{
             this.line_number++;
             this.current(null);
             String json=this.iterator.nextLine();
-            System.out.println(json);
             if(json==null || json.equals("")){
                 continue;
             }
