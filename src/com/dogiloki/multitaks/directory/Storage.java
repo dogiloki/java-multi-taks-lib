@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 public class Storage{
     
     public static String ROOT_PATH=null;
+    public static boolean AUTO_FLUSH=true;
     
     /**
      * Genera una instancia de la clase Storage apuntando a un directorio
@@ -830,6 +831,9 @@ public class Storage{
      * @return 
      */
     public boolean flush(){
+        if(!Storage.AUTO_FLUSH){
+            return true;
+        }
         try{
             if(this.bw==null){
                 return true;

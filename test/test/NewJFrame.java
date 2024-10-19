@@ -7,6 +7,7 @@ package test;
 
 import com.dogiloki.multitaks.database.record.RecordList;
 import com.dogiloki.multitaks.directory.Storage;
+import com.github.javafaker.Faker;
 import database.Persona;
 
 /**
@@ -68,7 +69,7 @@ public class NewJFrame extends javax.swing.JFrame {
         long initial_time=System.currentTimeMillis();
         /*
         Faker f=new Faker();
-        for(int a=0; a<1; a++){
+        for(int a=0; a<10; a++){
             Persona p=new Persona();
             p.nombre=f.name().firstName();
             p.apellido=f.name().lastName();
@@ -82,6 +83,8 @@ public class NewJFrame extends javax.swing.JFrame {
         int index=0;
         while((p=personas.next())!=null){
             System.out.println(index+" - "+p.nombre);
+            p.nombre="a";
+            p.save();
             index++;
         }
         long final_memory=runtime.totalMemory()-runtime.freeMemory();
