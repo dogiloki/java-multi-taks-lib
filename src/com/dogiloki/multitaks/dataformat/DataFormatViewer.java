@@ -104,7 +104,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     public void save(){
         for(Map.Entry<String,JTextField> entry:this.list_text.entrySet()){
             String key=entry.getKey();
-            Object value=entry.getValue();
+            Object value=entry.getValue().getText();
             try{
                 if(this.data!=null){
                     Field field=this.data.getClass().getDeclaredField(key);
