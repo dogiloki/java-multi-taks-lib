@@ -1,7 +1,6 @@
 package com.dogiloki.multitaks.dataformat;
 
 import com.dogiloki.multitaks.Function;
-import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
 import com.google.gson.annotations.Expose;
 import java.awt.Color;
@@ -22,18 +21,20 @@ import javax.swing.JTextField;
  * @author _dogi
  */
 
-public class DataFormatViewer extends javax.swing.JPanel{
+public class DataFormatViewer<T> extends javax.swing.JPanel{
 
     public Map<Field,JTextField> list_text=new HashMap<>();
-    public ModelDB data;
+    public T data;
     
-    public DataFormatViewer(ModelDB data){
+    public DataFormatViewer(T data){
         initComponents();
         this.data=data;
     }
     
-    public void load(){
+    public DataFormatViewer<T> load(){
         this.panel.removeAll();
+        this.panel.revalidate();
+        this.panel.repaint();
         this.list_text.clear();
         int x=10, y=10;
         int width_total=this.scroll_panel.getWidth()-20-x, height_total=y;
@@ -104,6 +105,8 @@ public class DataFormatViewer extends javax.swing.JPanel{
         this.panel.revalidate();
         this.panel.repaint();
         this.panel.setPreferredSize(Function.createDimencion(width_total,height_total));
+        
+        return this;
     }
     
     public void save(){
@@ -111,7 +114,7 @@ public class DataFormatViewer extends javax.swing.JPanel{
             Field field=entry.getKey();
             JTextField text=entry.getValue();
             try{
-                field.set(this.data,text.getText());
+                field.set(this.data,(String)text.getText());
             }catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -122,8 +125,8 @@ public class DataFormatViewer extends javax.swing.JPanel{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel = new javax.swing.JPanel();
         scroll_panel = new javax.swing.JScrollPane();
+        panel = new javax.swing.JPanel();
 
         scroll_panel.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -135,22 +138,24 @@ public class DataFormatViewer extends javax.swing.JPanel{
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
+
+        scroll_panel.setViewportView(panel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scroll_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
