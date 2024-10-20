@@ -2,6 +2,7 @@ package com.dogiloki.multitaks.dataformat;
 
 import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
  *
@@ -21,7 +22,7 @@ public class XML extends DataFormat{
     @Override
     protected ListFields format(String text){
         ListFields fields=new ListFields();
-        if(text.isEmpty()){
+        if(text==null || text.isEmpty()){
             return fields;
         }
         fields=JSON.builder().fromJson(text,ListFields.class);
@@ -30,7 +31,13 @@ public class XML extends DataFormat{
     
     @Override
     public String toString(){
-        return this.json;
+        try{
+            XmlMapper xml=new XmlMapper();
+            return xml.writeValueAsString(this.instace);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return "";
     }
     
 }

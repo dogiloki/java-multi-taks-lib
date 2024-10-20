@@ -4,7 +4,7 @@ import com.dogiloki.multitaks.dataformat.JSON;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author dogi_
  */
 
-public class ListFields<T> extends HashMap<T,Object> implements Map<T,Object>{
+public class ListFields<T> extends LinkedHashMap<T,Object> implements Map<T,Object>{
     
     public ListFields<T> append(T key, Object value){
         super.put(key,value);
