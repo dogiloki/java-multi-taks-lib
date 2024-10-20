@@ -18,8 +18,8 @@ public class NewJFrame extends javax.swing.JFrame{
     public NewJFrame(){
         initComponents();
         Persona persona=(Persona)new Persona().all().first();
-        System.out.println(persona.toJson());
-        this.data_viewer=new DataFormatViewer(persona);
+        this.data_viewer=new DataFormatViewer();
+        this.data_viewer.loadList(persona);
         Function.setPanel(this.personas_panel,this.data_viewer);
     }
 
@@ -28,8 +28,9 @@ public class NewJFrame extends javax.swing.JFrame{
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        personas_panel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        personas_panel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -40,25 +41,27 @@ public class NewJFrame extends javax.swing.JFrame{
             }
         });
 
-        personas_panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout personas_panelLayout = new javax.swing.GroupLayout(personas_panel);
-        personas_panel.setLayout(personas_panelLayout);
-        personas_panelLayout.setHorizontalGroup(
-            personas_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        personas_panelLayout.setVerticalGroup(
-            personas_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 245, Short.MAX_VALUE)
-        );
-
         jButton2.setText("jButton2");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        personas_panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout personas_panelLayout = new javax.swing.GroupLayout(personas_panel);
+        personas_panel.setLayout(personas_panelLayout);
+        personas_panelLayout.setHorizontalGroup(
+            personas_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 371, Short.MAX_VALUE)
+        );
+        personas_panelLayout.setVerticalGroup(
+            personas_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 137, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(personas_panel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -67,11 +70,11 @@ public class NewJFrame extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addComponent(personas_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -82,7 +85,7 @@ public class NewJFrame extends javax.swing.JFrame{
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(personas_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -121,7 +124,7 @@ public class NewJFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.data_viewer.load();
+        System.out.println(this.data_viewer.list.toJson());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]){
@@ -135,6 +138,7 @@ public class NewJFrame extends javax.swing.JFrame{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel personas_panel;
     // End of variables declaration//GEN-END:variables
 }
