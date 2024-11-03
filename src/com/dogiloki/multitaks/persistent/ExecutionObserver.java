@@ -1,6 +1,7 @@
 package com.dogiloki.multitaks.persistent;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +15,10 @@ public class ExecutionObserver{
     
     public static ExecutionObserver execution(String command) throws IOException{
         return new ExecutionObserver(command);
+    }
+    
+    public static ExecutionObserver execution(String command, String context) throws IOException{
+        return new ExecutionObserver(command,context);
     }
     
     public interface onOutput{
@@ -31,6 +36,7 @@ public class ExecutionObserver{
     private boolean cancel;
     //private boolean stop;
     private String command;
+    private String context;
     private String out_str;
     private ProcessBuilder pb;
     private Process p;
@@ -52,9 +58,24 @@ public class ExecutionObserver{
         this.command(command);
     }
     
+    public ExecutionObserver(String command, String context){
+        this.command(command,context);
+    }
+    
     public ExecutionObserver command(String command){
+        return this._command(command,null);
+    }
+    
+    private ExecutionObserver command(String command, String context){
+        return this._command(command,context);
+    }
+    
+    private ExecutionObserver _command(String command, String context){
         this.command=command;
         this.pb=new ProcessBuilder(command.split(" "));
+        if(this.context!=null){
+            this.pb.directory(new File(this.context));
+        }
         return this;
     }
     
