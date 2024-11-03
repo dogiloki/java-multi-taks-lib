@@ -72,6 +72,7 @@ public class ExecutionObserver{
     
     private ExecutionObserver _command(String command, String context){
         this.command=command;
+        this.context=context;
         this.pb=new ProcessBuilder(command.split(" "));
         if(this.context!=null){
             this.pb.directory(new File(this.context));
