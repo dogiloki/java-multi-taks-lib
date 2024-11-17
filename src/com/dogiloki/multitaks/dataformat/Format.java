@@ -22,7 +22,7 @@ public class Format extends DataFormat{
     public String data(ListFields<String> values){
         String done="";
         for(Map.Entry<String,Object> entry:values.entrySet()){
-            String str="{"+entry.getKey()+"}";
+            String str="\\{"+entry.getKey()+"\\}";
             done=this.text.replaceAll(str,entry.getValue().toString());
             this.text=done;
         }
