@@ -12,7 +12,7 @@ import java.util.List;
  * @author dogi_
  */
 
-@Directory(type=DirectoryType.JSON)
+@Directory(type=DirectoryType.XML)
 public class Persona extends ModelDirectory{
     
     @Expose

@@ -28,7 +28,6 @@ import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 
 /**
@@ -39,6 +38,7 @@ import java.security.MessageDigest;
 public class Storage{
     
     public static String ROOT_PATH=null;
+    public static boolean AUTO_FLUSH=true;
     
     /**
      * Genera una instancia de la clase Storage apuntando a un directorio
@@ -831,6 +831,9 @@ public class Storage{
      * @return 
      */
     public boolean flush(){
+        if(!Storage.AUTO_FLUSH){
+            return true;
+        }
         try{
             if(this.bw==null){
                 return true;

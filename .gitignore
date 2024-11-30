@@ -11,8 +11,11 @@ nb-configuration.xml
 
 # Class Files #
 *.class
+<<<<<<< HEAD
 
 # Package Files #
 *.jar
 *.war
 *.ear
+=======
+>>>>>>> release/1.0.0

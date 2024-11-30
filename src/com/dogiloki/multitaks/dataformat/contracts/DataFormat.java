@@ -12,11 +12,15 @@ public abstract class DataFormat{
     
     protected ListFields<String> fields=new ListFields();
     protected String json="";
+    protected String text="";
     protected Object instace;
     
     public DataFormat(String text){
+        this.text=text;
         this.fields=this.format(text);
-        this.json=JSON.builder().toJson(this.fields);
+        if(this.fields!=null){
+            this.json=JSON.builder().toJson(this.fields);
+        }
     }
     
     public DataFormat(Object instance){

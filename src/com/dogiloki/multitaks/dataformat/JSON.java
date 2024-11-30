@@ -26,6 +26,16 @@ public class JSON extends DataFormat{
                 .create();
     }
     
+    public static Gson builderNotNulls(){
+        return new GsonBuilder()
+                .excludeFieldsWithModifiers(java.lang.reflect.Modifier.TRANSIENT)
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeSpecialFloatingPointValues()
+                .setLenient()
+                .create();
+    }
+    
+    
     public static Gson builderDefault(){
         return new Gson();
     }

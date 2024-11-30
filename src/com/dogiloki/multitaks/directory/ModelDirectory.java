@@ -126,35 +126,7 @@ public class ModelDirectory extends Storage{
         switch(this.getType()){
             case JSON: data=new JSON(instance); break;
             case ENV: data=new ENV(instance); break;
-            case XML:{
-                try{
-                    String xml="";
-                    /*
-                    for(Map.Entry entry:fields.entrySet()){
-                        String key=entry.getKey().toString();
-                        Object value=entry.getValue();
-                        DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
-                        DocumentBuilder builder=factory.newDocumentBuilder();
-                        Document document=builder.newDocument();
-                        Element root_element=document.createElement(key);
-                        root_element.appendChild(document.createTextNode(value.toString()));
-                        document.appendChild(root_element);
-                        TransformerFactory transformer_factory=TransformerFactory.newInstance();
-                        Transformer transformer=transformer_factory.newTransformer();
-                        DOMSource source=new DOMSource(document);
-                        StringWriter writer=new StringWriter();
-                        StreamResult result=new StreamResult(writer);
-                        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,"yes");
-                        transformer.transform(source,result);
-                        xml+=writer.toString()+"\n";
-                    }
-                    */
-                    return xml.substring(0,xml.length()-1);
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                    return "";
-                }
-            }
+            case XML: data=new XML(instance); break;
         }
         if(data==null){
             return "";

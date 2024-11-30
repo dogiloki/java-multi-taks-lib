@@ -65,11 +65,12 @@ public class Collection extends Storage{
     }
     
     public boolean update(Filter filter, Record record){
+        Storage.AUTO_FLUSH=false;
         RecordList<Record> records_find=this.find(filter);
         Record record_find;
         boolean matching=false;
         boolean done=false;
-        while((record_find=records_find.next())==null){
+        while((record_find=records_find.next())!=null){
             matching=true;
             for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
                 if(entry.getKey().equals(record_find.fieldId())){
@@ -83,8 +84,9 @@ public class Collection extends Storage{
             }else{
                 this.getDB().LOGGER.info("could not update ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
             }
-            this.flush();
         }
+        Storage.AUTO_FLUSH=true;
+        this.flush();
         if(!matching){
             this.getDB().LOGGER.info("no records matching ("+filter.toString()+") in "+this.getName());
             return false;
@@ -93,19 +95,21 @@ public class Collection extends Storage{
     }
     
     public boolean delete(Filter filter){
+        Storage.AUTO_FLUSH=false;
         RecordList<Record> records_find=this.find(filter);
         Record record_find;
         boolean matching=false;
         boolean done=false;
-        while((record_find=records_find.next())==null){
+        while((record_find=records_find.next())!=null){
             done=this.writeLine("",record_find.getLineNumber());
             if(done){
                 this.getDB().LOGGER.info("deleted ("+filter.toString()+") in "+this.getName());
             }else{
                 this.getDB().LOGGER.info("could not deleted ("+filter.toString()+") in "+this.getName());
             }
-            this.flush();
         }
+        Storage.AUTO_FLUSH=true;
+        this.flush();
         if(!matching){
             this.getDB().LOGGER.info("no records matching ("+filter.toString()+") in "+this.getName());
             return false;

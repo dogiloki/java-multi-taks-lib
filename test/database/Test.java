@@ -37,7 +37,6 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        GlobalVar.group("db").set("name","hola");
         List<Persona> personas=new ArrayList<>();
         Persona persona=new Persona();
         persona.nombre="Julio";
