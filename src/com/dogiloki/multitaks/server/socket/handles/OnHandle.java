@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class OnHandle extends HashMap<String,SocketHandle.onMessage>{
     
     public OnHandle(){
-        //super();
+        
     }
     
 }
