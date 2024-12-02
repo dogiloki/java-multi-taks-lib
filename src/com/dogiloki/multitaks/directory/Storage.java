@@ -119,6 +119,7 @@ public class Storage{
     
     /**
      * Comprimir archivos en formato .zip
+     * @deprecated
      * @param path Ruta de la carpeta a compromir
      * @param name_zip Nombre del archivo .zip (sin la extensión .zip)
      * @return Indica si se comprimio el archivo
@@ -137,6 +138,7 @@ public class Storage{
     
     /**
      * Comprimir archivos en formato .zip
+     * @deprecated
      * @param path Ruta de la carpeta a compromir
      * @param zos ZipOutputStream Para almacenar subcarpetas
      * @param path_dir Nombre del archivo .zip (sin la extensión .zip)
@@ -178,6 +180,7 @@ public class Storage{
     
     /**
      * Descomprimir archivos en formato .zip
+     * @deprecated
      * @param path Ruta de la carpeta a compromir
      * @param path_zip Nombre del archivo .zip (incluyendo la extensión .zip)
      * @return 

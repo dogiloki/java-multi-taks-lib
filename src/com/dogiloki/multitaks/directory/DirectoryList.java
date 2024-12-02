@@ -12,7 +12,7 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
  * @author dogi_
  */
 
-public class DirectoryList{
+public class DirectoryList implements Iterator<Path>{
     
     private Path directory;
     private DirectoryStream<Path> directory_stream;
