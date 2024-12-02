@@ -37,13 +37,8 @@ import java.util.List;
 public class Test{
     
     public Test(){
-        List<Persona> personas=new ArrayList<>();
-        Persona persona=new Persona();
-        persona.nombre="Julio";
-        persona.apellido="Vilalnueva";
-        persona.edad=21;
-        personas.add(persona);
-        ModelDB.insert(Persona.class,personas);
+        Database db=new Database("db");
+        db.collection("persona");
     }
     
     public static void main(String args[]){

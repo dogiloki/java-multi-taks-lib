@@ -28,8 +28,8 @@ public class Collection extends Storage{
     public Collection(String src, Class clazz){
         this.clazz=clazz;
         this.setSrc(src);
-        new Storage(src,DirectoryType.FILE).exists(true);
         this.aim(this.getSrc(),DirectoryType.FILE);
+        this.exists(true);
     }
     
     public Collection aim(String src){
