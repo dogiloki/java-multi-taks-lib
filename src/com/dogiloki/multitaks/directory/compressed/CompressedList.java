@@ -2,9 +2,6 @@ package com.dogiloki.multitaks.directory.compressed;
 
 import com.dogiloki.multitaks.datastructure.AbstractIterator;
 import com.dogiloki.multitaks.directory.FileBuffered;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.zip.ZipOutputStream;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
 

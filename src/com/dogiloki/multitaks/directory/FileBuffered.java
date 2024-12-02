@@ -15,13 +15,12 @@ import java.io.OutputStreamWriter;
 public class FileBuffered{
     
     private InputStream is;
+    private BufferedReader br;
     private InputStreamReader isr;
     
     private OutputStream os;
-    private OutputStreamWriter osw;
-    
-    private BufferedReader br;
     private BufferedWriter bw;
+    private OutputStreamWriter osw;
     
     public FileBuffered(InputStream is){
         this.input(is);
