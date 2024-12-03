@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/database/Database.java</file>
-            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/database/Collection.java</file>
-            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/test/database/Test.java</file>
-            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/database/record/Record.java</file>
-            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/PerformanceMeasurement.java</file>
+            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/Properties.java</file>
+            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/locale/Lang.java</file>
+            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/test/lang/Test.java</file>
+            <file>file:/E:/Github/Netbeans/java-multi-taks-lib/src/com/dogiloki/multitaks/dataformat/Format.java</file>
         </group>
     </open-files>
 </project-private>

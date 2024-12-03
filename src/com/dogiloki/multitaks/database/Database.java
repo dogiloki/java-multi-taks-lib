@@ -17,7 +17,7 @@ public class Database extends ModelDirectory{
     public final Logger LOGGER;
     
     public Database(String src){
-        ConfigFile.load(DatabaseConfig.class,src+"/config.env");
+        ConfigFile.load(DatabaseConfig.class,src+"/config.cfg");
         this.LOGGER=new Logger(src+"/"+DatabaseConfig.FOLDER_LOGS);
         this.LOGGER.info("using database "+src);
         src+="/"+DatabaseConfig.FOLDER_COLLECTIONS;

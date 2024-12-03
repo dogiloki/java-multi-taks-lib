@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks;
 
+import com.dogiloki.multitaks.directory.ConfigFile;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,11 +25,12 @@ public class GlobalVar{
             GlobalVar.instance=new GlobalVar();
             // Configuraciones por defecto para uso de librería más eficiente
             // Nombre de la carpeta en que se usará database.ModelDB
-            GlobalVar.group("db").set("name","db");
+            Properties.load();
+            GlobalVar.group("db").set("name",Properties.DATABASE_FOLDER);
             // Nombre de la carpeta en que se usará Storage.store() y Storage.get()
-            GlobalVar.group("storage").set("store","store");
+            GlobalVar.group("storage").set("store",Properties.SERVER_FOLDER);
             // Nombre de la carpeta en que se usará server.ServerWeb
-            GlobalVar.group("server").set("name","server");
+            GlobalVar.group("server").set("name",Properties.SERVER_FOLDER);
         }
         return GlobalVar.instance;
     }
