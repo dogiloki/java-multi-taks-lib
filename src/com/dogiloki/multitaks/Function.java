@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.swing.Icon;
@@ -170,11 +171,23 @@ public class Function<T>{
         return null;
     }
     
+    /**
+     * Obtener un elemento aleatorio de una lista
+     * @param <T> Tipo de dato de la lista
+     * @param items La lista con los datos
+     * @return Elemento de la lista
+     */
     public static <T> T random(List<T> items){
         if(items.isEmpty()){
             return null;
         }
         return items.get(new Random().nextInt(items.size()));
+    }
+    
+    public static void iterate(int steps, Consumer<Integer> action){
+        for(int step=1; step<=steps; step++){
+            action.accept(step);
+        }
     }
     
 }

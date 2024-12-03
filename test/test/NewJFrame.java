@@ -115,8 +115,8 @@ public class NewJFrame extends javax.swing.JFrame{
         Persona p;
         int index=0;
         while((p=personas.next())!=null){
-            System.out.println(index+" - "+p.nombre);
-            p.nombre="a";
+            System.out.println(index+" - "+p.name);
+            p.name="a";
             p.save();
             index++;
         }

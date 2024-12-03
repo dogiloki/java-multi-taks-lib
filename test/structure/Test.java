@@ -25,13 +25,13 @@ public class Test{
         TreeBinary<Persona> tree=new TreeBinary();
         RecordList<Persona> personas=new Persona().all();
         Persona p;
-        tree.onEvaluate((item)->item.nombre);
+        tree.onEvaluate((item)->item.name);
         while((p=personas.next())!=null){
             tree.add(p);
         }
         tree.inOrden();
         while(tree.hasNext()){
-            System.out.println(tree.next().nombre);
+            System.out.println(tree.next().name);
         }
         long final_memory=runtime.totalMemory()-runtime.freeMemory();
         long used_memory=final_memory-initial_memory;

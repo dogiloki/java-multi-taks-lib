@@ -12,14 +12,20 @@ import com.google.gson.annotations.Expose;
  * @author dogi_
  */
 
-@Collect(src="personas")
+@Collect(src="persona")
 public class Persona extends ModelDB{
     
     @FieldFormat(label="Nombre",type=TypeFieldFormat.TEXT) @Expose
-    public String nombre;
+    public String name;
 
     @FieldFormat(label="Apellido",type=TypeFieldFormat.TEXT) @Expose
-    public String apellido;
+    public String surname;
+    
+    @FieldFormat(label="Correo electrónico",type=TypeFieldFormat.TEXT) @Expose
+    public String email;
+    
+    @FieldFormat(label="Dirección",type=TypeFieldFormat.TEXT) @Expose
+    public String address;
     
     @FieldFormat(label="Edad",type=TypeFieldFormat.TEXT) @Expose
     public int edad;
