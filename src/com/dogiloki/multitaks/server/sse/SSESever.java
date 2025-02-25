@@ -26,9 +26,7 @@ public class SSESever extends HttpServlet{
             
             synchronized (this.lock){
                 this.clients.put(res,writer);
-            }
-        }catch(){
-            
+            } 
         }catch(Exception ex){
             ex.printStackTrace();
         }finally{
