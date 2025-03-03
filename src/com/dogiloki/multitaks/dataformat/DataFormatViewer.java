@@ -43,7 +43,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                 if(!(annot_key instanceof Expose) || !(annot_format instanceof FieldFormat)){
                     continue;
                 }
-                this.list.put(annot_format.label(),field.get(this.data));
+                this.list.put(field.getName(),field.get(this.data));
             }
             this.load();
         }catch(Exception ex){
