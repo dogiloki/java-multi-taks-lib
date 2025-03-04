@@ -21,14 +21,14 @@ import javax.swing.JTextField;
 public class DataFormatViewer<T> extends javax.swing.JPanel{
 
     public Map<String,JTextField> list_text=new HashMap<>();
-    public ListFields<String> list=new ListFields<>();
+    public ListFields<Field> list=new ListFields<>();
     public T data=null;
     
     public DataFormatViewer(){
         initComponents();
     }
     
-    public void setList(ListFields<String> list){
+    public void setList(ListFields<Field> list){
         this.list=list;
         this.load();
     }
@@ -43,7 +43,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                 if(!(annot_key instanceof Expose) || !(annot_format instanceof FieldFormat)){
                     continue;
                 }
-                this.list.put(field.getName(),field.get(this.data));
+                this.list.put(field,field.get(this.data));
             }
             this.load();
         }catch(Exception ex){
@@ -59,17 +59,19 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
         int width_total=this.scroll_panel.getWidth()-20-x, height_total=y;
         int width=width_total, height=50;
         
-        for(Map.Entry<String,Object> entry:this.list.entrySet()){
-            String key=entry.getKey();
+        for(Map.Entry<Field,Object> entry:this.list.entrySet()){
+            Field field=entry.getKey();
             Object value=entry.getValue();
+            String label=field.getAnnotation(FieldFormat.class).label();
+            String key=field.getName();
             try{
                 Panel panel=new Panel();
                 panel.setLayout(null);
                 panel.setBounds(x,y,width,height);
                 
-                JLabel label=new JLabel(key);
-                label.setBounds(0,0,width,15);
-                panel.add(label);
+                JLabel jlabel=new JLabel(label);
+                jlabel.setBounds(0,0,width,15);
+                panel.add(jlabel);
                 
                 
                 JTextField text=new JTextField((String)value);
@@ -109,8 +111,8 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                 if(this.data!=null){
                     Field field=this.data.getClass().getDeclaredField(key);
                     field.set(this.data,(String)value);
+                    this.list.put(field,value);
                 }
-                this.list.put(key,value);
             }catch(Exception ex){
                 ex.printStackTrace();
             }
