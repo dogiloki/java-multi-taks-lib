@@ -103,6 +103,12 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
         return this;
     }
     
+    public void clean(){
+        for(Map.Entry<String,JTextField> entry:this.list_text.entrySet()){
+            entry.getValue().setText("");
+        }
+    }
+    
     public void save(){
         for(Map.Entry<String,JTextField> entry:this.list_text.entrySet()){
             String key=entry.getKey();
