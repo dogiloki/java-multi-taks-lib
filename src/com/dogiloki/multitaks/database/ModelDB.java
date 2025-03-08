@@ -158,4 +158,8 @@ public class ModelDB extends Record{
         }
     }
     
+    public String toString(){
+        return this.toJson();
+    }
+    
 }

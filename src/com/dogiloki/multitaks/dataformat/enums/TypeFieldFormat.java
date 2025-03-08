@@ -7,6 +7,6 @@ package com.dogiloki.multitaks.dataformat.enums;
 
 public enum TypeFieldFormat{
     
-    TEXT, LIST;
+    TEXT, LIST, COLLECT;
     
 }

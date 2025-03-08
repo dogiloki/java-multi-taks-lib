@@ -1,12 +1,21 @@
 package com.dogiloki.multitaks.dataformat;
 
+import com.dogiloki.multitaks.dataformat.input.ComponentText;
 import com.dogiloki.multitaks.Function;
+import com.dogiloki.multitaks.database.ModelDB;
+import com.dogiloki.multitaks.database.record.RecordList;
 import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
+import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
+import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
 import com.dogiloki.multitaks.directory.ListFields;
 import com.google.gson.annotations.Expose;
 import java.awt.Panel;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +29,7 @@ import javax.swing.JTextField;
 
 public class DataFormatViewer<T> extends javax.swing.JPanel{
 
-    public Map<String,JTextField> list_text=new HashMap<>();
+    public Map<String,InputComponent> list_input_components=new HashMap<>();
     public ListFields<Field> list=new ListFields<>();
     public T data=null;
     
@@ -43,6 +52,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                 if(!(annot_key instanceof Expose) || !(annot_format instanceof FieldFormat)){
                     continue;
                 }
+                field.set(this.data,field.get(this.data));
                 this.list.put(field,field.get(this.data));
             }
             this.load();
@@ -54,7 +64,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     public DataFormatViewer<T> load(){
         this.panel.removeAll();
         this.panel.updateUI();
-        this.list_text.clear();
+        this.list_input_components.clear();
         int x=10, y=10;
         int width_total=this.scroll_panel.getWidth()-20-x, height_total=y;
         int width=width_total, height=50;
@@ -62,7 +72,8 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
         for(Map.Entry<Field,Object> entry:this.list.entrySet()){
             Field field=entry.getKey();
             Object value=entry.getValue();
-            String label=field.getAnnotation(FieldFormat.class).label();
+            FieldFormat annotation=field.getAnnotation(FieldFormat.class);
+            String label=annotation.label();
             String key=field.getName();
             try{
                 Panel panel=new Panel();
@@ -73,21 +84,56 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                 jlabel.setBounds(0,0,width,15);
                 panel.add(jlabel);
                 
-                
-                JTextField text=new JTextField((String)value);
-                text.setBounds(0,15,width,25);
-                text.addFocusListener(new FocusListener(){
-                    @Override
-                    public void focusGained(FocusEvent evt){
-                    
+                switch(annotation.type()){
+                    case TEXT:{
+                        ComponentText component=new ComponentText((String)value);
+                        component.setBounds(0,15,width,25);
+                        component.addFocusListener(new FocusListener(){
+                            @Override
+                            public void focusGained(FocusEvent evt){
+
+                            }
+                            @Override
+                            public void focusLost(FocusEvent evt){
+                                save();
+                            }
+                        });
+                        panel.add(component);
+                        this.list_input_components.put(key,component);
+                        break;
                     }
-                    @Override
-                    public void focusLost(FocusEvent evt){
-                        save();
+                    case COLLECT:{
+                        Class<? extends ModelDB> model=annotation.collect();
+                        ComponentCollect component=new ComponentCollect();
+                        component.setBounds(0,15,width,25);
+                        component.addItemListener(new ItemListener(){
+                            @Override
+                            public void itemStateChanged(ItemEvent evt){
+                                String[] fields=annotation.fill_fields();
+                                for(String field:fields){
+                                    String[] name=field.split("=");
+                                    String name_model=name[0];
+                                    String name_dto=name[1];
+                                    try{
+                                        Field field_model=model.getDeclaredField(name_model);
+                                        Field field_dto=data.getClass().getDeclaredField(name_dto);
+                                        field_dto.set(data,field_model.get());
+                                    }catch(Exception ex){
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+                        RecordList<ModelDB> records=model.newInstance().all();
+                        ModelDB record;
+                        while((record=records.next())!=null){
+                            component.addItem(record.toString());
+                        }
+                        panel.add(component);
+                        this.list_input_components.put(key,component);
+                        break;
                     }
-                });
-                panel.add(text);
-                this.list_text.put(key,text);
+                }
                 
                 y+=height;
                 height_total=y;
@@ -104,18 +150,26 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     }
     
     public void clean(){
-        for(Map.Entry<String,JTextField> entry:this.list_text.entrySet()){
+        
+        for(Map.Entry<String,InputComponent> entry:this.list_input_components.entrySet()){
             entry.getValue().setText("");
         }
     }
     
     public void save(){
-        for(Map.Entry<String,JTextField> entry:this.list_text.entrySet()){
+        for(Map.Entry<String,InputComponent> entry:this.list_input_components.entrySet()){
             String key=entry.getKey();
-            Object value=entry.getValue().getText();
             try{
                 if(this.data!=null){
                     Field field=this.data.getClass().getDeclaredField(key);
+                    FieldFormat annotation=field.getAnnotation(FieldFormat.class);
+                    Object value=null;
+                    switch(annotation.type()){
+                        case TEXT:{
+                            value=entry.getValue().getText();
+                            break;
+                        }
+                    }
                     field.set(this.data,(String)value);
                     this.list.put(field,value);
                 }
