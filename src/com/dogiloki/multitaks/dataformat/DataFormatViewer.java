@@ -10,6 +10,8 @@ import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
 import com.dogiloki.multitaks.directory.ListFields;
 import com.google.gson.annotations.Expose;
 import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
@@ -19,6 +21,7 @@ import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -91,7 +94,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                         component.addFocusListener(new FocusListener(){
                             @Override
                             public void focusGained(FocusEvent evt){
-
+                                
                             }
                             @Override
                             public void focusLost(FocusEvent evt){
@@ -106,29 +109,25 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                         Class<? extends ModelDB> model=annotation.collect();
                         ComponentCollect component=new ComponentCollect();
                         component.setBounds(0,15,width,25);
-                        component.addItemListener(new ItemListener(){
+                        component.setLightWeightPopupEnabled(false);
+                        component.setRecordList(model.newInstance().all());
+                        component.addActionListener(new ActionListener(){
                             @Override
-                            public void itemStateChanged(ItemEvent evt){
+                            public void actionPerformed(ActionEvent evt){
                                 String[] fields=annotation.fill_fields();
                                 for(String field:fields){
                                     String[] name=field.split("=");
                                     String name_model=name[0];
                                     String name_dto=name[1];
                                     try{
-                                        Field field_model=model.getDeclaredField(name_model);
-                                        Field field_dto=data.getClass().getDeclaredField(name_dto);
-                                        field_dto.set(data,field_model.get());
+                                        list_input_components.get(name_model).setText(component.getSelectedRecord().getFields().get(name_dto).toString());
                                     }catch(Exception ex){
                                         ex.printStackTrace();
                                     }
                                 }
+                                save();
                             }
                         });
-                        RecordList<ModelDB> records=model.newInstance().all();
-                        ModelDB record;
-                        while((record=records.next())!=null){
-                            component.addItem(record.toString());
-                        }
                         panel.add(component);
                         this.list_input_components.put(key,component);
                         break;
@@ -143,8 +142,9 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
             }
         }
         
-        this.panel.updateUI();
         this.panel.setPreferredSize(Function.createDimencion(width_total,height_total));
+        this.panel.updateUI();
+        this.updateUI();
         
         return this;
     }
@@ -167,6 +167,10 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                     switch(annotation.type()){
                         case TEXT:{
                             value=entry.getValue().getText();
+                            break;
+                        }
+                        case COLLECT:{
+                            value=((ComponentCollect)entry.getValue()).getSelectedRecord().getId();
                             break;
                         }
                     }

@@ -20,7 +20,6 @@ import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.datastructure.sorting.enums.OrderAlgorithm;
 import com.dogiloki.multitaks.directory.ConfigFile;
 import com.dogiloki.multitaks.directory.Storage;
-import com.github.javafaker.Faker;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
