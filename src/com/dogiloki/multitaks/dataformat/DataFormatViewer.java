@@ -3,7 +3,6 @@ package com.dogiloki.multitaks.dataformat;
 import com.dogiloki.multitaks.dataformat.input.ComponentText;
 import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.database.ModelDB;
-import com.dogiloki.multitaks.database.record.RecordList;
 import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
 import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
 import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
@@ -12,18 +11,12 @@ import com.google.gson.annotations.Expose;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 /**
  *
@@ -120,7 +113,16 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                                     String name_model=name[0];
                                     String name_dto=name[1];
                                     try{
-                                        list_input_components.get(name_model).setText(component.getSelectedRecord().getFields().get(name_dto).toString());
+                                        InputComponent input_component=list_input_components.get(name_model);
+                                        if(input_component==null){
+                                           continue; 
+                                        }
+                                        input_component.setText(
+                                            component.getSelectedRecord()
+                                                .getFields()
+                                                .get(name_dto)
+                                                .toString()
+                                        );
                                     }catch(Exception ex){
                                         ex.printStackTrace();
                                     }
