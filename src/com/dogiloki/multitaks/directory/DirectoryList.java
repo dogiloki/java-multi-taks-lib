@@ -1,11 +1,14 @@
 package com.dogiloki.multitaks.directory;
 
+import com.dogiloki.multitaks.callbacks.OnCallbackWithResult;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -68,6 +71,28 @@ public class DirectoryList{
             this.current_directory=path;
         }
         return this.current_directory;
+    }
+    
+    public <T> List<T> toList(){
+        return (List<T>) this._toList(new OnCallbackWithResult<Path,String>(){
+            @Override
+            public String run(Path item){
+                return item.toString();
+            }
+            
+        });
+    }
+    
+    public <T> List<T> toList(OnCallbackWithResult<Path,T> action){
+        return this._toList(action);
+    }
+    
+    private <T> List<T> _toList(OnCallbackWithResult<Path,T> action){
+        List<T> list=new ArrayList<>();
+        while(this.hasNext()){
+            list.add(action.run(this.next()));
+        }
+        return list;
     }
     
 }
