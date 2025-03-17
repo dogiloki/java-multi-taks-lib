@@ -73,7 +73,7 @@ public class ModelDirectory extends Storage{
     }
     
     public Object getInstance(){
-        return Function.assignNotNull(this._instance,this);
+        return Function.set(this._instance,this);
     }
     
     public void setInstance(Object instance){

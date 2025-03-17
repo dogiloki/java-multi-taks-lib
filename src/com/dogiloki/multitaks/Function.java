@@ -44,7 +44,7 @@ public class Function<T>{
     }
     
     // Asignar el primer valor diferente a nulo, dentro de un array
-    public T set(T... values){
+    public static <T> T set(T... values){
         for(T value:values){
             if(value!=null){
                 return value;
@@ -58,14 +58,6 @@ public class Function<T>{
                 if(!value.equals("")){
                     return value;
                 }
-            }
-        }
-        return null;
-    }
-    public static <T> T assignNotNull(T... values){
-        for(T value:values){
-            if(value!=null){
-                return value;
             }
         }
         return null;
@@ -86,7 +78,7 @@ public class Function<T>{
      * Hace uso de Objects.compareTo, antes comprobando si es nulo, es el primer valor es null sera menor al segundo y viceversa.
      * @param v1 Primer valor
      * @param v2 Segundo valor
-     * @return Indicar si el primer valor es mayor al segundo con un 1 si es lo contrario con un -1 si son iguales con un 0
+     * @return Indicar si el primer valor es mayor al segundo retorna un 1, si es lo contrario retorna -1, si son iguales retorna 0
      */
     public static int compareTo(Object v1, Object v2){
         if(v1==null && v2!=null){

@@ -2,6 +2,8 @@ package com.dogiloki.multitaks.dataformat.contracts;
 
 import com.dogiloki.multitaks.dataformat.JSON;
 import com.dogiloki.multitaks.directory.ListFields;
+import com.dogiloki.multitaks.validator.MapValues;
+import java.util.Map;
 
 /**
  *
@@ -9,6 +11,14 @@ import com.dogiloki.multitaks.directory.ListFields;
  */
 
 public abstract class DataFormat{
+    
+    public static String messageFormat(String text, MapValues args){
+        String str=text;
+        for(Map.Entry<String,Object> entry:args.entrySet()){
+            str=str.replaceAll(":"+entry.getKey(),entry.getValue().toString());
+        }
+        return str;
+    }
     
     protected ListFields<String> fields=new ListFields();
     protected String json="";
