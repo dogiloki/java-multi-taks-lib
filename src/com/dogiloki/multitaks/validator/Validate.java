@@ -4,7 +4,6 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.Singleton;
 import static com.dogiloki.multitaks.SingletonMethods.RULES;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,14 @@ public class Validate{
             for(String alias_rule:alias_rules){
                 Object[] alia_rule_split=alias_rule.split(":");
                 alias_rule=alia_rule_split[0].toString();
+                MakeValidator make_validator=new MakeValidator();
                 Rule action=((MapRules)Singleton.singleton(Validator.class).callMethod(RULES)).get(alias_rule);
-                Object[] params=alia_rule_split[1].toString().split(",");
+                Object[] params;
+                if(alia_rule_split.length<=1){
+                    params=new Object[0];
+                }else{
+                    params=alia_rule_split[1].toString().split(",");
+                }
                 if(alias_rule.equals("nullable") && value==null){
                     break;
                 }

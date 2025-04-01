@@ -15,7 +15,7 @@ public abstract class DataFormat{
     public static String messageFormat(String text, MapValues args){
         String str=text;
         for(Map.Entry<String,Object> entry:args.entrySet()){
-            str=str.replaceAll(":"+entry.getKey(),entry.getValue().toString());
+            str=str.replaceAll(":"+entry.getKey(),(String)entry.getValue());
         }
         return str;
     }
