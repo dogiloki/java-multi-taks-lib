@@ -104,6 +104,7 @@ public class Collection extends Storage{
             done=this.writeLine("",record_find.getLineNumber());
             if(done){
                 this.getDB().LOGGER.info("deleted ("+filter.toString()+") in "+this.getName());
+                matching=true;
             }else{
                 this.getDB().LOGGER.info("could not deleted ("+filter.toString()+") in "+this.getName());
             }
