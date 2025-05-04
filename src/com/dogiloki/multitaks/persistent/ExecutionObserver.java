@@ -128,7 +128,6 @@ public class ExecutionObserver{
                     this.exit_code=this.p.waitFor();
                     this.onFinalized.call(out_str,this.exit_code);
                 }
-                System.out.println("FIN!!!");
             }catch(Exception ex){
                 ex.printStackTrace();
             }
