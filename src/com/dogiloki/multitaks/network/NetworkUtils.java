@@ -1,14 +1,16 @@
-package com.dogiloki.multitaks;
+package com.dogiloki.multitaks.network;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author dogi_
  */
 
-public class Network{
+public class NetworkUtils{
 
     /**
      * Obtener IPv4 del dispositivo actual
@@ -60,6 +62,40 @@ public class Network{
             ex.printStackTrace();
         }
         return "";
+    }
+    
+    public static IPRange getIpRange(String gateway, String netmask) throws Exception{
+        byte[] ip=InetAddress.getByName(gateway).getAddress();
+        byte[] mask=InetAddress.getByName(netmask).getAddress();
+        byte[] network=new byte[4];
+        byte[] broadcast=new byte[4];
+        for(int a=0; a<4; a++){
+            network[a]=(byte)(ip[a]&mask[a]);
+            broadcast[a]=(byte)(network[a]|~mask[a]);
+        }
+        long start=ipToLong(network)+1;
+        long end=ipToLong(broadcast)-1;
+        IPRange result=new IPRange();
+        for(long a=start; a<=end; a++){
+            result.add(new IP(longToIp(a),netmask));
+        }
+        return result;
+    }
+    
+    public static long ipToLong(byte[] ip){
+        long result=0;
+        for(byte b:ip){
+            result=(result<<8)|(b&0XFF);
+        }
+        return result;
+    }
+    
+    public static String longToIp(long ip){
+        return String.format("%d.%d.%d.%d",
+                (ip>>24)&0XFF,
+                (ip>>16)&0XFF,
+                (ip>>8)&0XFF,
+                ip&0XFF);
     }
     
 }

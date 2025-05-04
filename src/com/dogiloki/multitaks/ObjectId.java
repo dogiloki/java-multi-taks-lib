@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks;
 
+import com.dogiloki.multitaks.network.NetworkUtils;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -69,7 +70,7 @@ public class ObjectId{
     }
     
     private byte[] getMac(){
-        byte[] mac=Network.getMac().getBytes();
+        byte[] mac=NetworkUtils.getMac().getBytes();
         return Arrays.copyOfRange(mac,0,3);
     }
     

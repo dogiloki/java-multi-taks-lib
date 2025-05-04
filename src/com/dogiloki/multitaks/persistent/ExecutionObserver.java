@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  *
@@ -12,6 +15,13 @@ import java.io.InputStreamReader;
  */
 
 public class ExecutionObserver{
+    
+    public static final int CORES=Runtime.getRuntime().availableProcessors();
+    public static final int POOL=Math.max(4,CORES*2);
+    public static final ExecutorService EXECUTOR=Executors.newFixedThreadPool(POOL);
+    public static Future submitTask(Runnable task){
+        return EXECUTOR.submit(task);
+    }
     
     public static ExecutionObserver execution(String command) throws IOException{
         return new ExecutionObserver(command);
@@ -80,65 +90,65 @@ public class ExecutionObserver{
         return this;
     }
     
-    public String start() throws IOException{
+    public Future<String> start() throws Exception{
         return this._start(null);
     }
     
-    public String start(onOutput action) throws IOException{
+    public Future<String> start(onOutput action) throws Exception{
         return this._start(action);
     }
     
-    private String _start(onOutput action) throws IOException{
+    private Future<String> _start(onOutput action) throws Exception{
         this.p=this.pb.start();
         this.input_stream=this.p.getInputStream();
         this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
         this.out_str="";
         this.cancel=false;
         //this.resumen();
-        if(action==null){
-            return this.transientOutput();
-        }
-        new Thread(){
-            @Override
-            public void run(){
-                String line;
-                try{
-                    int index=0;
-                    while((line=reader.readLine())!=null){
-                        action.call(line,index);
-                        out_str+=line+"\n";
-                        index++;
-                        if(cancel){
-                            break;
-                        }
-                    }
-                    input_stream.close();
-                    reader.close();
-                    exit_code=p.waitFor();
-                    if(cancel){
-                        onCanceled.call(out_str,exit_code);
-                    }else{
-                        onFinalized.call(out_str,exit_code);
-                    }
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
+        return EXECUTOR.submit(()->{
+            if(action==null){
+                return this.transientOutput();
             }
-        }.start();
-        return this.out_str;
+            try{
+                String line;
+                int index=0;
+                while((line=reader.readLine())!=null){
+                    action.call(line,index);
+                    out_str+=line+"\n";
+                    index++;
+                    if(cancel){
+                        break;
+                    }
+                }
+                this.input_stream.close();
+                this.reader.close();
+                if(this.cancel){
+                    this.onCanceled.call(this.out_str,-1);
+                }else{
+                    this.exit_code=this.p.waitFor();
+                    this.onFinalized.call(out_str,this.exit_code);
+                }
+                System.out.println("FIN!!!");
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return this.out_str;
+        });
     }
     
     public void cancel(){
         this.cancel=true;
     }
     
-    private String transientOutput() throws IOException{
+    private String transientOutput() throws Exception{
         String line;
         while((line=this.reader.readLine())!=null){
             this.out_str+=line+"\n";
         }
-        input_stream.close();
-        reader.close();
+        this.input_stream.close();
+        this.reader.close();
+        this.exit_code=this.p.waitFor();
+        this.onFinalized.call(out_str,this.exit_code);
         return this.out_str;
     }
     

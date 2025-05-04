@@ -29,7 +29,7 @@ public class Function<T>{
      * Obtener fecha y hora actual con el formato asignado en Function.date_format por defecto (dd-MM-yyyy HH:mm:ss)
      * @return Devuelve String con el fomato asígnado
      */
-    public String getDateTime(){
+    public static String getDateTime(){
         return new SimpleDateFormat(Function.date_format).format(new Date());
     }
     
@@ -38,7 +38,7 @@ public class Function<T>{
      * @param num Número a convertir
      * @return Devuelve String con el fomato asígnado
      */
-    public String formatNumber(String num){
+    public static String formatNumber(String num){
         DecimalFormat formato=new DecimalFormat(Function.number_format);
         return formato.format(Float.parseFloat(num));
     }
@@ -59,6 +59,19 @@ public class Function<T>{
                     return value;
                 }
             }
+        }
+        return null;
+    }
+    
+    /**
+     * Obtiene una posisión de manera segura de un array (generalmente generado por un split). Si no esta el índice retorna null
+     * @param parts
+     * @param index
+     * @return Valor en la posisión del array según el index. Si no existe el índice retorna null
+     */
+    public static String getSafeSplit(String[] parts, int index){
+        if(index>=0 && index<parts.length){
+            return parts[index];
         }
         return null;
     }
@@ -89,6 +102,16 @@ public class Function<T>{
         }
         if(v1==null || v2==null){
             return 0;
+        }
+        try{
+            return Integer.compare(Integer.parseInt(v1.toString()),Integer.parseInt(v2.toString()));
+        }catch(Exception ex){
+            
+        }
+        try{
+            return Double.compare(Double.parseDouble(v1.toString()),Double.parseDouble(v2.toString()));
+        }catch(Exception ex){
+            
         }
         return v1.toString().compareTo(v2.toString());
     }
