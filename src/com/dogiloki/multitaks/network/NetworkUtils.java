@@ -62,7 +62,16 @@ public class NetworkUtils{
         return "";
     }
     
+    /**
+     * Obtener rango de ip's del subneteo en base al gateway y submáscara de red
+     * @param gateway
+     * @param netmask
+     * @return Retorn una instancia de IPRange
+     * @throws Exception 
+     */
     public static IPRange getIpRange(String gateway, String netmask) throws Exception{
+        gateway=gateway.trim();
+        netmask=netmask.trim();
         byte[] ip=InetAddress.getByName(gateway).getAddress();
         byte[] mask=InetAddress.getByName(netmask).getAddress();
         byte[] network=new byte[4];
