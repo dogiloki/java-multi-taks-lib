@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,8 +22,14 @@ public class ExecutionObserver{
     public static final int CORES=Runtime.getRuntime().availableProcessors();
     public static final int POOL=Math.max(4,CORES*2);
     public static final ExecutorService EXECUTOR=Executors.newFixedThreadPool(POOL);
-    public static Future submitTask(Runnable task){
-        return EXECUTOR.submit(task);
+    public static final List<Process> PROCESS=new ArrayList<>();
+    public static void shutdown(){
+        for(Process p:PROCESS){
+            p.destroy();
+        }
+        PROCESS.clear();
+        EXECUTOR.shutdown();
+        System.exit(0);
     }
     
     public static ExecutionObserver execution(String command) throws IOException{
@@ -100,16 +109,17 @@ public class ExecutionObserver{
     
     private Future<String> _start(onOutput action) throws Exception{
         this.p=this.pb.start();
+        PROCESS.add(this.p);
         this.input_stream=this.p.getInputStream();
         this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
         this.out_str="";
         this.cancel=false;
         //this.resumen();
         return EXECUTOR.submit(()->{
-            if(action==null){
-                return this.transientOutput();
-            }
             try{
+                if(action==null){
+                    return this.transientOutput();
+                }
                 String line;
                 int index=0;
                 while((line=reader.readLine())!=null){
@@ -123,6 +133,7 @@ public class ExecutionObserver{
                 this.input_stream.close();
                 this.reader.close();
                 if(this.cancel){
+                    this.p.destroy();
                     this.onCanceled.call(this.out_str,-1);
                 }else{
                     this.exit_code=this.p.waitFor();
