@@ -776,12 +776,20 @@ public class Storage{
     }
     
     /**
-     * Obtiene todo el contenido de un fichero en forma de iterador (cada iteración se divide por \n) en lugar de leer todo fichero
+     * Obtiene todo el contenido de un fichero en forma de iterador (cada iteración es deliminata por \n) en lugar de leer todo fichero
      * @return Scanner con el método en forma de iterador
      */
     public Scanner readIterator(){
+        return this.readIterator("\n");
+    }
+    /**
+     * Obtiene todo el contenido de un fichero en forma de iterador (cada iteración es deliminata por el parametro delimiter) en lugar de leer todo fichero
+     * @param delimiter Delimitador
+     * @return Scanner con el método en forma de iterador
+     */
+    public Scanner readIterator(String delimiter){
         Scanner in=new Scanner(System.in);
-        in.useDelimiter("\n");
+        in.useDelimiter(delimiter);
         if(!this.open(true)){
             return in;
         }
