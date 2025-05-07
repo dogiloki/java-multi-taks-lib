@@ -1,6 +1,5 @@
 package com.dogiloki.multitaks.network;
 
-import static com.dogiloki.multitaks.network.NetworkUtils.longToIp;
 import com.dogiloki.multitaks.network.enums.IPClassification;
 import java.net.InetAddress;
 
@@ -15,6 +14,10 @@ public class IP{
     private String mask;
     private byte[] ip;
     private IPClassification classification;
+    
+    public IP(String address){
+        this.address(address);
+    }
     
     public IP(String address, String mask){
         this.mask=mask;
