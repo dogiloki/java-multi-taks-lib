@@ -19,4 +19,10 @@ public class MapValues extends HashFields<String,Object>{
         }
     }
     
+    @Override
+    public MapValues append(String key, Object value){
+        super.append(key,value);
+        return this;
+    }
+    
 }
