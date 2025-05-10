@@ -55,7 +55,7 @@ public class ExecutionObserver{
     //private boolean stop;
     private String command;
     private String context;
-    private String out_str;
+    private StringBuilder out_str;
     private ProcessBuilder pb;
     private Process p;
     private InputStream input_stream;
@@ -135,7 +135,7 @@ public class ExecutionObserver{
             PROCESS.add(this.p);
             this.input_stream=this.p.getInputStream();
             this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
-            this.out_str="";
+            this.out_str=new StringBuilder();
             this.cancel=false;
             //this.resumen();
             if(action==null){
@@ -145,9 +145,9 @@ public class ExecutionObserver{
             int index=0;
             while((line=reader.readLine())!=null){
                 action.call(line,index);
-                out_str+=line+"\n";
+                this.out_str.append(line+"\n");
                 index++;
-                if(cancel){
+                if(this.cancel){
                     break;
                 }
             }
@@ -155,15 +155,15 @@ public class ExecutionObserver{
             this.reader.close();
             if(this.cancel){
                 this.p.destroy();
-                this.onCanceled.call(this.out_str,-1);
+                this.onCanceled.call(this.out_str.toString(),-1);
             }else{
                 this.exit_code=this.p.waitFor();
-                this.onFinalized.call(out_str,this.exit_code);
+                this.onFinalized.call(out_str.toString(),this.exit_code);
             }
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        return this.out_str;
+        return this.out_str.toString();
     }
     
     public void cancel(){
@@ -173,13 +173,13 @@ public class ExecutionObserver{
     private String transientOutput() throws Exception{
         String line;
         while((line=this.reader.readLine())!=null){
-            this.out_str+=line+"\n";
+            this.out_str.append(line+"\n");
         }
         this.input_stream.close();
         this.reader.close();
         this.exit_code=this.p.waitFor();
-        this.onFinalized.call(out_str,this.exit_code);
-        return this.out_str;
+        this.onFinalized.call(this.out_str.toString(),this.exit_code);
+        return this.out_str.toString();
     }
     
 }
