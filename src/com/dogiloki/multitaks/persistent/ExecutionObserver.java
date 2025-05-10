@@ -186,7 +186,7 @@ public class ExecutionObserver{
     private String transientOutput() throws Exception{
         String line;
         while((line=this.reader.readLine())!=null){
-            this.out_str.append(line).append(System.lineSeparator());;
+            this.out_str.append(line).append(System.lineSeparator());
         }
         this.input_stream.close();
         this.reader.close();
