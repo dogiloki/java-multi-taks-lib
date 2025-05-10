@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,15 +22,14 @@ public class ExecutionObserver{
     public static final int CORES=Runtime.getRuntime().availableProcessors();
     public static final int POOL=Math.max(4,CORES*2);
     public static final ExecutorService EXECUTOR=Executors.newFixedThreadPool(POOL);
-    public static final List<Process> PROCESS=new ArrayList<>();
-    public static final List<Thread> THREADS=new ArrayList<>();
+    public static final List<Process> PROCESS=Collections.synchronizedList(new ArrayList<>());
+    public static final List<Thread> THREADS=Collections.synchronizedList(new ArrayList<>());
     public static void shutdown(){
         for(Process p:PROCESS){
             p.destroy();
         }
         PROCESS.clear();
         EXECUTOR.shutdown();
-        System.exit(0);
     }
     
     public static ExecutionObserver execution(String command) throws IOException{
@@ -43,7 +44,7 @@ public class ExecutionObserver{
         public void call(String line, int posi);
     }
     
-    public interface onCaceled{
+    public interface onCanceled{
         public void call(String out_str, int code);
     }
     
@@ -59,13 +60,14 @@ public class ExecutionObserver{
     private ProcessBuilder pb;
     private Process p;
     private InputStream input_stream;
+    private OutputStream output_stream;
     private BufferedReader reader;
     private int exit_code;
     private boolean use_thread=false;
-    public onCaceled onCanceled=(String out_str1, int code)->{
+    public onCanceled onCanceled=(String out_str1, int code)->{
         
     };
-    public onFinalized onFinalized=(String out_str1,int code)->{
+    public onFinalized onFinalized=(String out_str1, int code)->{
         
     };
     
@@ -114,12 +116,7 @@ public class ExecutionObserver{
     
     private void _start(onOutput action) throws Exception{
         if(this.use_thread){
-            Thread thread=new Thread(){
-                @Override
-                public void run(){
-                    task(action);
-                }
-            };
+            Thread thread=new Thread(()->task(action));
             thread.start();
             THREADS.add(thread);
         }else{
@@ -134,6 +131,7 @@ public class ExecutionObserver{
             this.p=this.pb.start();
             PROCESS.add(this.p);
             this.input_stream=this.p.getInputStream();
+            this.output_stream=this.p.getOutputStream();
             this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
             this.out_str=new StringBuilder();
             this.cancel=false;
@@ -145,14 +143,12 @@ public class ExecutionObserver{
             int index=0;
             while((line=reader.readLine())!=null){
                 action.call(line,index);
-                this.out_str.append(line+"\n");
+                this.out_str.append(line).append(System.lineSeparator());
                 index++;
                 if(this.cancel){
                     break;
                 }
             }
-            this.input_stream.close();
-            this.reader.close();
             if(this.cancel){
                 this.p.destroy();
                 this.onCanceled.call(this.out_str.toString(),-1);
@@ -161,9 +157,26 @@ public class ExecutionObserver{
                 this.onFinalized.call(out_str.toString(),this.exit_code);
             }
         }catch(Exception ex){
+            this.onFinalized.call(ex.getMessage(),-999);
             ex.printStackTrace();
+        }finally{
+            try{
+                if(this.input_stream!=null)this.input_stream.close();
+                if(this.output_stream!=null)this.output_stream.close();
+                if(this.reader!=null)this.reader.close();
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }
         return this.out_str.toString();
+    }
+    
+    public void sendToProcess(String input) throws Exception{
+        if(this.output_stream==null){
+            return;
+        }
+        this.output_stream.write((input+System.lineSeparator()).getBytes());
+        this.output_stream.flush();
     }
     
     public void cancel(){
@@ -173,7 +186,7 @@ public class ExecutionObserver{
     private String transientOutput() throws Exception{
         String line;
         while((line=this.reader.readLine())!=null){
-            this.out_str.append(line+"\n");
+            this.out_str.append(line).append(System.lineSeparator());;
         }
         this.input_stream.close();
         this.reader.close();
