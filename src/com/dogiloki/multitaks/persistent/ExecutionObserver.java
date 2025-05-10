@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  *
@@ -23,6 +21,7 @@ public class ExecutionObserver{
     public static final int POOL=Math.max(4,CORES*2);
     public static final ExecutorService EXECUTOR=Executors.newFixedThreadPool(POOL);
     public static final List<Process> PROCESS=new ArrayList<>();
+    public static final List<Thread> THREADS=new ArrayList<>();
     public static void shutdown(){
         for(Process p:PROCESS){
             p.destroy();
@@ -62,6 +61,7 @@ public class ExecutionObserver{
     private InputStream input_stream;
     private BufferedReader reader;
     private int exit_code;
+    private boolean use_thread=false;
     public onCaceled onCanceled=(String out_str1, int code)->{
         
     };
@@ -79,6 +79,11 @@ public class ExecutionObserver{
     
     public ExecutionObserver(String command, String context){
         this.command(command,context);
+    }
+    
+    public ExecutionObserver useThread(){
+        this.use_thread=true;
+        return this;
     }
     
     public ExecutionObserver command(String command){
@@ -99,51 +104,66 @@ public class ExecutionObserver{
         return this;
     }
     
-    public Future<String> start() throws Exception{
-        return this._start(null);
+    public void start() throws Exception{
+        this._start(null);
     }
     
-    public Future<String> start(onOutput action) throws Exception{
-        return this._start(action);
+    public void start(onOutput action) throws Exception{
+        this._start(action);
     }
     
-    private Future<String> _start(onOutput action) throws Exception{
-        this.p=this.pb.start();
-        PROCESS.add(this.p);
-        this.input_stream=this.p.getInputStream();
-        this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
-        this.out_str="";
-        this.cancel=false;
-        //this.resumen();
-        return EXECUTOR.submit(()->{
-            try{
-                if(action==null){
-                    return this.transientOutput();
+    private void _start(onOutput action) throws Exception{
+        if(this.use_thread){
+            Thread thread=new Thread(){
+                @Override
+                public void run(){
+                    task(action);
                 }
-                String line;
-                int index=0;
-                while((line=reader.readLine())!=null){
-                    action.call(line,index);
-                    out_str+=line+"\n";
-                    index++;
-                    if(cancel){
-                        break;
-                    }
-                }
-                this.input_stream.close();
-                this.reader.close();
-                if(this.cancel){
-                    this.p.destroy();
-                    this.onCanceled.call(this.out_str,-1);
-                }else{
-                    this.exit_code=this.p.waitFor();
-                    this.onFinalized.call(out_str,this.exit_code);
-                }
-            }catch(Exception ex){
-                ex.printStackTrace();
+            };
+            thread.start();
+            THREADS.add(thread);
+        }else{
+            EXECUTOR.submit(()->{
+                this.task(action);
+            });
+        }
+    }
+    
+    private String task(onOutput action){
+        try{
+            this.p=this.pb.start();
+            PROCESS.add(this.p);
+            this.input_stream=this.p.getInputStream();
+            this.reader=new BufferedReader(new InputStreamReader(this.input_stream));
+            this.out_str="";
+            this.cancel=false;
+            //this.resumen();
+            if(action==null){
+                return this.transientOutput();
             }
-            return this.out_str;
-        });
+            String line;
+            int index=0;
+            while((line=reader.readLine())!=null){
+                action.call(line,index);
+                out_str+=line+"\n";
+                index++;
+                if(cancel){
+                    break;
+                }
+            }
+            this.input_stream.close();
+            this.reader.close();
+            if(this.cancel){
+                this.p.destroy();
+                this.onCanceled.call(this.out_str,-1);
+            }else{
+                this.exit_code=this.p.waitFor();
+                this.onFinalized.call(out_str,this.exit_code);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return this.out_str;
     }
     
     public void cancel(){
