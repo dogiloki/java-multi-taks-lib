@@ -16,13 +16,23 @@ import java.util.logging.Logger;
 
 public class HashFields<T,U> extends LinkedHashMap<T,U> implements Map<T,U>{
     
+    public interface OnIterate<T,U>{
+        public void run(T key, U value);
+    }
+    
     public HashFields(){
         
     }
     
-    public HashFields<T,U> append(T key,U value){
+    public HashFields<T,U> append(T key, U value){
         super.put(key,value);
         return this;
+    }
+    
+    public void iterate(OnIterate<T,U> action){
+        for(Map.Entry<T,U> entry:this.entrySet()){
+            action.run(entry.getKey(),entry.getValue());
+        }
     }
     
     public String toQuery(){
