@@ -6,6 +6,7 @@ import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
 import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
 import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
+import com.dogiloki.multitaks.directory.HashFields;
 import com.dogiloki.multitaks.directory.ListFields;
 import com.google.gson.annotations.Expose;
 import java.awt.Panel;
@@ -26,14 +27,14 @@ import javax.swing.JLabel;
 public class DataFormatViewer<T> extends javax.swing.JPanel{
 
     public Map<String,InputComponent> list_input_components=new HashMap<>();
-    public ListFields<Field> list=new ListFields<>();
+    public HashFields<Field,Object> list=new HashFields<>();
     public T data=null;
     
     public DataFormatViewer(){
         initComponents();
     }
     
-    public void setList(ListFields<Field> list){
+    public void setList(HashFields list){
         this.list=list;
         this.load();
     }

@@ -1,7 +1,7 @@
 package com.dogiloki.multitaks.dataformat;
 
-import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
+import com.dogiloki.multitaks.directory.HashFields;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 /**
@@ -20,12 +20,12 @@ public class XML extends DataFormat{
     }
     
     @Override
-    protected ListFields format(String text){
-        ListFields fields=new ListFields();
+    protected HashFields format(String text){
+        HashFields fields=new HashFields();
         if(text==null || text.isEmpty()){
             return fields;
         }
-        fields=JSON.builder().fromJson(text,ListFields.class);
+        fields=JSON.builder().fromJson(text,HashFields.class);
         return fields;
     }
     

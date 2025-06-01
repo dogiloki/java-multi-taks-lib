@@ -2,6 +2,7 @@ package com.dogiloki.multitaks.dataformat;
 
 import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
+import com.dogiloki.multitaks.directory.HashFields;
 import java.util.Map;
 
 /**
@@ -20,8 +21,8 @@ public class ENV extends DataFormat{
     }
     
     @Override
-    protected ListFields format(String text){
-        ListFields fields=new ListFields();
+    protected HashFields format(String text){
+        HashFields fields=new HashFields();
         if(text==null || text.isEmpty()){
             return fields;
         }

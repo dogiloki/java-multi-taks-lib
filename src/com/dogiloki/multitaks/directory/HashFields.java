@@ -50,14 +50,14 @@ public class HashFields<T,U> extends LinkedHashMap<T,U> implements Map<T,U>{
                         .append("=")
                         .append(URLEncoder.encode(value.toString(),charset));
             }catch(UnsupportedEncodingException ex) {
-                Logger.getLogger(ListFields.class.getName()).log(Level.SEVERE,null,ex);
+                Logger.getLogger(HashFields.class.getName()).log(Level.SEVERE,null,ex);
             }
         });
         return str.toString();
     }
     
     public String toJson(){
-        return JSON.gson().toJson(this,ListFields.class);
+        return JSON.gson().toJson(this,HashFields.class);
     }
     
 }

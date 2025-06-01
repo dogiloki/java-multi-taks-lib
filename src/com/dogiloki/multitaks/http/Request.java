@@ -81,7 +81,7 @@ public class Request{
             case GET:
             case DELETE: return BodyPublishers.noBody();
             case POST:
-            case PUT: return BodyPublishers.ofString(this.body.toJson());
+            case PUT: return null; //BodyPublishers.ofString(this.body.toJson());
             default: return BodyPublishers.noBody();
         }
     }

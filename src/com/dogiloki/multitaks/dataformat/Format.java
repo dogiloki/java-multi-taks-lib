@@ -1,7 +1,7 @@
 package com.dogiloki.multitaks.dataformat;
 
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
-import com.dogiloki.multitaks.directory.ListFields;
+import com.dogiloki.multitaks.directory.HashFields;
 import java.util.Map;
 
 /**
@@ -19,7 +19,7 @@ public class Format extends DataFormat{
         super(instace);
     }
     
-    public String data(ListFields<String> values){
+    public String data(HashFields<String,Object> values){
         String done="";
         for(Map.Entry<String,Object> entry:values.entrySet()){
             String str="\\{"+entry.getKey()+"\\}";
@@ -30,7 +30,7 @@ public class Format extends DataFormat{
     }
 
     @Override
-    protected ListFields<String> format(String text){
+    protected HashFields<String,Object> format(String text){
         return null;
     }
     

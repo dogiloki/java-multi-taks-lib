@@ -1,7 +1,7 @@
 package com.dogiloki.multitaks.dataformat.contracts;
 
 import com.dogiloki.multitaks.dataformat.JSON;
-import com.dogiloki.multitaks.directory.ListFields;
+import com.dogiloki.multitaks.directory.HashFields;
 import com.dogiloki.multitaks.validator.MapValues;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public abstract class DataFormat{
         return str;
     }
     
-    protected ListFields<String> fields=new ListFields();
+    protected HashFields<String,Object> fields=new HashFields();
     protected String json="";
     protected String text="";
     protected Object instace;
@@ -36,10 +36,10 @@ public abstract class DataFormat{
     public DataFormat(Object instance){
         this.instace=instance;
         this.json=JSON.builder().toJson(instance);
-        this.fields=JSON.builder().fromJson(this.json,ListFields.class);
+        this.fields=JSON.builder().fromJson(this.json,HashFields.class);
     }
     
-    protected abstract ListFields<String> format(String text);
+    protected abstract HashFields format(String text);
     
     public <T extends Object> T from(Class clazz){
         this.instace=JSON.builder().fromJson(this.json,clazz);
