@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -106,6 +107,14 @@ public class ListFields<T> extends ArrayList<T>{
     public void clear(){
         super.clear();
         this.cache.clear();
+    }
+    
+    @Override
+    public String toString(){
+        return this.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+                
     }
     
 }
