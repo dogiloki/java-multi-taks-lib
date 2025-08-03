@@ -28,6 +28,16 @@ public class ListFields<T> extends ArrayList<T>{
         super();
     }
     
+    public ListFields<T> append(int index, T value){
+        this.add(index,value);
+        return this;
+    }
+    
+    public ListFields<T> append(T value){
+        this.add(value);
+        return this;
+    }
+    
     public boolean repeated(boolean value){
         this.repeated=value;
         if(this.isRepeated()){

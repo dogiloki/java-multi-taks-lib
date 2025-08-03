@@ -1,10 +1,12 @@
 package com.dogiloki.multitaks;
 
+import com.dogiloki.multitaks.datetime.DateTime;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -26,11 +28,48 @@ public class Function<T>{
     public static String number_format="#,###.##";
     
     /**
+     * @param clazz Clase a contruir con construtor sin parámetros
+     * @return Intancia de la clase
+     */
+    public static <T> T buildObject(Class clazz){
+        try{
+            return (T)clazz.getDeclaredConstructor().newInstance();
+        }catch(Exception ex){
+            ex.printStackTrace();
+            throw new RuntimeException("No found "+clazz.getName());
+        }
+    }
+    
+    /**
      * Obtener fecha y hora actual con el formato asignado en Function.date_format por defecto (dd-MM-yyyy HH:mm:ss)
      * @return Devuelve String con el fomato asígnado
      */
     public static String getDateTime(){
         return new SimpleDateFormat(Function.date_format).format(new Date());
+    }
+    public static String getDateTime(String date_format){
+        return new SimpleDateFormat(date_format).format(new Date());
+    }
+    public static String getDateTime(Object object){
+        if(object instanceof Calendar){
+            object=((Calendar)object).getTime();
+        }else if(object==null){
+            object=new Date();
+        }
+        return new SimpleDateFormat(Function.date_format).format(object);
+    }
+    
+    /**
+     * Parsear fecha en base a un formato
+     * @param str Fecha y tiempo en formato String
+     * @return Instancia de Date() con datos de el parámetro str
+     */
+    public static Date parseDateTime(String str){
+        try{
+            return new SimpleDateFormat(Function.date_format).parse(str);
+        }catch(Exception ex){
+            throw new RuntimeException("Error by turning the date: "+Function.date_format);
+        }
     }
     
     /**

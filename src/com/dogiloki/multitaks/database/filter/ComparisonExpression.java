@@ -50,10 +50,10 @@ public class ComparisonExpression extends Filter{
                 return Function.compareTo(value,this.value)<0;
             }
             case GTE:{
-                return Function.compareTo(value,this.value)>0 && Objects.equals(value,this.value);
+                return Function.compareTo(value,this.value)>=0;
             }
             case LTE:{
-                return Function.compareTo(value,this.value)<0 && Objects.equals(value,this.value);
+                return Function.compareTo(value,this.value)<=0;
             }
             case LIKE:{
                 return (value==null || this.value==null)?false:(value.toString().toLowerCase().contains(this.value.toString().toLowerCase()));
