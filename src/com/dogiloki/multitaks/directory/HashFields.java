@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks.directory;
 
+import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,12 +21,24 @@ public class HashFields<T,U> extends LinkedHashMap<T,U> implements Map<T,U>{
         public void run(T key, U value);
     }
     
+    public interface OnAppend<T,U>{
+        public void run(T key, U value);
+    }
+    
+    private OnAppend<T,U> on_append=(key,value)->{};
+    
     public HashFields(){
         
     }
     
+    public HashFields<T,U> onAppend(OnAppend<T,U> callback){
+        this.on_append=callback;
+        return this;
+    }
+    
     public HashFields<T,U> append(T key, U value){
         super.put(key,value);
+        this.on_append.run(key,value);
         return this;
     }
     

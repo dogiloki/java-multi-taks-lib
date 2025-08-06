@@ -5,6 +5,7 @@ import com.dogiloki.multitaks.datastructure.tree.enums.TraversalType;
 import java.util.Iterator;
 import com.dogiloki.multitaks.callbacks.OnCallback;
 import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +21,14 @@ public class TreeBinary<T> implements Iterator<T>{
     private OnCallback<T> on_saving=(item)->item;
     private OnCallback<T> on_evaluate=(item)->item;
     private OnCallbackNotReturn<T> on_order=(item)->{};
+    private List<T> items=new ArrayList<>();
     private NodeBinary<T> current=null;
     private int index=0;
     
     public TreeBinary(){
-        
+        this.onOrder((item)->{
+            this.items.add(item);
+        });
     }
     
     public void add(T value){
@@ -56,6 +60,7 @@ public class TreeBinary<T> implements Iterator<T>{
         if(node==null){
             return;
         }
+        this.items.clear();
         switch(this.traversal_type){
             case IN_ORDER:{
                 this.order(node.leftNode());
@@ -153,6 +158,10 @@ public class TreeBinary<T> implements Iterator<T>{
     
     public OnCallbackNotReturn onOrder(){
         return this.on_order;
+    }
+    
+    public List<T> items(){
+        return this.items;
     }
     
 }
