@@ -80,6 +80,7 @@ public class Storage{
      * @return 
      */
     public static String formatPath(String path){
+        if(path==null) return null;
         return path.replace("\\","/");
     }
     
@@ -600,6 +601,11 @@ public class Storage{
         this.aim(src,type);
     }
     
+    public Storage(String src, DirectoryType type, boolean created){
+        this.aim(src,type);
+        this.exists(created);
+    }
+    
     public void aim(String src, DirectoryType type){
         if(this.getRootPath()!=null){
             src=this.getRootPath()+"/"+src;
@@ -941,6 +947,15 @@ public class Storage{
      */
     private DirectoryList _listDirectory(String path, DirectoryType type){
         return new DirectoryList(path,type);
+    }
+    
+    /**
+     * Crear si no existe
+     * @return Retorna la propia instancia Storage
+     */
+    public Storage notExists(){
+        this.exists(true);
+        return this;
     }
     
     /**

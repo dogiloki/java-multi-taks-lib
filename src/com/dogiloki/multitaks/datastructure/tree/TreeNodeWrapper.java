@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TreeNodeWrapper extends DefaultMutableTreeNode{
     
-    private String display_text;
+    private final String display_text;
     
     public TreeNodeWrapper(Object obj){
         super(obj);

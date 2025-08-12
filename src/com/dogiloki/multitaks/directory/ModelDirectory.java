@@ -48,6 +48,7 @@ public class ModelDirectory extends Storage{
     
     private ModelDirectory _aim(Object instance, String src){
         this.setInstance(instance);
+        src=Storage.formatPath(src);
         this.setSrc(src);
         Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
@@ -138,6 +139,9 @@ public class ModelDirectory extends Storage{
     public boolean save(){
         if(this.getType()!=null && this.getSrc()!=null && this.isFile()){
             return this.write(this.toString());
+        }else if(this.getType()==DirectoryType.FOLDER && this.getSrc()!=null){
+            this.exists(true);
+            return this.exists();
         }
         return false;
     }

@@ -2,7 +2,6 @@ package com.dogiloki.multitaks.dataformat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 import com.dogiloki.multitaks.directory.HashFields;
 

@@ -1,5 +1,7 @@
 package com.dogiloki.multitaks.download;
 
+import com.dogiloki.multitaks.download.enums.DownloadStatus;
+
 /**
  *
  * @author dogi_
@@ -14,11 +16,15 @@ public class DownloadDialog extends javax.swing.JDialog{
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setTitle(url);
         this.download=new Download(url,path);
         this.progress.setMaximum(100);
         this.download.onMetrics((metrics)->{
             this.text.setText(metrics.message);
             this.progress.setValue(metrics.percent());
+            if(metrics.status==DownloadStatus.FINALIZED){
+                dispose();
+            }
         });
         this.download.start();
     }

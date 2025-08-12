@@ -16,6 +16,7 @@ public abstract class DataFormat{
         String str=text;
         for(Map.Entry<String,Object> entry:args.entrySet()){
             str=str.replaceAll(":"+entry.getKey(),(String)entry.getValue());
+            str=str.replaceAll("\\{"+entry.getKey()+"\\}",(String)entry.getValue());
         }
         return str;
     }

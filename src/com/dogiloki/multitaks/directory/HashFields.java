@@ -1,6 +1,5 @@
 package com.dogiloki.multitaks.directory;
 
-import com.dogiloki.multitaks.callbacks.OnCallbackNotReturn;
 import com.dogiloki.multitaks.dataformat.JSON;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

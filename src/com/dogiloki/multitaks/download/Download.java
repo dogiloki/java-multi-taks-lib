@@ -112,7 +112,7 @@ public class Download extends ModelDirectory implements Runnable{
             this.close();
             this.metrics.status=DownloadStatus.FINALIZED;
             this.metrics.message="[ Finalized ] "+this.metrics.message;
-            
+            this.on_metrics.run(this.metrics);
         }catch(Exception ex){
             ex.printStackTrace();
         }
