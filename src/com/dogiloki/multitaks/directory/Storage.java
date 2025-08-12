@@ -801,6 +801,7 @@ public class Storage{
         }
         try{
             in=new Scanner(this.file);
+            in.useDelimiter(delimiter);
         }catch(Exception ex){
             ex.printStackTrace();
         }
