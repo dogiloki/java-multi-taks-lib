@@ -36,7 +36,9 @@ public class Test{
         */
         //String text=Storage.instance("E:\\Escritorio\\fotos\\20171006_115719.jpg").hashing();
         //System.out.println(new Persona().toString());
-        DirectoryList paths=new Storage("db").listDirectory();
+        DirectoryList paths=new Storage("db").listDirectory().filter((path)->{
+            return path.toString().endsWith(".cfg");
+        });
         while(paths.hasNext()){
             System.out.println(paths.next());
         }

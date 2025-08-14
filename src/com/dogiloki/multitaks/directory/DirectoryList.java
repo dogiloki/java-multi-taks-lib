@@ -9,6 +9,7 @@ import java.util.Iterator;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  *
@@ -22,6 +23,7 @@ public class DirectoryList{
     private Path current_directory;
     private DirectoryType type;
     private Iterator<Path> iterator;
+    private Predicate<Path> filter;
     
     public DirectoryList(String path){
         this.run(path,DirectoryType.ALL);
@@ -31,6 +33,12 @@ public class DirectoryList{
         this.run(path,type);
     }
     
+    public DirectoryList filter(Predicate<Path> extra_filter){
+        Predicate<Path> old_filter=this.filter;
+        this.filter=old_filter.and(extra_filter);
+        return this;
+    }
+    
     private void run(String path, DirectoryType type){
         try{
             this.directory=Paths.get(path);
@@ -38,6 +46,7 @@ public class DirectoryList{
             this.current_directory=null;
             this.type=type;
             this.iterator=this.directory_stream.iterator();
+            this.filter=p->true;
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -54,10 +63,10 @@ public class DirectoryList{
             while(this.iterator.hasNext()){
                 Path path=this.iterator.next();
                 if(path==null) continue;
-                if(this.type==DirectoryType.ALL ||
-                   (this.type==DirectoryType.FOLDER && Files.isDirectory(path)) ||
-                   (this.type==DirectoryType.FILE && !Files.isDirectory(path))
-                ){
+                boolean type_valid=this.type==DirectoryType.ALL ||
+                        (this.type==DirectoryType.FOLDER && Files.isDirectory(path)) ||
+                        (this.type==DirectoryType.FILE && !Files.isDirectory(path));
+                if(type_valid && this.filter.test(path)){
                     this.current_directory=path;
                     break;
                 }
