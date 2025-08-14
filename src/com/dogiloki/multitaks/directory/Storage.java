@@ -29,6 +29,7 @@ import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import java.net.URL;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 
 /**
@@ -980,7 +981,16 @@ public class Storage{
      * @return Devuelve un objeto de tipo DirectoryList que actual como iterador
      */
     private DirectoryList _listDirectory(String path, DirectoryType type){
-        return new DirectoryList(path,type);
+        return new DirectoryList(path,type).filter(path_filter->this.directoryListFilter(path_filter));
+    }
+    
+    /**
+     * Método para sobreecargar y aplicar un filtro cuando se filtre un directorio
+     * @param path
+     * @return 
+     */
+    public boolean directoryListFilter(Path path){
+        return true;
     }
     
     /**
