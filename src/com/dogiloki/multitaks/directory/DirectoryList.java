@@ -47,38 +47,40 @@ public class DirectoryList{
         return this.iterator;
     }
     
-    public boolean hasNext(){
-        if(!this.iterator.hasNext()){
-            try{
-                this.directory_stream.close();
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-            return false;
-        }
-        return true;
-    }
-    
-    public Path next(){
+    // Busca y prepara el próximo elemento válido
+    private void prepareNext(){
+        if(this.current_directory!=null) return; // Ya preparado
         try{
-            if(!this.hasNext()){
-                return null;
+            while(this.iterator.hasNext()){
+                Path path=this.iterator.next();
+                if(path==null) continue;
+                if(this.type==DirectoryType.ALL ||
+                   (this.type==DirectoryType.FOLDER && Files.isDirectory(path)) ||
+                   (this.type==DirectoryType.FILE && !Files.isDirectory(path))
+                ){
+                    this.current_directory=path;
+                    break;
+                }
             }
-            Path path=this.iterator.next();
-            if(path==null){
-                return null;
+            // Si no había elemento válido se da por terminado
+            if(this.current_directory==null && this.directory_stream!=null){
+                this.directory_stream.close();
             }
-            if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FOLDER && Files.isDirectory(path))){
-                this.current_directory=path;
-            }else
-            if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FILE && !Files.isDirectory(path))){
-                this.current_directory=path;
-            }
-            return this.current_directory;
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        return null;
+    }
+    
+    public boolean hasNext(){
+        this.prepareNext();
+        return this.current_directory!=null;
+    }
+    
+    public Path next(){
+        this.prepareNext();
+        Path path=this.current_directory;
+        this.current_directory=null;
+        return path;
     }
     
     public <T> List<T> toList(){

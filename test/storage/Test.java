@@ -3,6 +3,7 @@ package storage;
 import com.dogiloki.multitaks.Checksum;
 import java.util.Base64;
 import com.dogiloki.multitaks.code.Code;
+import com.dogiloki.multitaks.directory.DirectoryList;
 import com.dogiloki.multitaks.directory.FileBlock;
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.Storage;
@@ -34,7 +35,11 @@ public class Test{
         System.out.println(p.nombre);
         */
         //String text=Storage.instance("E:\\Escritorio\\fotos\\20171006_115719.jpg").hashing();
-        System.out.println(new Persona().toString());
+        //System.out.println(new Persona().toString());
+        DirectoryList paths=new Storage("db").listDirectory();
+        while(paths.hasNext()){
+            System.out.println(paths.next());
+        }
     }
     
     public static void main(String args[]){
