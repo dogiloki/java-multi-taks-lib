@@ -60,17 +60,25 @@ public class DirectoryList{
     }
     
     public Path next(){
-        Path path=this.iterator.next();
-        if(path==null){
-            return null;
+        try{
+            if(!this.hasNext()){
+                return null;
+            }
+            Path path=this.iterator.next();
+            if(path==null){
+                return null;
+            }
+            if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FOLDER && Files.isDirectory(path))){
+                this.current_directory=path;
+            }else
+            if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FILE && !Files.isDirectory(path))){
+                this.current_directory=path;
+            }
+            return this.current_directory;
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-        if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FOLDER && Files.isDirectory(path))){
-            this.current_directory=path;
-        }else
-        if(this.type==DirectoryType.ALL || (this.type==DirectoryType.FILE && !Files.isDirectory(path))){
-            this.current_directory=path;
-        }
-        return this.current_directory;
+        return null;
     }
     
     public <T> List<T> toList(){

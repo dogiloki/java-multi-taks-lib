@@ -28,6 +28,7 @@ import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import java.net.URL;
 import java.security.MessageDigest;
 
 /**
@@ -42,7 +43,7 @@ public class Storage{
     
     /**
      * Genera una instancia de la clase Storage apuntando a un directorio
-     * @param path Ruta del directorio
+     * @param src Ruta del directorio
      * @return 
      */
     public static Storage instance(String src){
@@ -113,8 +114,8 @@ public class Storage{
      * @return Indica si renombró correctamente el fichero
      */
     public static boolean rename(String name_old, String name_new){
-        File directorio_old=new File(name_old);
-        File directorio_new=new File(name_new);
+        File directorio_old=new File(Storage.formatPath(name_old));
+        File directorio_new=new File(Storage.formatPath(name_new));
         return directorio_old.renameTo(directorio_new);
     }
     
@@ -587,6 +588,7 @@ public class Storage{
     private File file=null;
     private BufferedWriter bw=null;
     private BufferedReader br=null;
+    private boolean from_jar=false;
     private String _root_path=Storage.ROOT_PATH;
     
     public Storage(){
@@ -647,6 +649,25 @@ public class Storage{
         this._type=type;
     }
     
+    public Storage fromJar(){
+        this._fromJar(true);
+        return this;
+    }
+    
+    public Storage fromJar(boolean value){
+        this._fromJar(value);
+        return this;
+    }
+    
+    private Storage _fromJar(boolean value){
+        this.from_jar=value;
+        return this;
+    }
+    
+    public boolean isFromJar(){
+        return this.from_jar;
+    }
+    
     /**
      * Abre fichero inicializando su BufferedWriter y BufferedReader
      * @param append Indicar si abrir el fichero para adicción de texto
@@ -655,21 +676,34 @@ public class Storage{
     private boolean open(boolean append){
         if(this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
             try{
-                this.file=new File(this.getSrc());
+                if(this.isFromJar()){
+                    URL resource_url=this.getClass().getResource(this.getSrc());
+                    this.file=new File(resource_url.toURI());
+                }else{
+                    this.file=new File(this.getSrc());
+                }
                 this.bw=new BufferedWriter(new FileWriter(this.file,append));
                 this.br=new BufferedReader(new FileReader(this.file));
                 return true;
-            }catch(IOException ex){
+            }catch(Exception ex){
                 ex.printStackTrace();
                 return false;
             }
         }
         return false;
     }
-    
     private void openOnlyFile(){
         if(this.getSrc()!=null){
-            this.file=new File(this.getSrc());
+            try{
+                if(this.isFromJar()){
+                    URL resource_url=getClass().getResource("/"+this.getSrc());
+                    this.file=new File(resource_url.toURI());
+                }else{
+                    this.file=new File(this.getSrc());
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
     

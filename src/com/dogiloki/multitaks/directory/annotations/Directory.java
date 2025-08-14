@@ -19,5 +19,6 @@ public @interface Directory{
     
     DirectoryType type();
     String src() default("");
+    boolean fromJar() default(false);
     
 }

@@ -52,6 +52,7 @@ public class ModelDirectory extends Storage{
         this.setSrc(src);
         Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
+            super.fromJar(annot_directory.fromJar());
             this.setType(annot_directory.type());
             if(!annot_directory.src().isEmpty()){
                 this.setSrc(annot_directory.src());
@@ -128,6 +129,16 @@ public class ModelDirectory extends Storage{
             case JSON: data=new JSON(instance); break;
             case ENV: data=new ENV(instance); break;
             case XML: data=new XML(instance); break;
+            case FOLDER: data=new DataFormat(this.getName()){
+                @Override
+                protected HashFields format(String text){
+                    return null;
+                }
+                @Override
+                public String toString(){
+                    return this.text;
+                }
+            }; break;
         }
         if(data==null){
             return "";
