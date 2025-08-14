@@ -40,9 +40,9 @@ public class Logger extends ModelDirectory implements LogImpl{
     
     private void createFielLog(String src){
         if(src==null){
-            src=(String)Function.assign(GlobalVar.get("loguer"),"log");
+            src=(String)Function.assign(GlobalVar.get("logger"),"log");
             if(src==null){
-                GlobalVar.set("loguer",src);
+                GlobalVar.set("logger",src);
             }
         }
         super.aim(src);
@@ -57,35 +57,32 @@ public class Logger extends ModelDirectory implements LogImpl{
         return this.mode_debug;
     }
     
+    public Logger showMessage(){
+        this.getLog().showMessage();
+        return this;
+    }
+    
     @Override
     public Logger add(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(message);
-        }
+        this.getLog().add(message);
         return this;
     }
     
     @Override
     public Logger info(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.INFO,message);
-        }
+        this.getLog().add(LogType.INFO,message);
         return this;
     }
     
     @Override
     public Logger error(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.ERROR,message);
-        }
+        this.getLog().add(LogType.ERROR,message);
         return this;
     }
 
     @Override
     public Logger warning(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.WARNING,message);
-        }
+        this.getLog().add(LogType.WARNING,message);
         return this;
     }
 
@@ -99,25 +96,19 @@ public class Logger extends ModelDirectory implements LogImpl{
 
     @Override
     public Logger notice(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.NOTICE,message);
-        }
+        this.getLog().add(LogType.NOTICE,message);
         return this;
     }
 
     @Override
     public Logger critical(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.CRITICAL,message);
-        }
+        this.getLog().add(LogType.CRITICAL,message);
         return this;
     }
 
     @Override
     public Logger alert(String message){
-        if(this.isModeDebug()){
-            this.getLog().add(LogType.ALERT,message);
-        }
+        this.getLog().add(LogType.ALERT,message);
         return this;
     }
 
