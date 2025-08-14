@@ -1,5 +1,7 @@
 package code;
 
+import com.dogiloki.multitaks.ObjectId;
+
 /**
  *
  * @author dogi_
@@ -8,7 +10,12 @@ package code;
 public class Test{
     
     public Test(){
-        
+        System.out.println(ObjectId.generate());
+        System.out.println(ObjectId.generate());
+        System.out.println(ObjectId.generate());
+        System.out.println(ObjectId.generate());
+        System.out.println(ObjectId.generate());
+        System.out.println(ObjectId.generate());
     }
     
     public static void main(String args[]){

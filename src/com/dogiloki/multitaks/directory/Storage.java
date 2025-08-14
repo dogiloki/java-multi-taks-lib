@@ -277,11 +277,10 @@ public class Storage{
         JFileChooser chooser=new JFileChooser(path_current);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.showOpenDialog(frame);
-        try{
-            return chooser.getSelectedFile().toString();
-        }catch(Exception ex){
-            ex.printStackTrace();
+        int done=chooser.showOpenDialog(frame);
+        if(done==JFileChooser.APPROVE_OPTION){
+            File selected_file=chooser.getSelectedFile();
+            return selected_file==null?null:selected_file.getAbsolutePath();
         }
         return null;
     }

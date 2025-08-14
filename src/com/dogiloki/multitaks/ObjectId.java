@@ -2,8 +2,10 @@ package com.dogiloki.multitaks;
 
 import com.dogiloki.multitaks.network.NetworkUtils;
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -12,22 +14,20 @@ import java.util.Arrays;
 
 public class ObjectId{
     
-    private static long count_static=-2;
+    private static AtomicLong COUNT_STATIC=new AtomicLong(-1);
     private long count;
     
     public static String generate(){
-        ObjectId.count_static++;
-        return new ObjectId(ObjectId.count_static).get();
+        return new ObjectId(COUNT_STATIC.incrementAndGet()).get();
     }
     
     public static String generate(long count){
-        ObjectId.count_static=count;
-        ObjectId.count_static++;
-        return new ObjectId(ObjectId.count_static).get();
+        COUNT_STATIC.set(count);
+        return new ObjectId(COUNT_STATIC.incrementAndGet()).get();
     }
     
     public static void count(long count){
-        ObjectId.count_static=count;
+        COUNT_STATIC.set(count);
     }
     
     public ObjectId(){
@@ -45,8 +45,7 @@ public class ObjectId{
             out_array.write(this.getMac());
             out_array.write(this.getCount());
             MessageDigest md=MessageDigest.getInstance("SHA-256");
-            md.update(out_array.toByteArray());
-            byte[] hash=md.digest();
+            byte[] hash=md.digest(out_array.toByteArray());
             StringBuilder hex=new StringBuilder();
             for(byte b:hash){
                 hex.append(String.format("%02x",b & 0XFF));
@@ -60,24 +59,18 @@ public class ObjectId{
     
     private byte[] getTimestamp(){
         long timestamp=System.currentTimeMillis();
-        byte[] timestamp_bytes={
-            (byte)((timestamp>>24) & 0xFF),
-            (byte)((timestamp>>16) & 0xFF),
-            (byte)((timestamp>>8) & 0xFF),
-            (byte)((timestamp) & 0xFF)
-        };
-        return timestamp_bytes;
+        return ByteBuffer.allocate(8).putLong(timestamp).array();
     }
     
     private byte[] getMac(){
         byte[] mac=NetworkUtils.getMac().getBytes();
-        return Arrays.copyOfRange(mac,0,3);
+        return Arrays.copyOfRange(mac,0,Math.min(mac.length,3));
     }
     
     private byte[] getCount(){
         this.count++;
-        byte[] count=String.valueOf(this.count).getBytes();
-        return Arrays.copyOfRange(count,0,3);
+        byte[] count_bytes=ByteBuffer.allocate(8).putLong(this.count).array();
+        return Arrays.copyOfRange(count_bytes,0,3);
     }
     
 }
