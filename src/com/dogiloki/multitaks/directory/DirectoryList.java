@@ -24,6 +24,7 @@ public class DirectoryList{
     private DirectoryType type;
     private Iterator<Path> iterator;
     private Predicate<Path> filter;
+    private boolean recursive=false;
     
     public DirectoryList(String path){
         this.run(path,DirectoryType.ALL);
@@ -39,14 +40,34 @@ public class DirectoryList{
         return this;
     }
     
+    public DirectoryList setRecursive(boolean value){
+        this.recursive=value;
+        this.run(this.directory.toString(),this.type);
+        return this;
+    }
+    
+    public boolean isRecursive(){
+        return this.recursive;
+    }
+    
     private void run(String path, DirectoryType type){
         try{
             this.directory=Paths.get(path);
-            this.directory_stream=Files.newDirectoryStream(this.directory);
-            this.current_directory=null;
             this.type=type;
-            this.iterator=this.directory_stream.iterator();
             this.filter=p->true;
+            this.current_directory=null;
+            if(this.isRecursive()){
+                this.iterator=Files.walk(this.directory)
+                        .filter(filter_path->{
+                            return this.type==DirectoryType.ALL ||
+                                    (this.type==DirectoryType.FOLDER && Files.isDirectory(filter_path)) ||
+                                    (this.type==DirectoryType.FILE && !Files.isDirectory(filter_path));
+                        })
+                        .iterator();
+            }else{
+                this.directory_stream=Files.newDirectoryStream(this.directory);
+                this.iterator=this.directory_stream.iterator();
+            }
         }catch(Exception ex){
             ex.printStackTrace();
         }
