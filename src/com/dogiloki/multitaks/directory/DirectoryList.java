@@ -25,7 +25,6 @@ public class DirectoryList{
     private Iterator<Path> iterator;
     private Predicate<Path> filter;
     private boolean recursive=false;
-    private boolean relative_paths=false;
     
     public DirectoryList(String path){
         this.run(path,DirectoryType.ALL);
@@ -45,15 +44,6 @@ public class DirectoryList{
         this.recursive=value;
         this.run(this.directory.toString(),this.type);
         return this;
-    }
-    
-    public DirectoryList setUseRelativePaths(boolean value){
-        this.relative_paths=value;
-        return this;
-    }
-    
-    public boolean isRelativePaths(){
-        return this.relative_paths;
     }
     
     public boolean isRecursive(){
@@ -120,7 +110,7 @@ public class DirectoryList{
         this.prepareNext();
         Path path=this.current_directory;
         this.current_directory=null;
-        return this.isRelativePaths()?this.directory.relativize(path):path;
+        return path;
     }
     
     public <T> List<T> toList(){

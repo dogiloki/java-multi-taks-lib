@@ -1160,25 +1160,16 @@ public class Storage{
     }
     
     public String hashing(){
-        if(!this.exists()){
-            return null;
-        }
-        FileBlock file_block=new FileBlock(this.getSrc(),65536);
         try{
+            FileBlock file_block=new FileBlock(this.getSrc(),65536);
             MessageDigest digest=MessageDigest.getInstance("SHA-256");
             file_block.readBlocks((byte[] block)->{
-                digest.update(block,0,block.length);
+                digest.update(file_block.getBuffer(),0,file_block.getBit());
             });
             byte[] hash=digest.digest();
             return Code.bytesToHex(hash);
         }catch(Exception ex){
             ex.printStackTrace();
-        }finally{
-            try{
-                file_block.close();
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
         }
         return null;
     }
