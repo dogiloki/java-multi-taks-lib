@@ -51,7 +51,7 @@ public class JSON extends DataFormat{
     @Override
     protected HashFields format(String text){
         HashFields fields=new HashFields();
-        if(text.isEmpty()){
+        if(text==null || text.isEmpty()){
             return fields;
         }
         fields=JSON.builder().fromJson(text,HashFields.class);

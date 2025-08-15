@@ -52,7 +52,7 @@ public class ModelDirectory extends Storage{
         this.setSrc(src);
         Directory annot_directory=this.getInstance().getClass().getAnnotation(Directory.class);
         if(annot_directory instanceof Directory){
-            super.fromJar(annot_directory.fromJar());
+            this.fromJar(annot_directory.fromJar());
             this.setType(annot_directory.type());
             if(!annot_directory.src().isEmpty()){
                 this.setSrc(annot_directory.src());
@@ -64,6 +64,9 @@ public class ModelDirectory extends Storage{
     }
     
     private void create(){
+        if(this.isFromJar()){
+            return;
+        }
         if(this.getType()==null || this.getSrc()==null){
             return;
         }

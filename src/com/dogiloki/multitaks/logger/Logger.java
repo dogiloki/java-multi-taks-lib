@@ -40,7 +40,7 @@ public class Logger extends ModelDirectory implements LogImpl{
     
     private void createFielLog(String src){
         if(src==null){
-            src=(String)Function.assign(GlobalVar.get("logger"),"log");
+            src=(String)Function.assign(GlobalVar.get("logger"),"logs");
             if(src==null){
                 GlobalVar.set("logger",src);
             }

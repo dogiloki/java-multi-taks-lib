@@ -28,6 +28,9 @@ import com.dogiloki.multitaks.GlobalVar;
 import com.dogiloki.multitaks.ObjectId;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
+import com.dogiloki.multitaks.logger.AppLogger;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.security.MessageDigest;
@@ -676,14 +679,20 @@ public class Storage{
     private boolean open(boolean append){
         if(this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
             try{
+                InputStream in=null;
                 if(this.isFromJar()){
-                    URL resource_url=this.getClass().getResource(this.getSrc());
-                    this.file=new File(resource_url.toURI());
+                    in=this.getClass().getResourceAsStream("/"+this.getSrc());
+                    if(in==null){
+                        AppLogger.debug("No se encontró "+this.getSrc()+" dentro del jar");
+                        throw new FileNotFoundException("No se encontró "+this.getSrc()+" dentro del jar");
+                    }
                 }else{
                     this.file=new File(this.getSrc());
                 }
-                this.bw=new BufferedWriter(new FileWriter(this.file,append));
-                this.br=new BufferedReader(new FileReader(this.file));
+                if(this.file!=null){
+                    this.bw=new BufferedWriter(new FileWriter(this.file,append));
+                }
+                this.br=new BufferedReader(in==null?new FileReader(this.file):new InputStreamReader(in));
                 return true;
             }catch(Exception ex){
                 ex.printStackTrace();
@@ -695,9 +704,13 @@ public class Storage{
     private void openOnlyFile(){
         if(this.getSrc()!=null){
             try{
+                InputStream in=null;
                 if(this.isFromJar()){
-                    URL resource_url=getClass().getResource("/"+this.getSrc());
-                    this.file=new File(resource_url.toURI());
+                    in=this.getClass().getResourceAsStream("/"+this.getSrc());
+                    if(in==null){
+                        AppLogger.debug("No se encontró "+this.getSrc()+" dentro del jar");
+                        throw new FileNotFoundException("No se encontró "+this.getSrc()+" dentro del jar");
+                    }
                 }else{
                     this.file=new File(this.getSrc());
                 }
@@ -750,7 +763,7 @@ public class Storage{
      */
     public boolean write(Object... text){
         try{
-            if(!this.open(false)){
+            if(!this.open(false) || this.bw==null){
                 return false;
             }
             for(Object t:text){
@@ -859,20 +872,18 @@ public class Storage{
     
     /**
      * Cierra su BufferedWriter y BufferedReader
-     * @return 
      */
-    public boolean close(){
+    public void close(){
         try{
-            if(this.bw==null || this.br==null){
-                return true;
+            if(this.bw!=null){
+                this.bw.close();
             }
-            this.bw.close();
-            this.br.close();
-            return true;
+            if(this.br!=null){
+                this.br.close();
+            }
         }catch(IOException ex){
             ex.printStackTrace();
         }
-        return false;
     }
     
     /**

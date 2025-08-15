@@ -70,6 +70,7 @@ public class Log extends ModelDirectory{
     }
     
     public void displayMessage(LogEntry entry){
+        if(!this.show_message) return;
         int message_type;
         switch(entry.type()){
             case INFO: message_type=JOptionPane.INFORMATION_MESSAGE; break;
