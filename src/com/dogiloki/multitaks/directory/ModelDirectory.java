@@ -64,7 +64,7 @@ public class ModelDirectory extends Storage{
     }
     
     private void create(){
-        if(this.getType()==null ||this.getSrc()==null){
+        if(this.getType()==null || this.getSrc()==null){
             return;
         }
         if(this.isFolder()){
