@@ -7,6 +7,7 @@ import com.dogiloki.multitaks.directory.DirectoryList;
 import com.dogiloki.multitaks.directory.FileBlock;
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.directory.Storage;
+import com.dogiloki.multitaks.updater.Manifest;
 
 /**
  *
@@ -36,12 +37,16 @@ public class Test{
         */
         //String text=Storage.instance("E:\\Escritorio\\fotos\\20171006_115719.jpg").hashing();
         //System.out.println(new Persona().toString());
-        DirectoryList paths=new Storage("db").listDirectory().filter((path)->{
-            return path.toString().endsWith(".cfg");
-        });
+        /*
+        DirectoryList paths=new Storage("db").listFiles().setRecursive(true);
         while(paths.hasNext()){
             System.out.println(paths.next());
         }
+        */
+        Manifest mani=new Manifest("E:\\Github\\wolftri\\updates\\minecraft-server");
+        mani.url("https://dogiloki.github.io/wolftri/updates/minecraft-server");
+        mani.version("1.0.0");
+        mani.save();
     }
     
     public static void main(String args[]){
