@@ -27,6 +27,9 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     private boolean apply_after_download=false;
     
     public Updater(String base_directory){
+        if(base_directory==null || base_directory.trim().isEmpty()){
+            base_directory=".";
+        }
         super.aim(base_directory);
         this.cfg=new UpdaterConfig().builder();
         this.base_directory=base_directory+"/updates";
