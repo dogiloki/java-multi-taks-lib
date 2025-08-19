@@ -23,6 +23,7 @@ public class Download extends ModelDirectory implements Runnable{
     private boolean pause=false;
     private boolean canceled=false;
     private boolean delete_if_canceled=false;
+    private boolean overwrite_if_exists=false;
     private final DownloadMetrics metrics=new DownloadMetrics();
     private OnCallbackNotReturn<DownloadMetrics> on_metrics=(item)->{};
     
@@ -37,16 +38,36 @@ public class Download extends ModelDirectory implements Runnable{
         this.on_metrics=action;
     }
     
-    public boolean deleteIfCanceled(){
+    public boolean isDeleteIfCanceled(){
         return this.delete_if_canceled;
     }
     
-    public boolean deleteIfCanceled(boolean b){
-        return this.delete_if_canceled=b;
+    public Download deleteIfCanceled(boolean b){
+        this.delete_if_canceled=b;
+        return this;
+    }
+    
+    public boolean isOverwriteIfExists(){
+        return this.overwrite_if_exists;
+    }
+    
+    public Download overwriteIfExists(boolean b){
+        this.overwrite_if_exists=b;
+        return this;
     }
     
     public Download start(){
         this.thread.start();
+        return this;
+    }
+    
+    public Download startBlocking(){
+        this.thread.start();
+        try{
+            this.thread.join();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         return this;
     }
     
@@ -79,11 +100,18 @@ public class Download extends ModelDirectory implements Runnable{
             
             this.in=new BufferedInputStream(connection.getInputStream());
             this.metrics.totalSize(connection.getContentLength());
+            
+            // Boorar archivo actual si existe
+            if(this.exists() && this.isOverwriteIfExists()){
+                this.write("");
+            }
+            
             int b=0;
             byte[] buffer=new byte[this.file_block.getBlockSize()];
+            
             this.in.skip(this.file_block.readAll().length);
             
-            while(true){
+            while(!this.canceled && (b=this.in.read(buffer))!=-1){
                 if(this.pause){
                     continue;
                 }
@@ -92,13 +120,12 @@ public class Download extends ModelDirectory implements Runnable{
                     this.file_block.close();
                     this.close();
 
-                    if(this.deleteIfCanceled()){
+                    if(this.isDeleteIfCanceled()){
                         this.delete();
                     }
                     break;
                 }
                 this.metrics.status=DownloadStatus.DOWNLOADING;
-                b=this.in.read(buffer);
                 if(b==-1){
                     break;
                 }

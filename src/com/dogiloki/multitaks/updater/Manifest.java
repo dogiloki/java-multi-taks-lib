@@ -14,8 +14,6 @@ import com.google.gson.annotations.Expose;
 @Directory(type=DirectoryType.JSON)
 public final class Manifest extends ModelDirectory{
     
-    public static String FILE_NAME="manifest.json";
-    
     @Expose
     public String proyect;
     @Expose
@@ -26,9 +24,13 @@ public final class Manifest extends ModelDirectory{
     public UpdateFiles files;
     
     public Manifest(String path){
-        super.aim(path+"/"+Manifest.FILE_NAME);
-        this.proyect=new Storage(path).getName();
-        this.files=new UpdateFiles(path);
+        super.aim(path+"/"+UpdaterConfig.MANIFEST_FILE_NAME);
+    }
+    
+    public Manifest create(){
+        this.proyect=new Storage(this.getFolder()).getName();
+        this.files=new UpdateFiles(this.getFolder());
+        return this;
     }
     
     public Manifest proyect(String value){

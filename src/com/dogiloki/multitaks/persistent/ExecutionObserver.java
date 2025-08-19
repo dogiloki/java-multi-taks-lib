@@ -64,11 +64,15 @@ public class ExecutionObserver{
     private BufferedReader reader;
     private int exit_code;
     private boolean use_thread=false;
+    private boolean wait_completion=false;
     public onCanceled onCanceled=(String out_str1, int code)->{
         
     };
     public onFinalized onFinalized=(String out_str1, int code)->{
         
+    };
+    public onOutput onOutput=(String line, int posi)->{
+    
     };
     
     public ExecutionObserver(){
@@ -83,26 +87,68 @@ public class ExecutionObserver{
         this.command(command,context);
     }
     
+    public String output(){
+        return this.out_str.toString();
+    }
+    
+    public int exitCode(){
+        return this.exit_code;
+    }
+    
+    public ExecutionObserver waitCompletion(boolean value){
+        this.wait_completion=value;
+        return this;
+    }
+    
+    public ExecutionObserver waitCompletion(){
+        this.wait_completion=true;
+        return this;
+    }
+    
+    public boolean isWaitCompletion(){
+        return this.wait_completion;
+    }
+    
+    public ExecutionObserver useThread(boolean value){
+        this.use_thread=value;
+        return this;
+    }
+    
     public ExecutionObserver useThread(){
         this.use_thread=true;
         return this;
+    }
+    
+    public boolean isUseThread(){
+        return this.use_thread;
+    }
+    
+    public ExecutionObserver context(String value){
+        if(value==null) return this;
+        this.context=value;
+        return this;
+    }
+    
+    public String context(){
+        return this.context;
+    }
+    
+    public String command(){
+        return this.command;
     }
     
     public ExecutionObserver command(String command){
         return this._command(command,null);
     }
     
-    private ExecutionObserver command(String command, String context){
+    public ExecutionObserver command(String command, String context){
         return this._command(command,context);
     }
     
     private ExecutionObserver _command(String command, String context){
         this.command=command;
-        this.context=context;
+        this.context(context);
         this.pb=new ProcessBuilder(command.split(" "));
-        if(this.context!=null){
-            this.pb.directory(new File(this.context));
-        }
         return this;
     }
     
@@ -115,7 +161,9 @@ public class ExecutionObserver{
     }
     
     private void _start(onOutput action) throws Exception{
-        if(this.use_thread){
+        if(this.isWaitCompletion()){
+            this.task(action);
+        }else if(this.isUseThread()){
             Thread thread=new Thread(()->task(action));
             thread.start();
             THREADS.add(thread);
@@ -128,6 +176,9 @@ public class ExecutionObserver{
     
     private String task(onOutput action){
         try{
+            if(this.context()!=null){
+                this.pb.directory(new File(this.context()));
+            }
             this.p=this.pb.start();
             PROCESS.add(this.p);
             this.input_stream=this.p.getInputStream();
@@ -185,8 +236,11 @@ public class ExecutionObserver{
     
     private String transientOutput() throws Exception{
         String line;
+        int index=0;
         while((line=this.reader.readLine())!=null){
+            this.onOutput.call(line,index);
             this.out_str.append(line).append(System.lineSeparator());
+            index++;
         }
         this.input_stream.close();
         this.reader.close();

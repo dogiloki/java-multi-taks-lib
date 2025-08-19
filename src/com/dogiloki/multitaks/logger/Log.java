@@ -84,6 +84,7 @@ public class Log extends ModelDirectory{
             default: message_type=JOptionPane.PLAIN_MESSAGE;
         }
         JOptionPane.showMessageDialog(null,entry.message(),entry.type().toString(),message_type);
+        this.show_message=false;
     }
     
 }

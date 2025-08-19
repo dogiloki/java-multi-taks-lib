@@ -134,13 +134,13 @@ public class Function<T>{
      */
     public static int compareTo(Object v1, Object v2){
         if(v1==null && v2!=null){
-            return -1;
+            return -1; // v1<v2
         }
         if(v1!=null && v2==null){
-            return 1;
+            return 1; // v2>v1
         }
         if(v1==null || v2==null){
-            return 0;
+            return 0; // v1==v2
         }
         try{
             return Integer.compare(Integer.parseInt(v1.toString()),Integer.parseInt(v2.toString()));

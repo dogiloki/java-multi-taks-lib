@@ -31,8 +31,8 @@ import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.logger.AppLogger;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 
 /**
@@ -382,6 +382,7 @@ public class Storage{
         try{
             File file;
             Storage s_path=new Storage(path);
+            if(!s_path.exists()) return;
             DirectoryList directories=s_path.listDirectory();
             while(directories.hasNext()){
                 String directory=directories.next().getFileName().toString();
@@ -589,6 +590,7 @@ public class Storage{
     private String _src=null;
     private DirectoryType _type=null;
     private File file=null;
+    private Path path=null;
     private BufferedWriter bw=null;
     private BufferedReader br=null;
     private boolean from_jar=false;
@@ -1038,8 +1040,8 @@ public class Storage{
      * @return Indica si existe el directorio y si se creo correctamente en caso de indicarlo
      */
     private boolean _exists(boolean created){
-        this.openOnlyFile();
-        boolean exists=this.file.exists();
+        if(this.asPath()==null) return false;
+        boolean exists=Files.exists(this.asPath());
         if(!exists && created){
             switch(this.getType()){
                 case FOLDER: return Storage.createFolder(this.getSrc());
@@ -1170,6 +1172,20 @@ public class Storage{
         return false;
     }
     
+    /**
+     * Obtener la ruta del archivo como Path
+     * @return instancia de Path
+     */
+    public Path asPath(){
+        if(this.getSrc()==null) return null;
+        this.path=this.path==null?Paths.get(this.getSrc()):this.path;
+        return this.path;
+    }
+    
+    /**
+     * Generar hash único por archivo en base a su contenido
+     * @return SHA-256
+     */
     public String hashing(){
         if(!this.exists()){
             return null;

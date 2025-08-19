@@ -12,6 +12,10 @@ import java.nio.file.Path;
 
 public class UpdateFiles extends ListFields<UpdateFile>{
     
+    public UpdateFiles(){
+        
+    }
+    
     public UpdateFiles(String path){
         try{
             DirectoryList files=new Storage(path)
@@ -19,7 +23,7 @@ public class UpdateFiles extends ListFields<UpdateFile>{
                     .setRecursive(true);
             while(files.hasNext()){
                 Path file_path=files.next();
-                if(file_path.toString().endsWith(Manifest.FILE_NAME)) continue;
+                if(file_path.toString().endsWith(UpdaterConfig.MANIFEST_FILE_NAME)) continue;
                 this.append(new UpdateFile(file_path.toString(),path));
             }
         }catch(Exception ex){
