@@ -594,6 +594,7 @@ public class Storage{
     private BufferedWriter bw=null;
     private BufferedReader br=null;
     private boolean from_jar=false;
+    private Class<?> reference_class=null;
     private String _root_path=Storage.ROOT_PATH;
     
     public Storage(){
@@ -665,6 +666,27 @@ public class Storage{
         return this;
     }
     
+    public Storage referenceClass(Class<?> clazz, String src){
+        this.referenceClass(clazz);
+        this.aim(src,null);
+        return this;
+    }
+    
+    public Storage referenceClass(Class<?> clazz, String src, DirectoryType type){
+        this.referenceClass(clazz);
+        this.aim(src,type);
+        return this;
+    }
+    
+    public Storage referenceClass(Class<?> clazz){
+        this.reference_class=clazz;
+        return this;
+    }
+    
+    public Class<?> referenceClass(){
+        return this.reference_class;
+    }
+    
     private Storage _fromJar(boolean value){
         this.from_jar=value;
         return this;
@@ -684,7 +706,7 @@ public class Storage{
             try{
                 InputStream in=null;
                 if(this.isFromJar()){
-                    in=this.getClass().getResourceAsStream("/"+this.getSrc());
+                    in=this.referenceClass().getResourceAsStream(this.getSrc());
                     if(in==null){
                         AppLogger.debug("No se encontró "+this.getSrc()+" dentro del jar");
                         throw new FileNotFoundException("No se encontró "+this.getSrc()+" dentro del jar");
@@ -709,7 +731,7 @@ public class Storage{
             try{
                 InputStream in=null;
                 if(this.isFromJar()){
-                    in=this.getClass().getResourceAsStream("/"+this.getSrc());
+                    in=this.referenceClass().getResourceAsStream(this.getSrc());
                     if(in==null){
                         AppLogger.debug("No se encontró "+this.getSrc()+" dentro del jar");
                         throw new FileNotFoundException("No se encontró "+this.getSrc()+" dentro del jar");

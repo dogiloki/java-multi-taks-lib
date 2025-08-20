@@ -104,7 +104,7 @@ public class ModelDirectory extends Storage{
         }
         try{
             if(instance instanceof ModelDirectory){
-                instance.getClass().getMethod("aim",String.class).invoke(instance,this.getSrc());
+                instance.getClass().getMethod("referenceClass",Class.class,String.class,DirectoryType.class).invoke(instance,this.referenceClass(),this.getSrc(),this.getType());
             }
             for(Method method:instance.getClass().getMethods()){
                 RunAfter annot_execute=method.getAnnotation(RunAfter.class);

@@ -24,7 +24,8 @@ public class UpdaterConfig extends ModelDirectory{
     @Expose
     public String manifest_file_name;
     
-    public UpdaterConfig(){
+    public UpdaterConfig(Class<?> clazz){
+        super.referenceClass(clazz);
         super.aim("updater-config.json");
         this.manifest_file_name=UpdaterConfig.MANIFEST_FILE_NAME;
     }

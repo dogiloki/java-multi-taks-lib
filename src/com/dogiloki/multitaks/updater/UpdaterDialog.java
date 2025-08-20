@@ -19,11 +19,11 @@ public final class UpdaterDialog extends javax.swing.JDialog {
     private TaskProgress download_task;
     private TaskProgress apply_task;
     
-    public UpdaterDialog(java.awt.Frame parent, boolean modal, String path){
+    public UpdaterDialog(java.awt.Frame parent, boolean modal, String path, UpdaterConfig cfg){
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        this.updater=new Updater(path){
+        this.updater=new Updater(path,cfg){
             @Override
             public void onProgress(){
                 switch(this.getStatus()){
@@ -222,7 +222,7 @@ public final class UpdaterDialog extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable(){
             @Override
             public void run() {
-                UpdaterDialog dialog = new UpdaterDialog(new javax.swing.JFrame(),true,null);
+                UpdaterDialog dialog = new UpdaterDialog(new javax.swing.JFrame(),true,null,null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter(){
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e){

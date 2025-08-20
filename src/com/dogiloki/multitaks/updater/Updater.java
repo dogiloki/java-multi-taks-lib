@@ -27,12 +27,12 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     private UpdateStatus _status;
     private boolean apply_after_download=false;
     
-    public Updater(String base_directory){
+    public Updater(String base_directory, UpdaterConfig cfg){
         if(base_directory==null || base_directory.trim().isEmpty()){
             base_directory=".";
         }
         super.aim(base_directory);
-        this.cfg=new UpdaterConfig().builder();
+        this.cfg=cfg;
         this.base_directory=base_directory+"/updates";
         this.backup=new Storage(this.base_directory+"/backup");
         this.update=new Storage(this.base_directory+"/update");
