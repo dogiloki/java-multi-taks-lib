@@ -7,7 +7,7 @@ import com.dogiloki.multitaks.persistent.enums.TaskStatus;
  * @author _dogi
  */
 
-public class TaskProgress{
+public class TaskProgress implements TaskProgressListener{
     
     private final String name;
     private int progress;
@@ -21,6 +21,7 @@ public class TaskProgress{
     
     public synchronized TaskProgress setProgress(int value){
         this.progress=Math.max(0,Math.min(100,value));
+        this.onProgressChanged();
         if(this.progress>=100){
             this.setStatus(TaskStatus.COMPLETED);
         }else{
@@ -29,8 +30,16 @@ public class TaskProgress{
         return this;    
     }
     
+    public TaskProgress addSubtask(String ...names){
+        for(String name:names){
+            this.subtasks.add(new TaskProgress(name));
+        }
+        return this;
+    }
+    
     private synchronized TaskProgress setStatus(TaskStatus status){
         this._status=status;
+        this.onStatusChanged();
         return this;
     }
     
@@ -56,6 +65,16 @@ public class TaskProgress{
     
     public ListTaskProgress getSubtasks(){
         return this.subtasks;
+    }
+
+    @Override
+    public void onProgressChanged(){
+        
+    }
+
+    @Override
+    public void onStatusChanged(){
+        
     }
     
 }

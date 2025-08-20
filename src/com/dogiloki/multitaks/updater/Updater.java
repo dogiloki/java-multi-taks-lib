@@ -17,13 +17,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class Updater extends ModelDirectory implements UpdatableApp{
     
     private final UpdaterConfig cfg;
-    private String base_directory;
-    private Storage backup;
-    private Storage update;
-    private int total_downloads=0;
+    private final String base_directory;
+    private final Storage backup;
+    private final Storage update;
+    private final UpdateItems _update_items=new UpdateItems();
+    private int _total_downloads;
+    private AtomicInteger _finished_downloads;
     private Manifest remote_manifest;
     private UpdateStatus _status;
-    private UpdateItems update_items=new UpdateItems();
     private boolean apply_after_download=false;
     
     public Updater(String base_directory){
@@ -35,6 +36,8 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
         this.base_directory=base_directory+"/updates";
         this.backup=new Storage(this.base_directory+"/backup");
         this.update=new Storage(this.base_directory+"/update");
+        this.setTotalDownloads(0);
+        this.setFinishedDownloads(0);
         this.changeStatus(UpdateStatus.IDLE);
     }
     
@@ -62,7 +65,7 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     
     private Updater _changeStatus(UpdateStatus status, Exception ex){
         this._status=status;
-        if(status==UpdateStatus.FINALIZED){
+        if(status==UpdateStatus.COMPLETED){
             this.onComplete();
             this.onProgress();
         }else if(status==UpdateStatus.FAILED){
@@ -78,8 +81,8 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
         return this._status;
     }
     
-    @Override
-    public void loadRemoteManifest(boolean bloking){
+    protected void loadRemoteManifest(boolean bloking){
+        this.changeStatus(UpdateStatus.CHECKING);
         Download download=new Download(this.cfg.getUrlManifest(),this.base_directory+"/"+this.cfg.manifest_file_name)
                 .overwriteIfExists(true);
         if(bloking){
@@ -94,25 +97,60 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
             download.start();
         }
     }
+    
+    public synchronized UpdateItems getUpdateItems(){
+        return this._update_items;
+    }
+    
+    public synchronized int getTotalDownloads(){
+        return this._total_downloads;
+    }
+    
+    private synchronized Updater addTotalDownloads(int value){
+        this._total_downloads+=value;
+        return this;
+    }
+    
+    private synchronized Updater setTotalDownloads(int value){
+        this._total_downloads=value;
+        return this;
+    }
+    
+    public synchronized AtomicInteger getFinishedDownloads(){
+        return this._finished_downloads;
+    }
+    
+    private synchronized int addFinishedDownloads(int value){
+        return this._finished_downloads.addAndGet(value);
+    }
+    
+    private synchronized Updater setFinishedDownloads(int value){
+        this._finished_downloads=new AtomicInteger(value);
+        return this;
+    }
+    
+    public synchronized int getPercentDownloads(){
+        if(this.getTotalDownloads()==0){
+            return 100;
+        }
+        int done=this.getFinishedDownloads().get();
+        return (int)(done*100.0f)/this.getTotalDownloads();
+    }
 
     @Override
     public boolean checkForUpdates(){
-        this.changeStatus(UpdateStatus.CHECKING);
         this.loadRemoteManifest(true);
         boolean needs_update=Function.compareTo(this.getCurrentVersion(),this.getLastVersion())<0;
-        if(!needs_update){
-            this.changeStatus(UpdateStatus.NO_UPDATE);
-        }
+        this.changeStatus(needs_update?UpdateStatus.UPDATE:UpdateStatus.NO_UPDATE);
         return needs_update;
     }
 
     @Override
     public void downloadUpdate(){
-        if(!this.checkForUpdates()) return;
         this.changeStatus(UpdateStatus.DOWNLOADING);
-        this.update_items.clear();
-        AtomicInteger finished=new AtomicInteger(0);
-        this.total_downloads=0;
+        this.getUpdateItems().clear();
+        this.setTotalDownloads(0);
+        this.setFinishedDownloads(0);
         for(UpdateFile update_file:this.remote_manifest.files){
             String url=this.cfg.getUrl(update_file.path);
             UpdateItem update_item=new UpdateItem(
@@ -120,30 +158,31 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
                     new Storage(this.backup.getSrc()+"/"+update_file.path),
                     new Storage(this.update.getSrc()+"/"+update_file.path)
             );
-            if(!update_item.current.hashing().equals(update_file.hash)){
+            if(!update_item.current.exists() || !update_item.current.hashing().equals(update_file.hash)){
                 try{
-                    this.total_downloads++;
+                    this.addTotalDownloads(1);
                     Download download=new Download(url,update_item.last.getSrc())
                             .overwriteIfExists(true)
                             .start();
                     download.onMetrics((metrics)->{
                         if(metrics.status==DownloadStatus.FINALIZED){
-                            this.update_items.add(update_item);
-                            int done=finished.incrementAndGet();
-                            if(done==this.total_downloads){
+                            this.getUpdateItems().add(update_item);
+                            int done=this.addFinishedDownloads(1);
+                            if(done==this.getTotalDownloads()){
                                 this.changeStatus(UpdateStatus.DOWNLOAD_COMPLETED);
                                 if(this.isApplyAfterDownload()){
                                     this.applyUpdate();
                                 }
                             }
                         }
+                        this.changeStatus(UpdateStatus.DOWNLOADING);
                     });
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
             }
         }
-        if(this.total_downloads==0){
+        if(this.getTotalDownloads()==0){
             this.changeStatus(UpdateStatus.NO_UPDATE);
         }
     }
@@ -151,20 +190,25 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     @Override
     public void applyUpdate(){
         if(this.getStatus()!=UpdateStatus.DOWNLOAD_COMPLETED) return;
-        if(this.update_items.size()<=0){
+        if(this.getUpdateItems().size()<=0){
             this.changeStatus(UpdateStatus.NO_UPDATE);
             return;
         }
-        this.changeStatus(UpdateStatus.APPLYING);
-        for(UpdateItem update_item:this.update_items){
+        for(UpdateItem update_item:this.getUpdateItems()){
+            this.changeStatus(UpdateStatus.APPLYING);
             try{
-                update_item.apply();
+                update_item.applyWithBackup();
             }catch(Exception ex){
                 ex.printStackTrace();
                 this.changeStatus(UpdateStatus.FAILED,ex);
             }
         }
-        this.changeStatus(UpdateStatus.FINALIZED);
+        this.changeStatus(UpdateStatus.COMPLETED);
+    }
+    
+    public synchronized int getPercentApplyUpdate(){
+        int done=this.getUpdateItems().getCountApplied();
+        return (int)(done*100.0f)/this.getUpdateItems().size();
     }
 
     @Override
@@ -182,13 +226,8 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     }
 
     @Override
-    public boolean verifyUpdate(){
-        return false;
-    }
-
-    @Override
-    public boolean backupCurrent(){
-        return false;
+    public void applyBackup(){
+        System.out.println("PENDIENTE!!!");
     }
 
     @Override

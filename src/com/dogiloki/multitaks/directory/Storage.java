@@ -650,8 +650,9 @@ public class Storage{
         return this._type;
     }
     
-    public void setType(DirectoryType type){
+    public Storage setType(DirectoryType type){
         this._type=type;
+        return this;
     }
     
     public Storage fromJar(){

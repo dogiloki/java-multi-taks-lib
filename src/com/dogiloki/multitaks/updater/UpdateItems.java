@@ -13,4 +13,10 @@ public class UpdateItems extends ListFields<UpdateItem>{
         
     }
     
+    public synchronized int getCountApplied(){
+        return (int)this.stream()
+                .filter(item->item.isApplied())
+                .count();
+    }
+    
 }

@@ -7,8 +7,6 @@ package com.dogiloki.multitaks.updater.contracts;
 
 public interface UpdatableApp{
     
-    // Obtener manifest remoto para validar archivos
-    public void loadRemoteManifest(boolean bloking);
     // Verificar si hay una nueva versión disponible
     public boolean checkForUpdates();
     // Descargar actualización
@@ -20,11 +18,9 @@ public interface UpdatableApp{
     public String getCurrentVersion();
     // Consultar última versión
     public String getLastVersion();
-    
-    // Validar hash
-    public boolean verifyUpdate();
-    // Respaldar versión actual antes de aplicar la nueva
-    public boolean backupCurrent();
+
+    // Aplicar respaldo de la última versión anterior
+    public void applyBackup();
     
     // Notificar progreso de descarga/instalación
     public void onProgress();

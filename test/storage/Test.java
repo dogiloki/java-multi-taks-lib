@@ -52,7 +52,7 @@ public class Test{
         mani.version("1.0.0");
         mani.save();
         */
-        Updater updater=new Updater("updates"){
+        Updater updater=new Updater("test/project"){
             @Override
             public void onProgress(){
                 switch(this.getStatus()){
@@ -76,7 +76,7 @@ public class Test{
                         System.out.println("Aplicando actualización");
                         break;
                     }
-                    case FINALIZED:{
+                    case COMPLETED:{
                         System.out.println("Actualización completada");
                         break;
                     }
