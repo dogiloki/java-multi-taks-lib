@@ -46,13 +46,12 @@ public class Test{
             System.out.println(paths.next());
         }
         */
-        /*
         Manifest mani=new Manifest("E:\\Github\\wolftri\\updates\\minecraft-server").create();
         mani.url("https://dogiloki.github.io/wolftri/updates/minecraft-server");
-        mani.version("1.0.0");
+        mani.version("1.0.0-beta.2");
         mani.save();
-        */
-        Updater updater=new Updater("test/project"){
+        /*
+        Updater updater=new Updater("test/project",null){
             @Override
             public void onProgress(){
                 switch(this.getStatus()){
@@ -88,6 +87,7 @@ public class Test{
             }
         };
         updater.start();
+        */
     }
     
     public static void main(String args[]){

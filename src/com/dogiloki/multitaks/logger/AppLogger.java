@@ -9,6 +9,18 @@ public class AppLogger{
     
     private static final Logger APP_LOGGER=new Logger();
     
+    public static void probe(){
+        AppLogger.info("This is a trial message");
+        AppLogger.error("This is a trial message");
+        AppLogger.warning("This is a trial message");
+        AppLogger.debug("This is a trial message");
+        AppLogger.notice("This is a trial message");
+        AppLogger.critical("This is a trial message");
+        AppLogger.alert("This is a trial message");
+        AppLogger.emergency("This is a trial message");
+        
+    }
+    
     public static void add(String message){
         AppLogger.APP_LOGGER.add(message);
     }
