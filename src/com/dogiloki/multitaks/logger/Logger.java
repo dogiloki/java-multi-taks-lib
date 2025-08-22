@@ -9,6 +9,8 @@ import com.dogiloki.multitaks.directory.annotations.Directory;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import com.dogiloki.multitaks.logger.contracts.LogImpl;
 import com.dogiloki.multitaks.logger.enums.LogType;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  *
@@ -29,16 +31,17 @@ public class Logger extends ModelDirectory implements LogImpl{
     
     private Log log;
     private boolean mode_debug=true;
+    private Exception ex;
     
     public Logger(){
-        this.createFielLog(null);
+        this.createFileLog(null);
     }
     
     public Logger(String src){
-        this.createFielLog(src);
+        this.createFileLog(src);
     }
     
-    private void createFielLog(String src){
+    private void createFileLog(String src){
         if(src==null){
             src=(String)Function.assign(GlobalVar.get("logger"),"logs");
             if(src==null){
@@ -55,6 +58,13 @@ public class Logger extends ModelDirectory implements LogImpl{
     
     public boolean isModeDebug(){
         return this.mode_debug;
+    }
+    
+    public Logger exception(Exception ex){
+        StringWriter sw=new StringWriter();
+        PrintWriter pw=new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        return this.debug(sw.toString());
     }
     
     public Logger showMessage(){

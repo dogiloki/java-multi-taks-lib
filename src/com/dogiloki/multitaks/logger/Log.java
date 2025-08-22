@@ -26,6 +26,7 @@ public class Log extends ModelDirectory{
     
     private ListFields<LogListener> listeners=new ListFields();
     private boolean show_message=false;
+    private LogEntry last_entry=null;
     
     public Log(String src){
         super.aim(src);
@@ -34,6 +35,7 @@ public class Log extends ModelDirectory{
     
     public void showMessage(){
         this.show_message=true;
+        this.displayMessage(this.last_entry);
     }
     
     public void addListener(LogListener listener){
@@ -64,13 +66,14 @@ public class Log extends ModelDirectory{
     
     public void add(LogType log_type, String message){
         LogEntry entry=new LogEntry(Logger.getTimeCurrent(),log_type,message);
+        this.last_entry=entry;
         this.append(entry.toString()+"\n");
         this.notifyListener(entry,null);
         this.displayMessage(entry);
     }
     
     public void displayMessage(LogEntry entry){
-        if(!this.show_message) return;
+        if(!this.show_message || entry==null) return;
         int message_type;
         switch(entry.type()){
             case INFO: message_type=JOptionPane.INFORMATION_MESSAGE; break;
