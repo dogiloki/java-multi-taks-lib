@@ -21,6 +21,10 @@ public class MapValues extends HashFields<String,Object>{
     
     @Override
     public MapValues append(String key, Object value){
+        if(value instanceof RuleWithParams){
+            super.append(key,value.toString());
+            return this;
+        }
         super.append(key,value);
         return this;
     }

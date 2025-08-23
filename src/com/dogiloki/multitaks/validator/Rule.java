@@ -21,7 +21,11 @@ public class Rule{
     }
     
     public boolean passes(Object key, Object value, MapValues values, Object[] params){
-        return this.action.run(key,value,values,params);
+        try{
+            return this.action.run(key,value,values,params);
+        }catch(Exception ex){
+            return false;
+        }
     }
     
     public String message(){

@@ -4,6 +4,7 @@ import com.dogiloki.multitaks.Function;
 import com.dogiloki.multitaks.Singleton;
 import static com.dogiloki.multitaks.SingletonMethods.RULES;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
+import com.dogiloki.multitaks.validator.enums.ValidatorRule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class Validate{
                 }else{
                     params=alia_rule_split[1].toString().split(",");
                 }
-                if(alias_rule.equals("nullable") && value==null){
+                if(alias_rule.equals(ValidatorRule.NULLABLE) && value==null){
                     break;
                 }
                 if(action==null){
