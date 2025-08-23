@@ -11,6 +11,7 @@ import com.dogiloki.multitaks.validator.RuleWithParams;
 public enum ValidatorRule{
     
     NULLABLE,
+    NOT_NULL,
     REQUIRED,
     STRING,
     INTEGER,

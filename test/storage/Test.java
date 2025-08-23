@@ -20,6 +20,7 @@ import com.dogiloki.multitaks.updater.UpdaterConfig;
 public class Test{
     
     public Test(){
+        try{
         /*
         ModelDirectory di=new ModelDirectory();
         Persona p=new Persona();
@@ -88,6 +89,9 @@ public class Test{
         };
         updater.start();
         */
+        }catch(Exception ex){
+        
+        }
     }
     
     public static void main(String args[]){

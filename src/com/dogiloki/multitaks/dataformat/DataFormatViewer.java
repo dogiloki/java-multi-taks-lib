@@ -7,7 +7,6 @@ import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
 import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
 import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
 import com.dogiloki.multitaks.directory.HashFields;
-import com.dogiloki.multitaks.directory.ListFields;
 import com.google.gson.annotations.Expose;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -153,7 +152,6 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     }
     
     public void clean(){
-        
         for(Map.Entry<String,InputComponent> entry:this.list_input_components.entrySet()){
             entry.getValue().setText("");
         }

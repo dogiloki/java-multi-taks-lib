@@ -63,6 +63,7 @@ public class Logger extends ModelDirectory implements LogImpl{
     public Logger exception(Exception ex){
         StringWriter sw=new StringWriter();
         PrintWriter pw=new PrintWriter(sw);
+        ex.printStackTrace();
         ex.printStackTrace(pw);
         return this.debug(sw.toString());
     }

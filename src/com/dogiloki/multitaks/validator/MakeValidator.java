@@ -18,6 +18,9 @@ import java.util.function.BiFunction;
 public class MakeValidator{
     
     public MakeValidator(){
+        Singleton.singleton(Validator.class).make(ValidatorRule.NOT_NULL,(Object key, Object value, MapValues values, Object[] params)->{
+            return value!=null && !value.toString().trim().equals("");
+        },":key es obligatorio");
         Singleton.singleton(Validator.class).make(ValidatorRule.REQUIRED,(Object key, Object value, MapValues values, Object[] params)->{
             return values.containsKey(key);
         },":key es obligatorio");

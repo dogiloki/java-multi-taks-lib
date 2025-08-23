@@ -33,7 +33,7 @@ public class Validate{
                 }else{
                     params=alia_rule_split[1].toString().split(",");
                 }
-                if(alias_rule.equals(ValidatorRule.NULLABLE) && value==null){
+                if(alias_rule.equals(ValidatorRule.NULLABLE) && value==null || value.trim().equals("")){
                     break;
                 }
                 if(action==null){

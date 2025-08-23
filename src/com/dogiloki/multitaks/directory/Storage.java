@@ -714,14 +714,20 @@ public class Storage{
                 }else{
                     this.file=new File(this.getSrc());
                 }
-                if(this.file!=null){
+                if(this.file!=null && this.file.exists()){
                     this.bw=new BufferedWriter(new FileWriter(this.file,append));
                 }
-                this.br=new BufferedReader(in==null?new FileReader(this.file):new InputStreamReader(in));
+                if(in==null){
+                    if(!this.file.exists()){
+                        return false;
+                    }
+                    this.br=new BufferedReader(new FileReader(this.file));
+                }else{
+                    this.br=new BufferedReader(new InputStreamReader(in));
+                }
                 return true;
             }catch(Exception ex){
                 ex.printStackTrace();
-                return false;
             }
         }
         return false;
@@ -792,7 +798,7 @@ public class Storage{
                 return false;
             }
             for(Object t:text){
-                this.bw.write(((String)t));
+                this.bw.write(t.toString());
             }
             this.flush();
             return true;
@@ -842,6 +848,9 @@ public class Storage{
             }
             String line=null;
             String lines="";
+            if(this.br==null){
+                return null;
+            }
             while((line=this.br.readLine())!=null){
                 lines+=line+"\n";
             }
@@ -1066,13 +1075,17 @@ public class Storage{
         if(this.asPath()==null) return false;
         boolean exists=Files.exists(this.asPath());
         if(!exists && created){
-            switch(this.getType()){
-                case FOLDER: return Storage.createFolder(this.getSrc());
-                case FILE: {
-                    Storage.createFolder(this.getFolder());
-                    exists=this.write("");
-                    this.close();
+            if(this.getType()==DirectoryType.FOLDER){
+                return Storage.createFolder(this.getSrc());
+            }else{
+                Storage.createFolder(this.getFolder());
+                try{
+                    Files.createFile(this.asPath());
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
+                exists=Files.exists(this.asPath());
+                this.close();
             }
         }
         return exists;

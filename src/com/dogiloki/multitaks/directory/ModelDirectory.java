@@ -9,6 +9,13 @@ import com.dogiloki.multitaks.dataformat.XML;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 import java.lang.reflect.Method;
 import com.dogiloki.multitaks.directory.annotations.RunAfter;
+import com.dogiloki.multitaks.validator.MapValues;
+import com.dogiloki.multitaks.validator.RuleWithParams;
+import com.dogiloki.multitaks.validator.Validate;
+import com.dogiloki.multitaks.validator.Validation;
+import com.dogiloki.multitaks.validator.annotations.Validatable;
+import com.dogiloki.multitaks.validator.annotations.ValidationRule;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -58,23 +65,23 @@ public class ModelDirectory extends Storage{
                 this.setSrc(annot_directory.src());
             }
         }
-        this.create();
         super.aim(this.getSrc(),this.getType());
         return this;
     }
     
-    private void create(){
+    public ModelDirectory create(){
         if(this.isFromJar()){
-            return;
+            return this;
         }
         if(this.getType()==null || this.getSrc()==null){
-            return;
+            return this;
         }
         if(this.isFolder()){
             Storage.createFolder(this.getSrc());
         }else{
             new Storage(this.getSrc(),DirectoryType.FILE).exists(true);
         }
+        return this;
     }
     
     public Object getInstance(){
@@ -150,7 +157,30 @@ public class ModelDirectory extends Storage{
         return text;
     }
     
-    public boolean save(){
+    public boolean save() throws Exception{
+        // Extraer valores del modelo y contruir reglas a partir de anotaciones
+        MapValues values=new MapValues();
+        MapValues rules=new MapValues();
+        for(Field field:this.getInstance().getClass().getDeclaredFields()){
+            field.setAccessible(true);
+            try{
+                Validatable validatable=field.getAnnotation(Validatable.class);
+                if(validatable==null) continue;
+                RuleWithParams rule_with_params=new RuleWithParams();
+                for(ValidationRule vr:validatable.rules()){
+                    rule_with_params.append(vr.type(),vr.params());
+                }
+                values.append(field.getName(),field.get(this.getInstance()));
+                rules.append(field.getName(),rule_with_params);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        Validation validation=Validate.make(values,rules);
+        if(validation.fails()){
+            throw new Exception(validation.errors().values().iterator().next().get(0));
+        }
+        this.create();
         if(this.getType()!=null && this.getSrc()!=null && this.isFile()){
             return this.write(this.toString());
         }else if(this.getType()==DirectoryType.FOLDER && this.getSrc()!=null){
