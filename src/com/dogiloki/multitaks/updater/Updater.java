@@ -55,17 +55,17 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
         return this.apply_after_download;
     }
     
-    protected Updater changeStatus(UpdateStatus status, Exception ex){
+    protected synchronized Updater changeStatus(UpdateStatus status, Exception ex){
         return this._changeStatus(status,ex);
     }
     
-    protected Updater changeStatus(UpdateStatus status){
+    protected synchronized Updater changeStatus(UpdateStatus status){
         return this._changeStatus(status,null);
     }
     
-    private Updater _changeStatus(UpdateStatus status, Exception ex){
+    private synchronized Updater _changeStatus(UpdateStatus status, Exception ex){
         this._status=status;
-        if(status==UpdateStatus.COMPLETED){
+        if(this._status==UpdateStatus.COMPLETED){
             this.onComplete();
             this.onProgress();
         }else if(status==UpdateStatus.FAILED){
@@ -77,7 +77,7 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
         return this;
     }
     
-    protected UpdateStatus getStatus(){
+    protected synchronized UpdateStatus getStatus(){
         return this._status;
     }
     
@@ -195,13 +195,13 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
             return;
         }
         for(UpdateItem update_item:this.getUpdateItems()){
-            this.changeStatus(UpdateStatus.APPLYING);
             try{
                 update_item.applyWithBackup();
             }catch(Exception ex){
                 ex.printStackTrace();
                 this.changeStatus(UpdateStatus.FAILED,ex);
             }
+            this.changeStatus(UpdateStatus.APPLYING);
         }
         this.changeStatus(UpdateStatus.COMPLETED);
     }
@@ -226,22 +226,22 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     }
 
     @Override
-    public void applyBackup(){
+    public synchronized void applyBackup(){
         System.out.println("PENDIENTE!!!");
     }
 
     @Override
-    public void onProgress(){
+    public synchronized void onProgress(){
         
     }
 
     @Override
-    public void onError(Exception ex){
+    public synchronized void onError(Exception ex){
         
     }
 
     @Override
-    public void onComplete(){
+    public synchronized void onComplete(){
         
     }
     

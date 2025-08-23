@@ -24,6 +24,7 @@ public final class UpdaterDialog extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         this.updater=new Updater(path,cfg){
+            
             @Override
             public void onProgress(){
                 switch(this.getStatus()){
@@ -62,14 +63,12 @@ public final class UpdaterDialog extends javax.swing.JDialog {
 
             @Override
             public void onError(Exception ex){
-                AppLogger.logger().showMessage();
-                AppLogger.error(ex.getMessage());
+                AppLogger.error(ex.getMessage()).exception(ex).showMessage();
             }
 
             @Override
             public void onComplete(){
-                AppLogger.logger().showMessage();
-                AppLogger.info("Actualización finalizada");
+                AppLogger.info("Actualización finalizada").showMessage();
                 dispose();
             }
         };
@@ -113,9 +112,6 @@ public final class UpdaterDialog extends javax.swing.JDialog {
     }
     
     public void loadApplyTaskProgress(){
-        ExecutionObserver.EXECUTOR.submit(()->{
-            this.updater.applyUpdate();
-        });
         this.apply_task=new TaskProgress("Descargando actualización - "+this.updater.getLastVersion()){
             @Override
             public void onProgressChanged(){

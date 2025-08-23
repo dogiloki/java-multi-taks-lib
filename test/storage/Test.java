@@ -49,7 +49,7 @@ public class Test{
         */
         Manifest mani=new Manifest("E:\\Github\\wolftri\\updates\\minecraft-server").create();
         mani.url("https://dogiloki.github.io/wolftri/updates/minecraft-server");
-        mani.version("1.0.0-beta.2");
+        mani.version("1.0.0");
         mani.save();
         /*
         Updater updater=new Updater("test/project",null){
