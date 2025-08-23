@@ -714,20 +714,14 @@ public class Storage{
                 }else{
                     this.file=new File(this.getSrc());
                 }
-                if(this.file!=null && this.file.exists()){
+                if(this.file!=null){
                     this.bw=new BufferedWriter(new FileWriter(this.file,append));
                 }
-                if(in==null){
-                    if(!this.file.exists()){
-                        return false;
-                    }
-                    this.br=new BufferedReader(new FileReader(this.file));
-                }else{
-                    this.br=new BufferedReader(new InputStreamReader(in));
-                }
+                this.br=new BufferedReader(in==null?new FileReader(this.file):new InputStreamReader(in));
                 return true;
             }catch(Exception ex){
                 ex.printStackTrace();
+                return false;
             }
         }
         return false;
