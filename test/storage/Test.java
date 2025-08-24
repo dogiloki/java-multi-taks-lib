@@ -1,6 +1,7 @@
 package storage;
 
 import com.dogiloki.multitaks.Checksum;
+import com.dogiloki.multitaks.Function;
 import java.util.Base64;
 import com.dogiloki.multitaks.code.Code;
 import com.dogiloki.multitaks.dataformat.JSON;
@@ -51,6 +52,7 @@ public class Test{
         mani.url("https://dogiloki.github.io/wolftri/updates/minecraft-server");
         mani.version("1.0.0");
         mani.save();
+        //mani.save();
         /*
         Updater updater=new Updater("test/project",null){
             @Override
@@ -90,7 +92,7 @@ public class Test{
         updater.start();
         */
         }catch(Exception ex){
-        
+            ex.printStackTrace();
         }
     }
     

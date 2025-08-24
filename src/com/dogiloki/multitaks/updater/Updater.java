@@ -140,7 +140,7 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     @Override
     public boolean checkForUpdates(){
         this.loadRemoteManifest(true);
-        boolean needs_update=Function.compareTo(this.getCurrentVersion(),this.getLastVersion())<0;
+        boolean needs_update=Function.compareVersion(this.getCurrentVersion(),this.getLastVersion())<0;
         this.changeStatus(needs_update?UpdateStatus.UPDATE:UpdateStatus.NO_UPDATE);
         return needs_update;
     }
