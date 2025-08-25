@@ -165,7 +165,7 @@ public class Function<T>{
         for(int index=0; index<length; index++){
             int n1=index<a1.length?Integer.parseInt(a1[index]):0;
             int n2=index<a2.length?Integer.parseInt(a2[index]):0;
-            if(n1!=n2) return Integer.compare(n2,n2);
+            if(n1!=n2) return Integer.compare(n1,n2);
         }
         // Si son iguales revisar beta
         boolean has_pre1=p1.length>1;
