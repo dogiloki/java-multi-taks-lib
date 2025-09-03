@@ -50,6 +50,7 @@ public class Logger extends ModelDirectory implements LogImpl{
         }
         super.aim(src);
         this.log=new Log(this.getSrc()+"/"+Logger.getDayCurrent()+".txt");
+        this.log.exists(true);
     }
     
     public void modeDebug(boolean op){
