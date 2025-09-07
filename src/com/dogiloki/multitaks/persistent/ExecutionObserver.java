@@ -31,6 +31,11 @@ public class ExecutionObserver{
         PROCESS.clear();
         EXECUTOR.shutdown();
     }
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+            ExecutionObserver.shutdown();
+        }));
+    }
     
     public static ExecutionObserver execution(String command) throws IOException{
         return new ExecutionObserver(command);
