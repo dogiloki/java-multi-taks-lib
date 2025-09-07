@@ -1,5 +1,6 @@
 package com.dogiloki.multitaks;
 
+import com.dogiloki.multitaks.datetime.DateTime;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.net.URL;
@@ -133,13 +134,13 @@ public class Function<T>{
      */
     public static int compareTo(Object v1, Object v2){
         if(v1==null && v2!=null){
-            return -1; // v1<v2
+            return -1;
         }
         if(v1!=null && v2==null){
-            return 1; // v2>v1
+            return 1;
         }
         if(v1==null || v2==null){
-            return 0; // v1==v2
+            return 0;
         }
         try{
             return Integer.compare(Integer.parseInt(v1.toString()),Integer.parseInt(v2.toString()));
@@ -152,28 +153,6 @@ public class Function<T>{
             
         }
         return v1.toString().compareTo(v2.toString());
-    }
-    
-    public static int compareVersion(String v1, String v2){
-        // Dividir en base al beta
-        String[] p1=v1.split("-",2);
-        String[] p2=v2.split("-",2);
-        // Comparar parte principal
-        String[] a1=p1[0].split("\\.");
-        String[] a2=p2[0].split("\\.");
-        int length=Math.max(a1.length,a2.length);
-        for(int index=0; index<length; index++){
-            int n1=index<a1.length?Integer.parseInt(a1[index]):0;
-            int n2=index<a2.length?Integer.parseInt(a2[index]):0;
-            if(n1!=n2) return Integer.compare(n1,n2);
-        }
-        // Si son iguales revisar beta
-        boolean has_pre1=p1.length>1;
-        boolean has_pre2=p2.length>1;
-        if(!has_pre1 && has_pre2) return 1;
-        if(has_pre1 && !has_pre2) return -1;
-        if(!has_pre1 && !has_pre2) return 0;
-        return Function.compareTo(p1[1],p2[1]);
     }
     
     // Convertir dos parámetro numéricos en dimenciones
