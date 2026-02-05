@@ -24,7 +24,6 @@ public class Record{
         
     }
     
-    
     public Record(long line_number){
         this.setLineNumber(line_number);
     }

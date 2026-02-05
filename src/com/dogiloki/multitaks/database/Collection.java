@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.dogiloki.multitaks.directory.Storage;
 import com.dogiloki.multitaks.directory.enums.DirectoryType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,7 @@ public class Collection extends Storage{
         Record record_find;
         boolean matching=false;
         boolean done=false;
+        Map<Long,String> redords_update=new HashMap<>();
         while((record_find=records_find.next())!=null){
             matching=true;
             for(Map.Entry<String,Object> entry:record.getFields().entrySet()){
@@ -78,7 +80,10 @@ public class Collection extends Storage{
                 }
                 record_find.set(entry.getKey(),entry.getValue());
             }
-            done=this.writeLine(record_find.toJson(),record_find.getLineNumber());
+            redords_update.put(record_find.getLineNumber(),record_find.toJson());
+        }
+        for(Map.Entry<Long,String> entry:redords_update.entrySet()){
+            done=this.writeLine(entry.getValue(),entry.getKey());
             if(done){
                 this.getDB().LOGGER.info("updated ("+filter.toString()+") record ("+record.toJson()+") in "+this.getName());
             }else{

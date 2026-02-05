@@ -701,6 +701,7 @@ public class Storage{
      * @param append Indicar si abrir el fichero para adicción de texto
      * @return Indica si se abrió correctamente el fichero
      */
+    /*
     private boolean open(boolean append){
         if(this.getType()!=DirectoryType.FOLDER && this.getSrc()!=null){
             try{
@@ -723,6 +724,38 @@ public class Storage{
                 ex.printStackTrace();
                 return false;
             }
+        }
+        return false;
+    }
+    */
+    private boolean openRead(){
+        try{
+            this.close();
+            if(this.isFromJar()){
+                InputStream in=this.referenceClass().getResourceAsStream(this.getSrc());
+                if(in==null){
+                    AppLogger.debug("No se encontró "+this.getSrc()+" dentro del jar");
+                    throw new FileNotFoundException("No se encontró "+this.getSrc()+" dentro del jar");
+                }
+                this.br=new BufferedReader(new InputStreamReader(in));
+            }else{
+                this.file=new File(this.getSrc());
+                this.br=new BufferedReader(new FileReader(file));
+            }
+            return true;
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    private boolean openWrite(boolean append){
+        try{
+            this.close();
+            this.file=new File(this.getSrc());
+            this.bw=new BufferedWriter(new FileWriter(file,append));
+            return true;
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
         return false;
     }
@@ -751,7 +784,7 @@ public class Storage{
      */
     public boolean clean(){
         try{
-            if(!this.open(false)){
+            if(!this.openWrite(false)){
                 return false;
             }
             this.bw.write("");
@@ -769,7 +802,7 @@ public class Storage{
      */
     public boolean append(Object text){
         try{
-            if(!this.open(true)){
+            if(!this.openWrite(true)){
                 return false;
             }
             this.bw.write(((String)text));
@@ -786,14 +819,12 @@ public class Storage{
      * @param text Contenido a reescribir en el fichero
      * @return Indica si se reescribio el nuevo contenido en el fichero
      */
-    public boolean write(Object... text){
+    public boolean write(Object text){
         try{
-            if(!this.open(false) || this.bw==null){
+            if(!this.openWrite(false) || this.bw==null){
                 return false;
             }
-            for(Object t:text){
-                this.bw.write(t.toString());
-            }
+            this.bw.write(text.toString());
             this.flush();
             return true;
         }catch(IOException ex){
@@ -812,17 +843,18 @@ public class Storage{
         try{
             //RandomAccessFile file=new RandomAccessFile(this.getSrc(),"rw");
             Scanner reader=this.readIterator();
-            int current_number=1;
+            long current_number=1;
             List<String> lines=new ArrayList<>();
-            String content="";
+            StringBuilder content=new StringBuilder();
             while(reader.hasNextLine()){
                 String line=reader.nextLine();
-                line=(current_number==number?Function.assign((String)text,""):line);
-                if(line!=null){
-                    content+=line+"\n";
+                if(current_number==number){
+                    line=Function.assign((String)text,"");
                 }
+                content.append(line).append("\n");
                 current_number++;
             }
+            reader.close();
             this.write(content);
             return true;
         }catch(Exception ex){
@@ -837,7 +869,7 @@ public class Storage{
      */
     public String read(){
         try{
-            if(!this.open(true)){
+            if(!this.openRead()){
                 return null;
             }
             String line=null;
@@ -871,7 +903,7 @@ public class Storage{
     public Scanner readIterator(String delimiter){
         Scanner in=new Scanner(System.in);
         in.useDelimiter(delimiter);
-        if(!this.open(true)){
+        if(!this.openRead()){
             return in;
         }
         try{
