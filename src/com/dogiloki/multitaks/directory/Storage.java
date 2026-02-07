@@ -819,12 +819,14 @@ public class Storage{
      * @param text Contenido a reescribir en el fichero
      * @return Indica si se reescribio el nuevo contenido en el fichero
      */
-    public boolean write(Object text){
+    public boolean write(Object... text){
         try{
             if(!this.openWrite(false) || this.bw==null){
                 return false;
             }
-            this.bw.write(text.toString());
+            for(Object str:text){
+                this.bw.write(str.toString());
+            }
             this.flush();
             return true;
         }catch(IOException ex){
