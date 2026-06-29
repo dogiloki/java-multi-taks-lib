@@ -47,9 +47,10 @@ public class TreeBinary<T> implements Iterator<T>{
         }
     }
     
-    public TreeBinary order(TraversalType traversal_type){
+    public TreeBinary<T> order(TraversalType traversal_type){
         this.index=0;
         this.nodes().clear();
+        this.items.clear();
         this.current=this.root_node;
         this.traversal_type=traversal_type;
         this.order(this.rootNode());
@@ -59,8 +60,7 @@ public class TreeBinary<T> implements Iterator<T>{
     private void order(NodeBinary<T> node){
         if(node==null){
             return;
-        }
-        this.items.clear();
+        } 
         switch(this.traversal_type){
             case IN_ORDER:{
                 this.order(node.leftNode());
@@ -69,7 +69,7 @@ public class TreeBinary<T> implements Iterator<T>{
                 this.order(node.rightNode());
                 break;
             }
-            case PRE_ONDER:{
+            case PRE_ORDER:{
                 this.nodes().add(node);
                 this.onOrder().run(node.getValue());
                 this.order(node.leftNode());
@@ -93,17 +93,17 @@ public class TreeBinary<T> implements Iterator<T>{
         }
     }
     
-    public TreeBinary inOrden(){
+    public TreeBinary<T> inOrden(){
         this.order(TraversalType.IN_ORDER);
         return this;
     }
     
-    public TreeBinary preOrden(){
-        this.order(TraversalType.PRE_ONDER);
+    public TreeBinary<T> preOrden(){
+        this.order(TraversalType.PRE_ORDER);
         return this;
     }
     
-    public TreeBinary postOrden(){
+    public TreeBinary<T> postOrden(){
         this.order(TraversalType.POST_ORDER);
         return this;
     }
@@ -133,7 +133,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this.nodes;
     }
     
-    public TreeBinary onSaving(OnCallback<T> action){
+    public TreeBinary<T> onSaving(OnCallback<T> action){
         this.on_saving=action;
         return this;
     }
@@ -142,7 +142,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this.on_saving;
     }
     
-    public TreeBinary onEvaluate(OnCallback<T> action){
+    public TreeBinary<T> onEvaluate(OnCallback<T> action){
         this.on_evaluate=action;
         return this;
     }
@@ -151,7 +151,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this.on_evaluate;
     }
     
-    public TreeBinary onOrder(OnCallbackNotReturn<T> action){
+    public TreeBinary<T> onOrder(OnCallbackNotReturn<T> action){
         this.on_order=action;
         return this;
     }

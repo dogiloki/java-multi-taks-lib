@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -14,6 +15,10 @@ import java.util.stream.Collectors;
 
 public class ListFields<T> extends ArrayList<T>{
     
+    // Indicar la formación del toString()
+    private Function<T,String> to_string_mapper=String::valueOf;
+    // Indicar delimitador al usar toString()
+    private String delimiter=",";
     // Indicar si los valores pueden repetirse
     private boolean repeated=true;
     // Almacenar los datos en una estructura más eficiente al usar el método contains
@@ -35,6 +40,15 @@ public class ListFields<T> extends ArrayList<T>{
     
     public ListFields<T> append(T value){
         this.add(value);
+        return this;
+    }
+    
+    public String delimiter(){
+        return this.delimiter;
+    }
+    
+    public ListFields<T> delimiter(String value){
+        this.delimiter=value;
         return this;
     }
     
@@ -119,11 +133,16 @@ public class ListFields<T> extends ArrayList<T>{
         this.cache.clear();
     }
     
+    public ListFields<T> toStringMapper(Function<T,String> mapper){
+        this.to_string_mapper=mapper;
+        return this;
+    }
+    
     @Override
     public String toString(){
         return this.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
+                .map(this.to_string_mapper)
+                .collect(Collectors.joining(this.delimiter()));
                 
     }
     

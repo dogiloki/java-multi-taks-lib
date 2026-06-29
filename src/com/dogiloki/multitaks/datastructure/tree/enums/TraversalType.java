@@ -7,9 +7,9 @@ package com.dogiloki.multitaks.datastructure.tree.enums;
 
 public enum TraversalType{
     
-    IN_ORDER,
-    PRE_ONDER,
+    IN_ORDER, // asc
+    PRE_ORDER,
     POST_ORDER,
-    IN_ORDER_REVERSE;
+    IN_ORDER_REVERSE; // desc
     
 }

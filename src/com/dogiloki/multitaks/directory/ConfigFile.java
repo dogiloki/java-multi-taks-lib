@@ -34,4 +34,16 @@ public class ConfigFile{
         return model;
     }
     
+    public static <T> void save(Class<T> clazz){
+        try{
+            T model=clazz.cast(ConfigFile.instance.get(clazz));
+            if(model!=null){
+                ModelDirectory md=new ModelDirectory().aim(model,null);
+                md.save();
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
 }
