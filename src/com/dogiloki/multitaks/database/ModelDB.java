@@ -69,7 +69,7 @@ public class ModelDB extends Record{
             if(filter==null){
                 filter_new=Filter.eq("deleted_at",null);
             }else{
-                filter_new=Filter.and(filter,Filter.eq("delete_at",null));
+                filter_new=Filter.and(filter,Filter.eq("deleted_at",null));
             }
         }else{
             filter_new=filter;
