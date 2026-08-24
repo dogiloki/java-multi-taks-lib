@@ -17,7 +17,7 @@ public class TreeBinary<T> implements Iterator<T>{
     
     private NodeBinary<T> root_node=null;
     private TraversalType traversal_type;
-    private Nodes<NodeBinary<T>,T> nodes=new Nodes();
+    private Nodes<NodeBinary<T>,T> nodes=new Nodes<>();
     private OnCallback<T> on_saving=(item)->item;
     private OnCallback<T> on_evaluate=(item)->item;
     private OnCallbackNotReturn<T> on_order=(item)->{};
@@ -32,7 +32,7 @@ public class TreeBinary<T> implements Iterator<T>{
     }
     
     public void add(T value){
-        NodeBinary<T> node=new NodeBinary(this.onSaving().run(value));
+        NodeBinary<T> node=new NodeBinary<>((T)this.onSaving().run(value));
         node.onEvaluate(this.onEvaluate());
         if(this.root_node==null){
             this.root_node=node;
@@ -108,7 +108,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this;
     }
     
-    public TreeBinary inOrdenReverse(){
+    public TreeBinary<T> inOrdenReverse(){
         this.order(TraversalType.IN_ORDER_REVERSE);
         return this;
     }
@@ -120,9 +120,7 @@ public class TreeBinary<T> implements Iterator<T>{
     
     @Override
     public T next(){
-        this.current=this.nodes().get(this.index);
-        this.index++;
-        return this.current.getValue();
+        return this.nodes().get(this.index++).getValue();
     }
     
     public NodeBinary<T> rootNode(){
@@ -138,7 +136,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this;
     }
     
-    public OnCallback onSaving(){
+    public OnCallback<T> onSaving(){
         return this.on_saving;
     }
     
@@ -147,7 +145,7 @@ public class TreeBinary<T> implements Iterator<T>{
         return this;
     }
     
-    public OnCallback onEvaluate(){
+    public OnCallback<T> onEvaluate(){
         return this.on_evaluate;
     }
     
