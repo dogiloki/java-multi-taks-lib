@@ -24,7 +24,7 @@ public class Persona extends ModelDB{
     @FieldFormat(label="Edad",type=TypeFieldFormat.TEXT) @Expose
     public int edad;
     
-    @FieldFormat(label="Tipo de medida",type=TypeFieldFormat.LIST,list=DirectoryType.class) @Expose
+    @FieldFormat(label="Tipo de medida",type=TypeFieldFormat.ENUM,enum_class=DirectoryType.class) @Expose
     public String tipo;
     
     public Persona(){

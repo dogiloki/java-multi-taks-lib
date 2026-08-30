@@ -7,6 +7,7 @@ import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 /**
  *
@@ -39,6 +40,11 @@ public class ComponentCollect extends JComboBox implements InputComponent{
     @Override
     public void setText(String text) {
         this.setSelectedItem(text);
+    }
+
+    @Override
+    public JComponent getComponent(){
+        return this;
     }
     
 }

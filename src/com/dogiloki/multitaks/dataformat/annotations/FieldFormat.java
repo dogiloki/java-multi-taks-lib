@@ -20,7 +20,8 @@ public @interface FieldFormat{
     String id() default "";
     String label();
     TypeFieldFormat type();
-    Class<? extends Enum<?>> list() default NoEnum.class;
+    String[] list() default{};
+    Class<? extends Enum<?>> enum_class() default NoEnum.class;
     Class<? extends ModelDB> collect() default ModelDB.class;
     String collect_value() default ("toString()");
     String[] fill_fields() default {};

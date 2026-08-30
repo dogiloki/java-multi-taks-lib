@@ -284,4 +284,8 @@ public class Function<T>{
         return new Color(red,green,blue);
     }
     
+    public static String slug(String text){
+        return text.toLowerCase().replaceAll("[^a-zA-Z0-9]+","-");
+    }
+    
 }

@@ -6,9 +6,10 @@ import com.dogiloki.multitaks.database.ModelDB;
 import com.dogiloki.multitaks.dataformat.annotations.FieldFormat;
 import com.dogiloki.multitaks.dataformat.contracts.InputComponent;
 import com.dogiloki.multitaks.dataformat.input.ComponentCollect;
+import com.dogiloki.multitaks.dataformat.input.ComponentList;
 import com.dogiloki.multitaks.directory.HashFields;
 import com.google.gson.annotations.Expose;
-import java.awt.Panel;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -16,7 +17,9 @@ import java.awt.event.FocusListener;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -31,6 +34,18 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     
     public DataFormatViewer(){
         initComponents();
+    }
+    
+    public InputComponent getField(String name){
+        return this.list_input_components.get(name);
+    }
+    
+    public JComponent getFieldComponent(String name){
+        InputComponent component=this.list_input_components.get(name);
+        if(component==null){
+            return null;
+        }
+        return component.getComponent();
     }
     
     public void setList(HashFields list){
@@ -72,7 +87,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
             String label=annotation.label();
             String key=field.getName();
             try{
-                Panel panel=new Panel();
+                JPanel panel=new JPanel();
                 panel.setLayout(null);
                 panel.setBounds(x,y,width,height);
                 
@@ -91,6 +106,23 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                             }
                             @Override
                             public void focusLost(FocusEvent evt){
+                                save();
+                            }
+                        });
+                        panel.add(component);
+                        this.list_input_components.put(key,component);
+                        break;
+                    }
+                    case LIST:{
+                        String[] options=annotation.list();
+                        ComponentList component=new ComponentList(options);
+                        component.setBounds(0,15,width,height/2);
+                        if(value!=null){
+                            component.setSelectedItem(value.toString());
+                        }
+                        component.addActionListener(new ActionListener(){
+                            @Override
+                            public void actionPerformed(ActionEvent evt){
                                 save();
                             }
                         });
@@ -151,6 +183,29 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
         return this;
     }
     
+    public void resizeFields(){
+        int x=10, y=10;
+        int width_total=this.scroll_panel.getWidth()-20-x, height_total=y;
+        int width=width_total, height=50;
+        for(Component component:this.panel.getComponents()){
+            component.setBounds(x,y,width,height);
+            if(component instanceof JPanel){
+                JPanel field_panel=(JPanel) component;
+                for(Component child:field_panel.getComponents()){
+                    if(child instanceof JLabel){
+                        child.setBounds(0,0,width,15);
+                    }else{
+                        child.setBounds(0,15,width,25);
+                    }
+                }
+            }
+            y+=height;
+        }
+        this.panel.setPreferredSize(Function.createDimencion(width,y));
+        this.panel.revalidate();
+        this.panel.repaint();
+    }
+    
     public void clean(){
         for(Map.Entry<String,InputComponent> entry:this.list_input_components.entrySet()){
             entry.getValue().setText("");
@@ -167,6 +222,10 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
                     Object value=null;
                     switch(annotation.type()){
                         case TEXT:{
+                            value=entry.getValue().getText();
+                            break;
+                        }
+                        case LIST:{
                             value=entry.getValue().getText();
                             break;
                         }
@@ -223,7 +282,7 @@ public class DataFormatViewer<T> extends javax.swing.JPanel{
     }// </editor-fold>//GEN-END:initComponents
 
     private void scroll_panelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_scroll_panelComponentResized
-        this.load();
+        this.resizeFields();
     }//GEN-LAST:event_scroll_panelComponentResized
 
 
