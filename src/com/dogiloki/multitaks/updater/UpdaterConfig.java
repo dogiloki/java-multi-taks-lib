@@ -21,13 +21,16 @@ public class UpdaterConfig extends ModelDirectory{
     public String version;
     @Expose
     public String url;
-    @Expose
+    
     public String manifest_file_name;
+    
+    public UpdaterConfig(){
+        this.manifest_file_name=UpdaterConfig.MANIFEST_FILE_NAME;
+    }
     
     public UpdaterConfig(Class<?> clazz){
         super.referenceClass(clazz);
         super.aim("updater-config.json");
-        this.manifest_file_name=UpdaterConfig.MANIFEST_FILE_NAME;
     }
     
     public String getUrlManifest(){

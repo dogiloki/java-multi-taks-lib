@@ -31,7 +31,7 @@ public final class UpdaterDialog extends javax.swing.JDialog {
                     case CHECKING:{
                         loadVerificationTaksProgress();
                         update_download_btn.setVisible(false);
-                        verification_task.setProgress(50);
+                        verification_task.setProgress(0);
                         break;
                     }
                     case UPDATE:{
@@ -56,6 +56,12 @@ public final class UpdaterDialog extends javax.swing.JDialog {
                     }
                     case APPLYING:{
                         apply_task.setProgress(this.getPercentApplyUpdate());
+                        break;
+                    }
+                    case FAILED:{
+                        update_download_btn.setVisible(false);
+                        message_label.setText("No fue posible encontrar o descargar la actualización");
+                        progress_bar.setValue(0);
                         break;
                     }
                 }

@@ -27,6 +27,10 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     private UpdateStatus _status;
     private boolean apply_after_download=false;
     
+    public Updater(UpdaterConfig cfg){
+        this(".",cfg);
+    }
+    
     public Updater(String base_directory, UpdaterConfig cfg){
         if(base_directory==null || base_directory.trim().isEmpty()){
             base_directory=".";
@@ -83,17 +87,22 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     
     protected void loadRemoteManifest(boolean bloking){
         this.changeStatus(UpdateStatus.CHECKING);
-        Download download=new Download(this.cfg.getUrlManifest(),this.base_directory+"/"+this.cfg.manifest_file_name)
-                .overwriteIfExists(true);
+        Download download=new Download(
+                this.cfg.getUrlManifest(),
+                this.base_directory+"/"+this.cfg.manifest_file_name
+        ).overwriteIfExists(true);
+        download.onMetrics((metrics)->{
+            if(metrics.status==DownloadStatus.FAILED){
+                this.changeStatus(UpdateStatus.FAILED,new Exception(metrics.message));
+                return;
+            }
+            if(metrics.status==DownloadStatus.FINALIZED){
+                this.remote_manifest=new Manifest(this.base_directory).builder();
+            }
+        });
         if(bloking){
             download.startBlocking();
-             this.remote_manifest=new Manifest(this.base_directory).builder();
         }else{
-            download.onMetrics((metrics)->{
-                if(metrics.status==DownloadStatus.FINALIZED){
-                    this.remote_manifest=new Manifest(this.base_directory).builder();
-                }
-            });
             download.start();
         }
     }
@@ -140,6 +149,7 @@ public abstract class Updater extends ModelDirectory implements UpdatableApp{
     @Override
     public boolean checkForUpdates(){
         this.loadRemoteManifest(true);
+        if(this.remote_manifest==null) return false;
         boolean needs_update=Function.compareVersion(this.getCurrentVersion(),this.getLastVersion())<0;
         this.changeStatus(needs_update?UpdateStatus.UPDATE:UpdateStatus.NO_UPDATE);
         return needs_update;

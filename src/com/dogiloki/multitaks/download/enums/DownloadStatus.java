@@ -11,6 +11,7 @@ public enum DownloadStatus{
     DOWNLOADING,
     PAUSED,
     CANCELLED,
-    FINALIZED
+    FINALIZED,
+    FAILED
     
 }

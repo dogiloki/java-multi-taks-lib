@@ -5,8 +5,9 @@ import com.dogiloki.multitaks.directory.FileBlock;
 import com.dogiloki.multitaks.directory.ModelDirectory;
 import com.dogiloki.multitaks.download.enums.DownloadStatus;
 import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.MessageFormat;
 
 /**
@@ -95,53 +96,68 @@ public class Download extends ModelDirectory implements Runnable{
             this.metrics.status=DownloadStatus.CONNECTING;
             this.on_metrics.run(this.metrics);
             
-            URLConnection connection=new URL(this.url).openConnection();
+            HttpURLConnection connection=(HttpURLConnection)new URL(this.url).openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(30000);
             connection.connect();
             
-            this.in=new BufferedInputStream(connection.getInputStream());
-            this.metrics.totalSize(connection.getContentLength());
+            int code=connection.getResponseCode();
+            if(code!=HttpURLConnection.HTTP_OK){
+                throw new IOException("No se puede descargar: HTTP "+code+" - "+this.url);
+            }
             
             // Boorar archivo actual si existe
             if(this.exists() && this.isOverwriteIfExists()){
                 this.write("");
             }
             
-            int b=0;
+            this.in=new BufferedInputStream(connection.getInputStream());
+            this.metrics.totalSize(connection.getContentLength());
+            
             byte[] buffer=new byte[this.file_block.getBlockSize()];
+            int bytes_read;
             
-            this.in.skip(this.file_block.readAll().length);
-            
-            while(!this.canceled && (b=this.in.read(buffer))!=-1){
-                if(this.pause){
-                    continue;
+            while(!this.canceled && (bytes_read=this.in.read(buffer))!=-1){
+                while(this.pause && !this.canceled){
+                    Thread.sleep(100);
                 }
                 if(this.canceled){
-                    this.in.close();
-                    this.file_block.close();
-                    this.close();
-
-                    if(this.isDeleteIfCanceled()){
-                        this.delete();
-                    }
                     break;
                 }
+                this.file_block.write(buffer,0,bytes_read);
                 this.metrics.status=DownloadStatus.DOWNLOADING;
-                if(b==-1){
-                    break;
-                }
-                this.file_block.write(buffer,0,b);
-                this.metrics.message=MessageFormat.format(DownloadMetrics.TEXT_DOWNLOADING,this.metrics.totalSize().toString(),this.metrics.currentSize(),this.metrics.percent());
+                this.metrics.message=MessageFormat.format(
+                        DownloadMetrics.TEXT_DOWNLOADING,
+                        this.metrics.totalSize().toString(),
+                        this.metrics.currentSize(),
+                        this.metrics.percent()
+                );
                 this.on_metrics.run(this.metrics);
             }
             
-            this.in.close();
-            this.file_block.close();
-            this.close();
+            if(this.canceled){
+                if(this.isDeleteIfCanceled()){
+                    this.delete();
+                }
+                return;
+            }
+
             this.metrics.status=DownloadStatus.FINALIZED;
             this.metrics.message="[ Finalized ] "+this.metrics.message;
             this.on_metrics.run(this.metrics);
         }catch(Exception ex){
+            this.metrics.status=DownloadStatus.FAILED;
+            this.metrics.message="[ Failed ] "+ex.getMessage();
+            this.on_metrics.run(this.metrics);
             ex.printStackTrace();
+        }finally{
+            try{
+                if(this.in!=null) this.in.close();
+                this.file_block.close();
+                this.close();
+            }catch(Exception ignored){
+                
+            }
         }
     }
     
