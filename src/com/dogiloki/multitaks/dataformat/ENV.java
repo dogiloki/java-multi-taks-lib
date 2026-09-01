@@ -1,6 +1,5 @@
 package com.dogiloki.multitaks.dataformat;
 
-import com.dogiloki.multitaks.directory.ListFields;
 import com.dogiloki.multitaks.dataformat.contracts.DataFormat;
 import com.dogiloki.multitaks.directory.HashFields;
 import java.util.Map;
@@ -26,20 +25,23 @@ public class ENV extends DataFormat{
         if(text==null || text.isEmpty()){
             return fields;
         }
-        for(String line:text.split("\n")){
-            if(line.isEmpty()){
+        for(String raw_line:text.split("\n")){
+            // Limipiar espacios en blanco
+            String line=raw_line.trim().replace("\r","");
+            // Ignorar linas vacías o que comiencen con #
+            if(line.isEmpty() || line.startsWith("#")){
                 continue;
             }
-            if(line.substring(0,1).equals("#")){
-                continue;
-            }
-            int index_key=0;
+            // Buscar el simbolo '=' de forma segura
             int index_value=line.indexOf("=");
-            int end_key=index_value;
-            index_value++;
-            int end_value=line.length();
-            String key=line.substring(index_key,end_key);
-            Object value=line.substring(index_value,end_value);
+            // Si no hay '=', se omite la línea (evitar el error de substrings)
+            if(index_value==-1){
+                continue;
+            }
+            // Extraer clave-valor (recortar espacios alrededor del '='
+            String key=line.substring(0,index_value).trim();
+            String value=line.substring(index_value+1).trim();
+            // Guardar en el mapa la clave-valor
             fields.put(key,value);
         }
         return fields;
